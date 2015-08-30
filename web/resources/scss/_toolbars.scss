@@ -1,0 +1,152 @@
+@mixin toolbar($background: #ffffff) {
+	background: $background;
+	width: 100%;
+	height: 35px;
+	border-bottom: 1px solid $bordercolor;
+	box-shadow: 0 0 5px $bordercolor;
+	font-size: 12px;
+}
+
+@mixin toolbar-content {
+	padding: 0 10px;
+}
+
+@mixin toolbar-input($width: 30px, $marginright: 0px) {
+	width: $width;
+	font-size: 10px;
+	margin-top: 5px;
+	margin-right: $marginright;
+}
+
+@mixin toolbar-label($marginright: 5px) {
+	margin-right: $marginright;
+}
+
+@mixin toolbar-buttons($width: 30px, $defaultborder: #ffffff, $margin: 3px 1px 0 0) {
+	display: inline-block;
+	text-decoration: none;
+	color: #0f0f0f;
+	width: $width;
+	padding: 1px 0;
+	text-align: center;
+	border: 1px solid $defaultborder;
+	border-radius: 2px;
+	font-size: 16px;
+	margin: $margin;
+	
+	&:hover {
+		border: 1px solid #b6b6b6;
+		background: #f7f7f7;
+	 	box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);	
+	}
+	
+	&:active {
+		box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+	}
+}
+
+@mixin toolbar-button-img {
+	margin-top: 5px;
+	height: 12px;
+	border: 0;
+}
+
+/* Styles for toolbars */
+
+.toolbar {
+	@include toolbar;
+}
+
+.toolbar .toolbar-content {
+	@include toolbar-content;
+}
+
+.toolbar .toolbar-content .toolbar-section {
+	border-right: 1px solid $bordercolor;
+	float: left;
+	height: 35px;
+	padding: 0 8px;
+}
+
+.toolbar .toolbar-content .toolbar-section.no-line {
+	border: 0;
+}
+
+.toolbar .toolbar-content .toolbar-section:first-child {
+	padding-left: 0;
+}
+
+.toolbar .toolbar-content a {
+	@include toolbar-buttons;
+}
+
+.toolbar .toolbar-content a img {
+	@include toolbar-button-img;
+}
+
+.toolbar .toolbar-content a.selected {
+	box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+	background: #e7e7e7;
+	border: 1px solid #b6b6b6;
+}
+
+.toolbar .toolbar-content .toolbar-options {
+	display: none;
+	opacity: 0;
+	position: absolute;
+	z-index: 1000;
+	height: 300px;
+	width: 500px;
+	padding: 20px;
+	border: 1px solid #c6c6c6;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+	background: #ffffff;
+	border-radius: 3px;
+}
+
+.toolbar .toolbar-content span {
+	display: inline-block;
+	margin-top: 3px;
+}
+
+.toolbar .toolbar-content label {
+	@include toolbar-label;
+}
+
+.toolbar .toolbar-content input[type="text"], .toolbar .toolbar-content input[type="password"] {
+	@include toolbar-input;
+}
+
+
+/* Styles for sub toolbars */
+
+.subtoolbar {
+	@include toolbar(#f6f6f6);	
+	display: none;
+}
+
+.subtoolbar .toolbar-content {
+	@include toolbar-content;
+}
+
+.subtoolbar .toolbar-content input[type="text"], .subtoolbar .toolbar-content input[type="password"] {
+	@include toolbar-input(200px);
+}
+
+.subtoolbar .toolbar-content label {
+	@include toolbar-label;
+}
+
+.subtoolbar .toolbar-content a {
+	@include toolbar-buttons(30px, #f6f6f6);
+}
+
+.subtoolbar .toolbar-content a img {
+	@include toolbar-button-img;
+}
+
+.subtoolbar .toolbar-content a.auto {
+	@include toolbar-buttons(auto, #f6f6f6, 3px 1px 0 0);
+	font-size: 12px;
+	padding: 5px 8px 2px 8px !important;
+}

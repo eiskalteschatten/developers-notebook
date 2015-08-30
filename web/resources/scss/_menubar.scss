@@ -1,0 +1,120 @@
+/* Styles for the menubar */
+
+.menubar {
+	width: 100%;
+	height: 45px;
+ 	background: #f6f6f6;
+	border-bottom: 1px solid $bordercolor;
+}
+
+.menubar div {
+	float: left;
+}
+
+.menubar .logo {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 50px;
+}
+
+.menubar .command-search {
+	margin: 6px 20px 0 20px;
+}
+
+.menubar .command-search .command-search-field {
+	width: 300px;
+}
+
+.menubar .command-search .command-search-field:focus {
+	box-shadow: 0 0 4px #a6a6a6;
+	outline: none;
+	border: 1px solid $blue;
+}
+
+.menubar .menu a {
+	display: inline-block;
+	padding: 12px 18px;
+	color: #000000;
+	text-decoration: none;
+	font-size: 15px;
+	height: 21px;
+	font-weight: 300;
+	float: left;
+}
+
+.menubar .menu a:hover, .menubar .dropdown.open .mainlink {
+	color: $blue;
+}
+
+.menubar .settings {
+	float: right;
+}
+
+.menubar .dropdown, .menubar .dropdown-menu {
+	background: #444444;
+}
+
+.menubar .dropdown-menu {
+	display: none;
+	border-right: 1px solid #222222;
+}
+
+.menubar .account {
+	float: right;
+}
+
+.menubar .account .dropdown-arrow {
+	color: #000000;
+	text-decoration: none;
+	font-size: 13px;
+	display: block;
+	height: 30px;
+	width: 50px;
+	padding-top: 15px;
+	text-align: center;
+}
+
+.menubar .account .dropdown-arrow:hover, .menubar .account .dropdown-arrow.open {
+	background: #e6e6e6;
+}
+
+.menubar .account .dropdown {
+	display: none;
+	opacity: 0;
+	position: absolute;
+	border: 1px solid #c6c6c6;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+	background: white;
+	z-index: 10000;
+	right: 2px;
+	font-size: 13px;
+	width: 150px;
+	border-radius: 3px;
+}
+
+.menubar .account .dropdown a {
+	font-size: 13px;
+	display: block;
+	text-decoration: none;
+	color: #000000;
+	padding: 5px 8px;
+}
+
+.menubar .account .dropdown a:hover {
+	background: $blue;
+	color: #ffffff;
+}
+
+.menubar .account .dropdown a:first-child {
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+.menubar .account .dropdown a:last-child {
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+.menubar .account .dropdown a.divider {
+	border-top: 1px solid $bordercolor;
+}

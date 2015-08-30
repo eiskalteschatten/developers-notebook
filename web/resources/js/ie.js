@@ -1,0 +1,1 @@
+alert("You are using an outdated version of Internet Explorer which is not supported. Please upgrade to the latest version or install a free alternative such as Mozilla Firefox or Google Chrome.");

@@ -1,0 +1,85 @@
+/* Styles for boxes */
+
+.box {
+	box-shadow: 0 0 10px $shadowcolor;
+	padding: 30px;
+	border-radius: 5px;
+}
+
+.box .title {
+	text-align: left;
+	margin-bottom: 15px;
+}
+
+.box .message {
+	text-align: left;
+	margin-bottom: 15px;
+	font-size: 14px;
+	color: #b81900;
+	display: none;
+	opacity: 0;
+}
+
+.box input {
+	margin-bottom: 20px;
+}
+
+
+/* Styles for content column */
+
+.content-three-columns {
+	width: 100%;
+	height: calc(100% - 50px);
+	overflow: hidden;
+}
+
+.content-three-columns .first-column, .content-three-columns .second-column, .content-three-columns .third-column {
+	height: 100%;
+	overflow: auto;
+	float: left;
+	position: relative;
+}
+
+.content-three-columns .first-column, .content-three-columns .second-column {
+	border-right: 1px solid $bordercolor;
+	width: 300px;
+}
+
+
+.content-three-columns .first-column {
+	background: #f6f6f6;
+}
+
+.content-three-columns .third-column {
+	width: calc(100% - 602px);
+ 	overflow: hidden;
+}
+
+.content-three-columns .column-content a {
+	display: block;
+	text-decoration: none;
+	color: #0f0f0f;
+	padding: 10px;
+	font-size: 15px;
+}
+
+.content-three-columns .column-content a.selected {
+	background: #e6e6e6;
+}
+
+.content-three-columns .column-content .section-label {
+	padding: 15px 10px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #868686;
+}
+
+
+/* Styles for the footer */
+
+.footer {
+	clear: both;
+	font-size: 13px;
+	padding: 20px 40px;
+	border-top: 1px solid $bordercolor;
+}
