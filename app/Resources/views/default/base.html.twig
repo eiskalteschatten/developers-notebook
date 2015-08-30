@@ -17,6 +17,8 @@
         <!--[if lte IE 9]>
             <script type="text/javascript" src="{{ asset('resources/js/ie.js') }}"></script>
         <![endif]-->
+
+        <script type="text/javascript" src="{{ asset('resources/js/jquery-2.1.4.min.js') }}"></script>
     </head>
     <body>
         {% block menubar %}
@@ -56,7 +58,6 @@
         </div>
 
         {% block javascripts %}
-            <script type="text/javascript" src="{{ asset('resources/js/jquery-2.1.4.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('resources/js/scripts.js') }}"></script>
         {% endblock %}
     </body>
