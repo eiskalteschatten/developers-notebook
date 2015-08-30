@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\CodeCacheEntry;
 
 class CodeCacheController extends Controller
 {
@@ -25,9 +26,26 @@ class CodeCacheController extends Controller
      */
     public function createAction(Request $request)
     {
-        $name = $request->request->get('name');
+        //$name = $request->request->get('name');
+        $date = new \DateTime("now");
 
-        return new Response('success');
+        $codeCacheEntry = new CodeCacheEntry();
+        $codeCacheEntry->setUserId(0);
+        $codeCacheEntry->setCode("");
+        $codeCacheEntry->setDateCreated($date);
+        $codeCacheEntry->setDateModified($date);
+        $codeCacheEntry->setFolder(0);
+        $codeCacheEntry->setProject(0);
+        $codeCacheEntry->setSyntax('javascript');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($codeCacheEntry);
+        $em->flush();
+
+        $response = array('id' => $codeCacheEntry->getId());
+
+        return new Response($response);
     }
 
     /**
