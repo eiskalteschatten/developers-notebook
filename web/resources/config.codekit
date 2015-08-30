@@ -3166,12 +3166,12 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
-	"\/js\/jquery-1.11.1.min.js": {
+	"\/js\/jquery-2.1.4.min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/jquery-1.11.1.min.js",
-		"outputAbbreviatedPath": "\/js\/min\/jquery-1.11.1.min-min.js",
+		"inputAbbreviatedPath": "\/js\/jquery-2.1.4.min.js",
+		"outputAbbreviatedPath": "\/js\/min\/jquery-2.1.4.min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,

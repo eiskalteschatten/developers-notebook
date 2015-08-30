@@ -26,14 +26,14 @@
                     <input type="text" class="command-search-field" onclick="expandSearch(this)" placeholder="Type a command or search query">
                 </div>
                 <div class="menu">
-                    <a href="{{  uri }}"></a>
-                    <a href="{{  uri }}projects/">Projects</a>
-                    <a href="{{  uri }}journal/">Journal</a>
-                    <a href="{{  uri }}issues/">Issues</a>
-                    <a href="{{  uri }}todo/">To Dos</a>
-                    <a href="{{  uri }}code-cache/">Code Cache</a>
-                    <a href="{{  uri }}notebook/">Notebook</a>
-                    <a href="{{  uri }}bookmarks/">Bookmarks</a>
+                    <a href="{{ path('_homepage') }}"></a>
+                    <a href="{{ uri }}projects/">Projects</a>
+                    <a href="{{ uri }}journal/">Journal</a>
+                    <a href="{{ uri }}issues/">Issues</a>
+                    <a href="{{ uri }}todo/">To Dos</a>
+                    <a href="{{ path('_codecache') }}">Code Cache</a>
+                    <a href="{{ uri }}notebook/">Notebook</a>
+                    <a href="{{ uri }}bookmarks/">Bookmarks</a>
                 </div>
                 <div class="account">
                     <a href="#!" class="dropdown-arrow" onclick="openAccountDropdown(this)">&#9660;</a>
@@ -47,9 +47,8 @@
         {% endblock %}
         <div class="popup-close-layer"></div>
 
-        <div class="content">
-            {% block body %}{% endblock %}
-        </div>
+        {% block body %}{% endblock %}
+
         {#<?php include_once('console.php'); ?>#}
 
         <div class="footer">
@@ -59,7 +58,6 @@
         {% block javascripts %}
             <script type="text/javascript" src="{{ asset('resources/js/jquery-2.1.4.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('resources/js/scripts.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('resources/js/homepage.js') }}"></script>
         {% endblock %}
     </body>
 </html>

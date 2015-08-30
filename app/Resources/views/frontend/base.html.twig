@@ -1,0 +1,64 @@
+{% set uri = app.request.uri %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="noindex,nofollow">
+
+        <title>{% block title %}Developer's Notebook{% endblock %}</title>
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('resources/css/main.css') }}" type="text/css">
+        {% endblock %}
+
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        <!--[if lte IE 9]>
+            <script type="text/javascript" src="{{ asset('resources/js/ie.js') }}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        {% block menubar %}
+            <div class="menubar">
+                <!-- <div class="logo"><a href="index.php"><img src="_images/logo-writter.png"></a></div> -->
+                <div class="command-search">
+                    <input type="text" class="command-search-field" onclick="expandSearch(this)" placeholder="Type a command or search query">
+                </div>
+                <div class="menu">
+                    <a href="{{ uri }}"></a>
+                    <a href="{{ uri }}projects/">Projects</a>
+                    <a href="{{ uri }}journal/">Journal</a>
+                    <a href="{{ uri }}issues/">Issues</a>
+                    <a href="{{ uri }}todo/">To Dos</a>
+                    <a href="{{ uri }}code-cache/">Code Cache</a>
+                    <a href="{{ uri }}notebook/">Notebook</a>
+                    <a href="{{ uri }}bookmarks/">Bookmarks</a>
+                </div>
+                <div class="account">
+                    <a href="#!" class="dropdown-arrow" onclick="openAccountDropdown(this)">&#9660;</a>
+                    <div class="dropdown">
+                        <a href="#!">Settings</a>
+                        <a href="#!">Account</a>
+                        <a href="#!" class="divider">Logout</a>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        <div class="popup-close-layer"></div>
+
+        <div class="content">
+            {% block body %}{% endblock %}
+        </div>
+        {#<?php include_once('console.php'); ?>#}
+
+        <div class="footer">
+            &copy; 2015 Alex Seifert
+        </div>
+
+        {% block javascripts %}
+            <script type="text/javascript" src="{{ asset('resources/js/jquery-2.1.4.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('resources/js/scripts.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>
