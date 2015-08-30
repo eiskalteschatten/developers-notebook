@@ -2,10 +2,14 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-_homepage:
+_frontend-homepage:
     path:     /
+    defaults: { _controller: AppBundle:FrontendController:indexAction }
+
+_homepage:
+    path:     /notebook/
     defaults: { _controller: AppBundle:DefaultController:indexAction }
 
 _codecache:
-    path:     /code-cache/
+    path:     /notebook/code-cache/
     defaults: { _controller: AppBundle:CodeCacheController:indexAction }

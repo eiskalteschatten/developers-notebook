@@ -6,14 +6,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class CodeCacheController extends Controller
+class FrontendController extends Controller
 {
     /**
-     * @Route("/notebook/code-cache/", name="codecache")
+     * @Route("/", name="frontend-homepage")
      */
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
-        return $this->render('default/code-cache.html.twig');
+        return $this->render('frontend/index.html.twig');
     }
 }
