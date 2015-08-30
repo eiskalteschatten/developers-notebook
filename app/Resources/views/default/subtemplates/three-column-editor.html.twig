@@ -15,7 +15,7 @@
         <div class="second-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" title="Create a new code snippet">+</a><a href="#!" title="Delete selected code snippet">&ndash;</a>
+                    <a href="#!" onclick="createPage()" title="Create a new code snippet">+</a><a href="#!" title="Delete selected code snippet">&ndash;</a>
                 </div>
             </div>
         </div>
@@ -286,6 +286,12 @@
 
         function saveFindReplaceOptions() {
 
+        }
+
+        function createPage() {
+            $.post("{{ app.request.getUri }}create/", { name: "John", time: "2pm" }, function(data) {
+               console.log(data);
+            });
         }
     </script>
 {% endblock %}

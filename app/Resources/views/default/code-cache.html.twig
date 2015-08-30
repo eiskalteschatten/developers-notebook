@@ -2,6 +2,10 @@
 
 {% block title %}Code Cache - Developer's Notebook{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
 {% block body %}
 
     {{ include('default/subtemplates/three-column-editor.html.twig', { 'defaultMode': 'javascript' }) }}
@@ -9,9 +13,5 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
-
-{% block javascripts %}
     {{ parent() }}
 {% endblock %}

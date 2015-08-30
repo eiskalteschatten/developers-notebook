@@ -1,0 +1,29 @@
+AppBundle\Entity\CodeCacheEntry:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        code:
+            type: text
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+        folder:
+            type: integer
+        project:
+            type: integer
+        syntax:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
