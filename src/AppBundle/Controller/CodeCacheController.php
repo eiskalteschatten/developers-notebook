@@ -36,8 +36,7 @@ class CodeCacheController extends Controller
 		
 		foreach ($pagesResult as $page) {
 			$content = $page->getContent();
-			$explodedContent = explode("\n", $content);
-			$previewContent = $explodedContent[0];	
+			$previewContent = $this->createPagePreview($content);
 			
 			$pages[] = array(
 				'id' => $page->getId(),
@@ -148,8 +147,34 @@ class CodeCacheController extends Controller
 	    $pages->setContent($content);	    
 	    $em->flush();
 
+		$response = new JsonResponse(array('previewContent' => $this->createPagePreview($content)));
+
+        return $response;
+    }
+    
+    /**
+     * @Route("/notebook/code-cache/remove/", name="codeCacheRemove")
+     * @Method("POST")
+     */
+    public function removeAction(Request $request)
+    {
+		$id = $request->request->get('id');
+		
+		$em = $this->getDoctrine()->getManager();
+	    $pages = $em->getRepository('AppBundle:Pages')->find($id);
+	
+		$em->remove($pages);
+		$em->flush();
+	   
         return new Response('success');
     }
+    
+    
+    private function createPagePreview($content) {
+	    $explodedContent = explode("\n", $content);
+		return $explodedContent[0];	
+    }
+    
     
     /**
      * @Route("/notebook/code-cache/createFolder/", name="codeCacheCreateFolder")

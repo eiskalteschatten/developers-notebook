@@ -30,13 +30,13 @@
         <div class="second-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createPage()" title="Create a new code snippet">+</a><a href="#!" title="Delete selected code snippet">&ndash;</a>
+                    <a href="#!" onclick="createPage()" title="Create a new page">+</a><a href="#!" onclick="removePage()" title="Delete selected page">&ndash;</a>
                 </div>
             </div>
             <div class="editor-pages">
 	            {% for page in pages %}
 		            <div class="editor-page" data-id="{{ page.id }}" data-syntax="{{ page.syntax }}" data-folder="{{ page.folder }}" data-project="{{ page.project }}">
-		            	{{ page.previewContent }}
+		            	<div class="preview">{{ page.previewContent }}</div>
 		            	<div class="date">{{ page.date }}</div>
 		            	<div class="content">{{ page.content }}</div>
 		            </div>
@@ -154,7 +154,7 @@
         		selectPage($(this));
         	});
         	
-        	$('.editor-page:first').trigger('click');
+			$('.editor-page:visible:first').trigger('click');
         });
 
         function changeTheme(select) {
@@ -346,6 +346,8 @@
 	        	div.click(function() {
 	        		selectPage($(this));
 	        	});
+	        	
+	        	div.trigger('click');
             });
         }
         
@@ -359,8 +361,25 @@
 	        }
 	        
             $.post("{{ app.request.getUri }}save/", toSend, function(data) {
-            	console.log(data);
+	            updatePagePreview(data.previewContent);
+            	//console.log(data);
             });
+        }
+        
+        function removePage() {
+	        if (confirm('Are you sure you want to remove this page?')) {
+			    var selected = $('.editor-page.selected');
+	        
+		        var toSend = {
+			        id: selected.attr('data-id')
+		        }
+		        
+	            $.post("{{ app.request.getUri }}remove/", toSend, function(data) {
+		            selected.remove();
+					$('.editor-page:visible:first').trigger('click');
+	            	//console.log(data);
+	            });
+			} 
         }
         
         function selectPage(obj) {
@@ -377,6 +396,10 @@
 			editor.setValue(content);
         }
         
+        function updatePagePreview(content) {
+	        $('.editor-page.selected').find('.preview').text(content);
+        }
+        
         function createFolder() {
 			var div = $("<div>");
         	div.addClass('editor-folder');
@@ -391,9 +414,13 @@
 		    if (event.which == 13) {
 	            sendCreateFolder(obj);
 	        }
+	        else if (event.which == 27) {
+			    $('.editor-folder.temp-new').remove();
+	        }
 	    }
 	        
 	    function sendCreateFolder(obj) {
+		    var div = $('.editor-folder.temp-new');
 		    var name = $(obj).val();
 		    
 		    if (name != "") {
@@ -404,7 +431,6 @@
 	            $.post("{{ app.request.getUri }}createFolder/", toSend, function(data) {
 				    $(obj).remove();
 				    
-				    var div = $('.editor-folder.temp-new');
 		            div.attr('data-id', data.id);
 		            div.text(data.name);
 					
@@ -414,6 +440,9 @@
 		        	
 		        	div.removeClass('temp-new');
 	            });
+	        }
+	        else {
+			    div.remove();
 	        }
         }
         
