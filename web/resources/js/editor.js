@@ -185,22 +185,40 @@ function setDraggableAndDroppable() {
 		appendTo: 'body',
 		containment: 'window'
 	});
-	
+
 	$('.editor-folder.folder').droppable({
 		hoverClass: "folder-hover",
 		drop: function( event, ui ) {
 			var folder = $(this);
 			var page = $(ui.draggable);
-			
+
 			var toSend = {
-		        folderId: folder.attr('data-id'),
-		        pageId: page.attr('data-id')
-	        }
-		    
-            $.post(editorUrl+"movePageToFolder/", toSend, function(data) {
-			    page.attr('data-folder', data.folder);
-			    $('.editor-folder.selected').trigger('click');
-            });
+				folderId: folder.attr('data-id'),
+				pageId: page.attr('data-id')
+			}
+
+			$.post(editorUrl+"movePageToFolder/", toSend, function(data) {
+				page.attr('data-folder', data.folder);
+				$('.editor-folder.selected').trigger('click');
+			});
+		}
+	});
+
+	$('.editor-folder.all-projects-folders').droppable({
+		hoverClass: "folder-hover",
+		drop: function( event, ui ) {
+			var folder = $(this);
+			var page = $(ui.draggable);
+
+			var toSend = {
+				folderId: -1,
+				pageId: page.attr('data-id')
+			}
+
+			$.post(editorUrl+"removePageFromFolders/", toSend, function(data) {
+				page.attr('data-folder', data.folder);
+				$('.editor-folder.selected').trigger('click');
+			});
 		}
 	});
 }

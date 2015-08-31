@@ -115,6 +115,26 @@ class EditorController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/notebook/editor/removePageFromFolders/", name="codeCacheRemovePageFromFolders")
+     * @Method("POST")
+     */
+    public function removePageFromFoldersAction(Request $request)
+    {
+        $folderId = -1;
+        $pageId = $request->request->get('pageId');
+
+        $em = $this->getDoctrine()->getManager();
+        $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+
+        $pages->setFolder($folderId);
+        $em->flush();
+
+        $response = new JsonResponse(array('folder' => $pages->getFolder()));
+
+        return $response;
+    }
+
 
     /**
      * @Route("/notebook/editor/createFolder/", name="codeCacheCreateFolder")
