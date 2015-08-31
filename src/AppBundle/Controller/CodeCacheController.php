@@ -215,6 +215,17 @@ class CodeCacheController extends Controller
 	    $folders = $em->getRepository('AppBundle:Folders')->find($id);
 	
 		$em->remove($folders);
+		
+		$pagesResult = $this->getDoctrine()
+        ->getRepository('AppBundle:Pages')
+        ->findBy(
+		    array('folder' => $id)
+		);
+		
+		foreach($pagesResult as $page) {
+			$page->setFolder(-1);
+		}
+		
 		$em->flush();
 	   
         return new Response('success');

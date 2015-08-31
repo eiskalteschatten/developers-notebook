@@ -340,7 +340,7 @@
 	        	div.attr('data-folder', data.folder);
 	        	div.attr('data-syntax', data.syntax);
 	        	div.attr('data-project', data.project);	        	
-	        	div.html('<div class="date">' + data.date + '</div><div class="content"></div>');
+	        	div.html('<div class="preview"></div><div class="date">' + data.date + '</div><div class="content"></div>');
 	        	$('.editor-pages').append(div);
 	        	
 	        	div.click(function() {
@@ -375,8 +375,9 @@
 		        }
 		        
 	            $.post("{{ app.request.getUri }}remove/", toSend, function(data) {
+		            var previewSibling = selected.prev();
 		            selected.remove();
-					$('.editor-page:visible:first').trigger('click');
+					previewSibling.trigger('click');
 	            	//console.log(data);
 	            });
 			} 
@@ -412,6 +413,7 @@
 	    
 	    function checkCreateFolderKeyDown(event, obj) {
 		    if (event.which == 13) {
+			    obj.removeEventListener("blur", sendCreateFolder);
 	            sendCreateFolder(obj);
 	        }
 	        else if (event.which == 27) {
@@ -473,8 +475,9 @@
 			        }
 			        
 		            $.post("{{ app.request.getUri }}removeFolder/", toSend, function(data) {
+						var previewSibling = selected.prev();
 			            selected.remove();
-			            $('.all-projects-folders').trigger('click');
+						previewSibling.trigger('click');
 		            	//console.log(data);
 		            });
 			    }
