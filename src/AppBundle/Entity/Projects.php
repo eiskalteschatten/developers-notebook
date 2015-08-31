@@ -5,9 +5,9 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CodeCacheEntry
+ * Projects
  */
-class CodeCacheEntry
+class Projects
 {
     /**
      * @var integer
@@ -22,7 +22,7 @@ class CodeCacheEntry
     /**
      * @var string
      */
-    private $code;
+    private $name;
 
     /**
      * @var \DateTime
@@ -33,21 +33,6 @@ class CodeCacheEntry
      * @var \DateTime
      */
     private $dateModified;
-
-    /**
-     * @var integer
-     */
-    private $folder;
-
-    /**
-     * @var integer
-     */
-    private $project;
-
-    /**
-     * @var string
-     */
-    private $syntax;
 
 
     /**
@@ -64,7 +49,7 @@ class CodeCacheEntry
      * Set userId
      *
      * @param integer $userId
-     * @return CodeCacheEntry
+     * @return Projects
      */
     public function setUserId($userId)
     {
@@ -84,33 +69,33 @@ class CodeCacheEntry
     }
 
     /**
-     * Set code
+     * Set name
      *
-     * @param string $code
-     * @return CodeCacheEntry
+     * @param string $name
+     * @return Projects
      */
-    public function setCode($code)
+    public function setName($name)
     {
-        $this->code = $code;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get code
+     * Get name
      *
      * @return string 
      */
-    public function getCode()
+    public function getName()
     {
-        return $this->code;
+        return $this->name;
     }
 
     /**
      * Set dateCreated
      *
      * @param \DateTime $dateCreated
-     * @return CodeCacheEntry
+     * @return Projects
      */
     public function setDateCreated($dateCreated)
     {
@@ -133,7 +118,7 @@ class CodeCacheEntry
      * Set dateModified
      *
      * @param \DateTime $dateModified
-     * @return CodeCacheEntry
+     * @return Projects
      */
     public function setDateModified($dateModified)
     {
@@ -150,74 +135,5 @@ class CodeCacheEntry
     public function getDateModified()
     {
         return $this->dateModified;
-    }
-
-    /**
-     * Set folder
-     *
-     * @param integer $folder
-     * @return CodeCacheEntry
-     */
-    public function setFolder($folder)
-    {
-        $this->folder = $folder;
-
-        return $this;
-    }
-
-    /**
-     * Get folder
-     *
-     * @return integer 
-     */
-    public function getFolder()
-    {
-        return $this->folder;
-    }
-
-    /**
-     * Set project
-     *
-     * @param integer $project
-     * @return CodeCacheEntry
-     */
-    public function setProject($project)
-    {
-        $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return integer 
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * Set syntax
-     *
-     * @param string $syntax
-     * @return CodeCacheEntry
-     */
-    public function setSyntax($syntax)
-    {
-        $this->syntax = $syntax;
-
-        return $this;
-    }
-
-    /**
-     * Get syntax
-     *
-     * @return string 
-     */
-    public function getSyntax()
-    {
-        return $this->syntax;
     }
 }

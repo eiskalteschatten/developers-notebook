@@ -1,0 +1,26 @@
+AppBundle\Entity\Folders:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        name:
+            type: string
+            length: 255
+        area:
+            type: string
+            length: 255
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+    lifecycleCallbacks: {  }

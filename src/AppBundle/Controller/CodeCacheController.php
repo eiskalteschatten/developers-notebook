@@ -7,7 +7,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\CodeCacheEntry;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Entity\Pages;
+use AppBundle\Entity\Folders;
+use AppBundle\Entity\Projects;
 
 class CodeCacheController extends Controller
 {
@@ -29,21 +32,22 @@ class CodeCacheController extends Controller
         //$name = $request->request->get('name');
         $date = new \DateTime("now");
 
-        $codeCacheEntry = new CodeCacheEntry();
-        $codeCacheEntry->setUserId(0);
-        $codeCacheEntry->setCode("");
-        $codeCacheEntry->setDateCreated($date);
-        $codeCacheEntry->setDateModified($date);
-        $codeCacheEntry->setFolder(0);
-        $codeCacheEntry->setProject(0);
-        $codeCacheEntry->setSyntax('javascript');
+        $pages = new Pages();
+        $pages->setUserId(0);
+        $pages->setContent("");
+        $pages->setDateCreated($date);
+        $pages->setDateModified($date);
+        $pages->setFolder(0);
+        $pages->setProject(0);
+        $pages->setSyntax('javascript');
+        $pages->setArea('code');
 
         $em = $this->getDoctrine()->getManager();
 
-        $em->persist($codeCacheEntry);
+        $em->persist($pages);
         $em->flush();
 
-        $response = array('id' => $codeCacheEntry->getId());
+        $response = new JsonResponse(array('id' => $pages->getId()));
 
         return new Response($response);
     }

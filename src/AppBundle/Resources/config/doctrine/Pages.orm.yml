@@ -1,4 +1,4 @@
-AppBundle\Entity\CodeCacheEntry:
+AppBundle\Entity\Pages:
     type: entity
     table: null
     id:
@@ -11,7 +11,7 @@ AppBundle\Entity\CodeCacheEntry:
         userId:
             type: integer
             column: user_id
-        code:
+        content:
             type: text
         dateCreated:
             type: datetime
@@ -24,6 +24,9 @@ AppBundle\Entity\CodeCacheEntry:
         project:
             type: integer
         syntax:
+            type: string
+            length: 255
+        area:
             type: string
             length: 255
     lifecycleCallbacks: {  }
