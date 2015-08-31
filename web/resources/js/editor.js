@@ -1,8 +1,19 @@
 function createPage() {
+	var folderId = $('.editor-folder.selected').attr('data-id');
+    var syntax = $('.editor-page.selected').attr('data-syntax');
+
+    if (folderId == "") {
+        folderId = -1;
+    }
+
+    if (syntax === undefined || syntax == "") {
+        syntax = "text";
+    }
+
     var toSend = {
-        folder: $('.editor-folder.selected').attr('data-id'),
+        folder: folderId,
         project: 0,
-        syntax: $('.editor-page.selected').attr('data-syntax')
+        syntax: syntax
     }
     
     $.post(currentUri+"create/", toSend, function(data) {
