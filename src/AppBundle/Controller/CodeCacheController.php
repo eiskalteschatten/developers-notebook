@@ -202,4 +202,21 @@ class CodeCacheController extends Controller
 
         return $response;
     }
+    
+    /**
+     * @Route("/notebook/code-cache/removeFolder/", name="codeCacheRemoveFolder")
+     * @Method("POST")
+     */
+    public function removeFolderAction(Request $request)
+    {
+		$id = $request->request->get('id');
+		
+		$em = $this->getDoctrine()->getManager();
+	    $folders = $em->getRepository('AppBundle:Folders')->find($id);
+	
+		$em->remove($folders);
+		$em->flush();
+	   
+        return new Response('success');
+    }
 }

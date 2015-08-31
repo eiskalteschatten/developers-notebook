@@ -3,7 +3,7 @@
         <div class="first-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" title="Remove selected folder">&ndash;</a>
+                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder()" title="Remove selected folder">&ndash;</a>
                 </div>
             </div>
             <div class="column-content">
@@ -20,7 +20,7 @@
                 <div class="section-label">Folders</div>
                 <div class="editor-folders folders">
                 	{% for folder in folders %}
-			            <div class="editor-folder" data-id="{{ folder.id }}">
+			            <div class="editor-folder folder" data-id="{{ folder.id }}">
 			            	{{ folder.name }}
 			            </div>
 					{% endfor %}
@@ -461,6 +461,27 @@
 			}
 			
 			$('.editor-page:visible:first').trigger('click');
+        }
+        
+		function removeFolder() {
+		    var selected = $('.editor-folder.selected');
+		    
+		    if (selected.hasClass('folder')) {
+		        if (confirm('Are you sure you want to remove this folder?')) {
+				    var toSend = {
+				        id: selected.attr('data-id')
+			        }
+			        
+		            $.post("{{ app.request.getUri }}removeFolder/", toSend, function(data) {
+			            selected.remove();
+			            $('.all-projects-folders').trigger('click');
+		            	//console.log(data);
+		            });
+			    }
+			} 
+			else {
+				alert("You must selected a folder to remove it.");
+			}
         }
     </script>
 {% endblock %}
