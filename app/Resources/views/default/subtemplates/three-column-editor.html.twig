@@ -402,7 +402,7 @@
 			$('#mode').val(syntax);
 			
 			var content = obj.find('.content').text();
-			editor.setValue(content);
+			editor.setValue(content, -1);
         }
         
         function updatePagePreview(content) {
@@ -472,7 +472,7 @@
 				$('.editor-page[data-folder=' + id + ']').show();
 			}
 			
-			editor.setValue("");
+			editor.setValue("", -1);
 
 			$('.editor-page:visible:first').trigger('click');
         }
