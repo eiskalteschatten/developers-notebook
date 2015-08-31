@@ -473,7 +473,7 @@ form input[type="text"], form input[type="password"] {
   left: 0;
   right: 0; }
 
-.editor-folders .editor-folder {
+.editor-folder {
   display: block;
   text-decoration: none;
   color: #0f0f0f;
@@ -481,12 +481,14 @@ form input[type="text"], form input[type="password"] {
   font-size: 15px;
   white-space: nowrap;
   cursor: default; }
-  .editor-folders .editor-folder:hover {
+  .editor-folder:hover {
     background: #fbfbfb; }
-  .editor-folders .editor-folder.selected {
+  .editor-folder.selected {
+    background: #e6e6e6; }
+  .editor-folder.folder-hover {
     background: #e6e6e6; }
 
-.editor-pages .editor-page {
+.editor-page {
   height: 40px;
   font-size: 14px;
   padding: 10px;
@@ -494,17 +496,17 @@ form input[type="text"], form input[type="password"] {
   position: relative;
   white-space: nowrap;
   cursor: default; }
-  .editor-pages .editor-page:hover {
+  .editor-page:hover {
     background: #fbfbfb; }
-  .editor-pages .editor-page.selected {
+  .editor-page.selected {
     background: #f6f6f6; }
-  .editor-pages .editor-page .date {
+  .editor-page .date {
     font-size: 10px;
     color: #a0a0a0;
     bottom: 0;
     left: 10px;
     position: absolute; }
-  .editor-pages .editor-page .content {
+  .editor-page .content {
     display: none; }
 
 /* Styles for popups */

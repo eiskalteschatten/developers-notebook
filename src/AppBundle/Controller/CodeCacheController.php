@@ -169,6 +169,26 @@ class CodeCacheController extends Controller
         return new Response('success');
     }
     
+    /**
+     * @Route("/notebook/code-cache/movePageToFolder/", name="codeCacheMovePageToFolder")
+     * @Method("POST")
+     */
+    public function movePageToFolderAction(Request $request)
+    {
+		$folderId = $request->request->get('folderId');
+		$pageId = $request->request->get('pageId');
+		
+		$em = $this->getDoctrine()->getManager();
+	    $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+	
+	    $pages->setFolder($folderId);	  
+		$em->flush();
+	   
+		$response = new JsonResponse(array('folder' => $pages->getFolder()));
+
+        return $response;
+    }
+    
     
     private function createPagePreview($content) {
 	    $explodedContent = explode("\n", $content);

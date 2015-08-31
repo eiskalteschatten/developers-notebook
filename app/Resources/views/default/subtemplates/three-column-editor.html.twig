@@ -159,6 +159,8 @@
         	});
         	
 			$('.editor-page:visible:first').trigger('click');
+			
+			setDraggableAndDroppable();
         });
 
         function changeTheme(select) {
@@ -352,6 +354,8 @@
 	        	});
 	        	
 	        	div.trigger('click');
+	        	
+	        	setDraggableAndDroppable();
             });
         }
         
@@ -445,6 +449,8 @@
 		        	});
 		        	
 		        	div.removeClass('temp-new');
+		        	
+		        	setDraggableAndDroppable();
 	            });
 	        }
 	        else {
@@ -491,6 +497,33 @@
 			else {
 				alert("You must selected a folder to remove it.");
 			}
+        }
+        
+        function setDraggableAndDroppable() {
+	        $('.editor-page').draggable({
+				revert: 'invalid', 
+				helper: "clone",
+				appendTo: 'body',
+				containment: 'window'
+			});
+			
+			$('.editor-folder.folder').droppable({
+				hoverClass: "folder-hover",
+				drop: function( event, ui ) {
+					var folder = $(this);
+					var page = $(ui.draggable);
+					
+					var toSend = {
+				        folderId: folder.attr('data-id'),
+				        pageId: page.attr('data-id')
+			        }
+				    
+		            $.post("{{ app.request.getUri }}movePageToFolder/", toSend, function(data) {
+					    page.attr('data-folder', data.folder);
+					    $('.editor-folder.selected').trigger('click');
+		            });
+				}
+			});
         }
     </script>
 {% endblock %}
