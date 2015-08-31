@@ -35,7 +35,7 @@
                         <a href="#!" onclick="toggleFullScreen(this)" title="Toggle full screen">&#8598;</a>
                     </div>
                     <div class="toolbar-section">
-                        <a href="#!" onclick="" title="Save"><img src="{{ asset('resources/img/save.svg') }}"></a>
+                        <a href="#!" onclick="savePage()" title="Save"><img src="{{ asset('resources/img/save.svg') }}"></a>
                     </div>
                     <div class="toolbar-section">
                         <a href="#!" onclick="toggleInvisibles(this)" title="Toggle invisible characters">&para;</a><a href="#!" onclick="toggleIndentGuides(this)" title="Toggle indent guides">&#8674;</a><a href="#!" onclick="toggleReadOnly(this)" title="Toggle read only"><img src="{{ asset('resources/img/lock.svg') }}"><!-- &#10007; --></a>
@@ -132,6 +132,8 @@
             $('.editor-page').click(function() {
         		selectPage($(this));
         	});
+        	
+        	$('.editor-page:first').trigger('click');
         });
 
         function changeTheme(select) {
@@ -142,6 +144,8 @@
         function changeMode(select) {
             var mode = $(select).val();
             editor.getSession().setMode("ace/mode/"+mode);
+            
+			$('.editor-page.selected').attr('data-syntax', mode);
         }
 
         function toggleToolbarOptions(button, closeButton) {
@@ -319,17 +323,31 @@
         }
         
         function savePage() {
-            $.post("{{ app.request.getUri }}save/", { name: "John", time: "2pm" }, function(data) {
-               console.log(data);
+	        var selected = $('.editor-page.selected');
+	        
+	        var toSend = {
+		        id: selected.attr('data-id'),
+		        syntax: selected.attr('data-syntax'),
+		        content: editor.getValue()
+	        }
+	        
+            $.post("{{ app.request.getUri }}save/", toSend, function(data) {
+            	console.log(data);
             });
         }
         
         function selectPage(obj) {
+	        var content = editor.getValue();
+	        $('.editor-page.selected').find('.content').text(content);
+	        
 			$('.editor-page').removeClass('selected');
 			obj.addClass('selected');
 			
 			var syntax = obj.attr('data-syntax');
 			$('#mode').val(syntax);
+			
+			var content = obj.find('.content').text();
+			editor.setValue(content);
         }
     </script>
 {% endblock %}

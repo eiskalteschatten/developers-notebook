@@ -129,7 +129,20 @@ class CodeCacheController extends Controller
      */
     public function saveAction(Request $request)
     {
-		//$name = $request->request->get('name');
+		$id = $request->request->get('id');
+		$syntax = $request->request->get('syntax');
+		$content = $request->request->get('content');
+		
+		$em = $this->getDoctrine()->getManager();
+	    $pages = $em->getRepository('AppBundle:Pages')->find($id);
+	
+	    if (!$pages) {
+	        throw $this->createNotFoundException('No page found for id '.$id);
+	    }
+	
+	    $pages->setSyntax($syntax);
+	    $pages->setContent($content);	    
+	    $em->flush();
 
         return new Response('success');
     }
