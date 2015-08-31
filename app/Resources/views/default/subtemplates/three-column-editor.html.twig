@@ -18,6 +18,15 @@
                     <a href="#!" onclick="createPage()" title="Create a new code snippet">+</a><a href="#!" title="Delete selected code snippet">&ndash;</a>
                 </div>
             </div>
+            <div class="editor-pages">
+	            {% for page in pages %}
+		            <div class="editor-page" data-id="{{ page.id }}" data-syntax="{{ page.syntax }}" data-folder="{{ page.folder }}" data-project="{{ page.project }}">
+		            	{{ page.previewContent }}
+		            	<div class="date">{{ page.date }}</div>
+		            	<div class="content">{{ page.content }}</div>
+		            </div>
+				{% endfor %}
+            </div>
         </div>
         <div class="third-column editor-container">
             <div class="toolbar">
@@ -119,6 +128,10 @@
             $('#mode option[value="'+defaultMode+'"]').prop('selected', true);
 
             getCursorPosition();
+            
+            $('.editor-page').click(function() {
+        		selectPage($(this));
+        	});
         });
 
         function changeTheme(select) {
@@ -289,9 +302,34 @@
         }
 
         function createPage() {
-            $.post("{{ app.request.getUri }}create/", { name: "John", time: "2pm" }, function(data) {
+            $.post("{{ app.request.getUri }}create/", function(data) {
+	        	var div = $("<div>");
+	        	div.addClass('editor-page')
+	        	div.attr('data-id', data.id);
+	        	div.attr('data-folder', data.folder);
+	        	div.attr('data-syntax', data.syntax);
+	        	div.attr('data-project', data.project);	        	
+	        	div.html('<div class="date">' + data.date + '</div><div class="content"></div>');
+	        	$('.editor-pages').append(div);
+	        	
+	        	div.click(function() {
+	        		selectPage($(this));
+	        	});
+            });
+        }
+        
+        function savePage() {
+            $.post("{{ app.request.getUri }}save/", { name: "John", time: "2pm" }, function(data) {
                console.log(data);
             });
+        }
+        
+        function selectPage(obj) {
+			$('.editor-page').removeClass('selected');
+			obj.addClass('selected');
+			
+			var syntax = obj.attr('data-syntax');
+			$('#mode').val(syntax);
         }
     </script>
 {% endblock %}

@@ -24,3 +24,37 @@
     left: 0;
     right: 0;
 }
+
+.editor-pages {
+	.editor-page {
+		height: 40px;
+		font-size: 14px;
+		padding: 10px;
+		border-bottom: 1px solid #e6e6e6;
+		position: relative;
+		white-space: nowrap;
+		cursor: default;
+		
+		&:hover {
+			background: #fbfbfb;
+		}
+		
+		&:last-child {
+			border-bottom: 0;
+		}
+		
+		&.selected {
+			background: #f6f6f6;	
+		}
+		
+		.date {
+			font-size: 10px;
+			color: #a0a0a0;
+			bottom: 0;
+			left: 10px;
+			position: absolute;
+		}
+		
+		.content {display: none;}
+	}
+}
