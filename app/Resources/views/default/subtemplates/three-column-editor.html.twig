@@ -404,8 +404,9 @@
         function createFolder() {
 			var div = $("<div>");
         	div.addClass('editor-folder');
+        	div.addClass('folder');
         	div.addClass('temp-new');
-        	div.html('<input type="text" onkeyup="checkCreateFolderKeyDown(event, this)" onblur="sendCreateFolder(this)" id="newFolder" placeholder="Folder Name">');
+        	div.html('<input type="text" onkeyup="checkCreateFolderKeyDown(event, this)" id="newFolder" placeholder="Folder Name">');
         	$('.editor-folders.folders').append(div);
         	
         	$("#newFolder").focus();
@@ -413,7 +414,6 @@
 	    
 	    function checkCreateFolderKeyDown(event, obj) {
 		    if (event.which == 13) {
-			    obj.removeEventListener("blur", sendCreateFolder);
 	            sendCreateFolder(obj);
 	        }
 	        else if (event.which == 27) {
@@ -462,6 +462,8 @@
 				$('.editor-page[data-folder=' + id + ']').show();
 			}
 			
+			editor.setValue("");
+
 			$('.editor-page:visible:first').trigger('click');
         }
         
@@ -469,7 +471,7 @@
 		    var selected = $('.editor-folder.selected');
 		    
 		    if (selected.hasClass('folder')) {
-		        if (confirm('Are you sure you want to remove this folder?')) {
+		        if (confirm('Are you sure you want to remove this folder? Its contents will not be deleted.')) {
 				    var toSend = {
 				        id: selected.attr('data-id')
 			        }
