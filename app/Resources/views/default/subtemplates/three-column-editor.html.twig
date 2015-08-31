@@ -14,7 +14,11 @@
                 </div>
                 <div class="section-label">Projects</div>
                 <div class="editor-folders projects">
-                	
+					{% for project in projects %}
+			            <div class="editor-folder" data-id="{{ project.id }}">
+			            	{{ project.name }}
+			            </div>
+					{% endfor %}
                 </div>
                 
                 <div class="section-label">Folders</div>
