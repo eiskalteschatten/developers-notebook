@@ -101,6 +101,10 @@ class CodeCacheController extends Controller
      */
     public function createAction(Request $request)
     {
+		$folder = $request->request->get('folder');
+		$project = $request->request->get('project');
+		$syntax = $request->request->get('syntax');
+		
         $date = new \DateTime("now");
 
         $pages = new Pages();
@@ -108,9 +112,9 @@ class CodeCacheController extends Controller
         $pages->setContent("");
         $pages->setDateCreated($date);
         $pages->setDateModified($date);
-        $pages->setFolder(0);
-        $pages->setProject(0);
-        $pages->setSyntax($this->standardSyntax);
+        $pages->setFolder($folder);
+        $pages->setProject($project);
+        $pages->setSyntax($syntax);
         $pages->setArea($this->standardArea);
 
         $em = $this->getDoctrine()->getManager();
@@ -145,5 +149,32 @@ class CodeCacheController extends Controller
 	    $em->flush();
 
         return new Response('success');
+    }
+    
+    /**
+     * @Route("/notebook/code-cache/createFolder/", name="codeCacheCreateFolder")
+     * @Method("POST")
+     */
+    public function createFolderAction(Request $request)
+    {
+		$name = $request->request->get('name');
+		
+        $date = new \DateTime("now");
+
+        $folders = new Folders();
+        $folders->setUserId(0);
+        $folders->setDateCreated($date);
+        $folders->setDateModified($date);
+        $folders->setName($name);
+        $folders->setArea($this->standardArea);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($folders);
+        $em->flush();
+
+        $response = new JsonResponse(array('id' => $folders->getId(), 'name' => $folders->getName()));
+
+        return $response;
     }
 }

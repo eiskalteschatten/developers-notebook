@@ -3,13 +3,28 @@
         <div class="first-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" title="Create a new folder">+</a><a href="#!" title="Remove selected folder">&ndash;</a>
+                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" title="Remove selected folder">&ndash;</a>
                 </div>
             </div>
             <div class="column-content">
-                <a href="#!" class="selected">All</a>
+				<div class="editor-folders">
+                	<div class="editor-folder all-projects-folders" data-id="-1">
+                		All
+                	</div>
+                </div>
                 <div class="section-label">Projects</div>
+                <div class="editor-folders projects">
+                	
+                </div>
+                
                 <div class="section-label">Folders</div>
+                <div class="editor-folders folders">
+                	{% for folder in folders %}
+			            <div class="editor-folder" data-id="{{ folder.id }}">
+			            	{{ folder.name }}
+			            </div>
+					{% endfor %}
+                </div>
             </div>
         </div>
         <div class="second-column">
@@ -128,6 +143,12 @@
             $('#mode option[value="'+defaultMode+'"]').prop('selected', true);
 
             getCursorPosition();
+            
+            $('.editor-folder').click(function() {
+        		selectFolder($(this));
+        	});
+        	
+        	$('.all-projects-folders').trigger('click');
             
             $('.editor-page').click(function() {
         		selectPage($(this));
@@ -306,9 +327,15 @@
         }
 
         function createPage() {
-            $.post("{{ app.request.getUri }}create/", function(data) {
+	        var toSend = {
+		        folder: $('.editor-folder.selected').attr('data-id'),
+		        project: 0,
+		        syntax: $('.editor-page.selected').attr('data-syntax')
+	        }
+	        
+            $.post("{{ app.request.getUri }}create/", toSend, function(data) {
 	        	var div = $("<div>");
-	        	div.addClass('editor-page')
+	        	div.addClass('editor-page');
 	        	div.attr('data-id', data.id);
 	        	div.attr('data-folder', data.folder);
 	        	div.attr('data-syntax', data.syntax);
@@ -348,6 +375,63 @@
 			
 			var content = obj.find('.content').text();
 			editor.setValue(content);
+        }
+        
+        function createFolder() {
+			var div = $("<div>");
+        	div.addClass('editor-folder');
+        	div.addClass('temp-new');
+        	div.html('<input type="text" onkeyup="checkCreateFolderKeyDown(event, this)" onblur="sendCreateFolder(this)" id="newFolder" placeholder="Folder Name">');
+        	$('.editor-folders.folders').append(div);
+        	
+        	$("#newFolder").focus();
+	    }
+	    
+	    function checkCreateFolderKeyDown(event, obj) {
+		    if (event.which == 13) {
+	            sendCreateFolder(obj);
+	        }
+	    }
+	        
+	    function sendCreateFolder(obj) {
+		    var name = $(obj).val();
+		    
+		    if (name != "") {
+			    var toSend = {
+			        name: name
+		        }
+			    
+	            $.post("{{ app.request.getUri }}createFolder/", toSend, function(data) {
+				    $(obj).remove();
+				    
+				    var div = $('.editor-folder.temp-new');
+		            div.attr('data-id', data.id);
+		            div.text(data.name);
+					
+					div.click(function() {
+		        		selectFolder($(this));
+		        	});
+		        	
+		        	div.removeClass('temp-new');
+	            });
+	        }
+        }
+        
+		function selectFolder(obj) {
+			$('.editor-folder').removeClass('selected');
+			obj.addClass('selected');
+			
+			var id = $(obj).attr('data-id');
+			
+			if (id == "-1") {
+				$('.editor-page').show();
+			}
+			else {
+				$('.editor-page').hide();
+				$('.editor-page[data-folder=' + id + ']').show();
+			}
+			
+			$('.editor-page:visible:first').trigger('click');
         }
     </script>
 {% endblock %}

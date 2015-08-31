@@ -147,16 +147,6 @@ form input[type="text"], form input[type="password"] {
   width: calc(100% - 602px);
   overflow: hidden; }
 
-.content-three-columns .column-content a {
-  display: block;
-  text-decoration: none;
-  color: #0f0f0f;
-  padding: 10px;
-  font-size: 15px; }
-
-.content-three-columns .column-content a.selected {
-  background: #e6e6e6; }
-
 .content-three-columns .column-content .section-label {
   padding: 15px 10px;
   font-size: 15px;
@@ -483,6 +473,19 @@ form input[type="text"], form input[type="password"] {
   left: 0;
   right: 0; }
 
+.editor-folders .editor-folder {
+  display: block;
+  text-decoration: none;
+  color: #0f0f0f;
+  padding: 10px;
+  font-size: 15px;
+  white-space: nowrap;
+  cursor: default; }
+  .editor-folders .editor-folder:hover {
+    background: #fbfbfb; }
+  .editor-folders .editor-folder.selected {
+    background: #e6e6e6; }
+
 .editor-pages .editor-page {
   height: 40px;
   font-size: 14px;
@@ -493,8 +496,6 @@ form input[type="text"], form input[type="password"] {
   cursor: default; }
   .editor-pages .editor-page:hover {
     background: #fbfbfb; }
-  .editor-pages .editor-page:last-child {
-    border-bottom: 0; }
   .editor-pages .editor-page.selected {
     background: #f6f6f6; }
   .editor-pages .editor-page .date {
