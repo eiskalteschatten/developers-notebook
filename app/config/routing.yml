@@ -13,3 +13,7 @@ _homepage:
 _codecache:
     path:     /notebook/code-cache/
     defaults: { _controller: AppBundle:CodeCacheController:indexAction }
+
+_editor-controller:
+    path:     /notebook/editor/
+    defaults: { _controller: AppBundle:EditorController }

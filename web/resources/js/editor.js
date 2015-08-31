@@ -7,16 +7,17 @@ function createPage() {
     }
 
     if (syntax === undefined || syntax == "") {
-        syntax = "text";
+        syntax = standardSyntax;
     }
 
     var toSend = {
+        standardArea: standardArea,
         folder: folderId,
         project: 0,
         syntax: syntax
     }
     
-    $.post(currentUri+"create/", toSend, function(data) {
+    $.post(editorUrl+"create/", toSend, function(data) {
     	var div = $("<div>");
     	div.addClass('editor-page');
     	div.attr('data-id', data.id);
@@ -45,7 +46,7 @@ function savePage() {
         content: editor.getValue()
     }
     
-    $.post(currentUri+"save/", toSend, function(data) {
+    $.post(editorUrl+"save/", toSend, function(data) {
         updatePagePreview(data.previewContent);
     	//console.log(data);
     });
@@ -59,7 +60,7 @@ function removePage() {
 	        id: selected.attr('data-id')
         }
         
-        $.post(currentUri+"remove/", toSend, function(data) {
+        $.post(editorUrl+"remove/", toSend, function(data) {
             var previewSibling = selected.prev();
             selected.remove();
 			previewSibling.trigger('click');
@@ -112,10 +113,11 @@ function sendCreateFolder(obj) {
     
     if (name != "") {
 	    var toSend = {
+            standardArea: standardArea,
 	        name: name
         }
 	    
-        $.post(currentUri+"createFolder/", toSend, function(data) {
+        $.post(editorUrl+"createFolder/", toSend, function(data) {
 		    $(obj).remove();
 		    
             div.attr('data-id', data.id);
@@ -163,7 +165,7 @@ function removeFolder() {
 		        id: selected.attr('data-id')
 	        }
 	        
-            $.post(currentUri+"removeFolder/", toSend, function(data) {
+            $.post(editorUrl+"removeFolder/", toSend, function(data) {
 				var previewSibling = selected.prev();
 	            selected.remove();
 				previewSibling.trigger('click');
@@ -195,7 +197,7 @@ function setDraggableAndDroppable() {
 		        pageId: page.attr('data-id')
 	        }
 		    
-            $.post(currentUri+"movePageToFolder/", toSend, function(data) {
+            $.post(editorUrl+"movePageToFolder/", toSend, function(data) {
 			    page.attr('data-folder', data.folder);
 			    $('.editor-folder.selected').trigger('click');
             });

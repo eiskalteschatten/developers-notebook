@@ -36,6 +36,10 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
 
+services:
+  app.services.helper:
+    class: AppBundle\Services\Helper
+
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"

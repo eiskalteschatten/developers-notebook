@@ -134,12 +134,13 @@
     <script type="text/javascript">
         var defaultTheme = "ace/theme/chrome";
         //var defaultTheme = "ace/theme/clouds_midnight";
-        var defaultMode = "{{ defaultMode }}";
-        var currentUri = "{{ app.request.getUri }}";
+        var standardSyntax = "{{ standardSyntax }}";
+        var standardArea = "{{ standardArea }}";
+        var editorUrl = "{{ path('_editor-controller') }}";
 
         var editor = ace.edit("editor");
         editor.setTheme(defaultTheme);
-        editor.getSession().setMode("ace/mode/"+defaultMode);
+        editor.getSession().setMode("ace/mode/"+standardSyntax);
         editor.setDisplayIndentGuides(false);
         editor.session.selection.on("changeCursor", function(e) {
             getCursorPosition();
@@ -147,7 +148,7 @@
 
         $(document).ready(function() {
             $('#theme option[value="'+defaultTheme+'"]').prop('selected', true);
-            $('#mode option[value="'+defaultMode+'"]').prop('selected', true);
+            $('#mode option[value="'+standardSyntax+'"]').prop('selected', true);
 
             getCursorPosition();
             

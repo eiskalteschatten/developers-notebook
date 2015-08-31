@@ -11,18 +11,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Projects;
+use AppBundle\Services\Helper;
 
 class CodeCacheController extends Controller
 {
-	private $standardSyntax = "javascript";
-	private $standardArea = "code";
-	private $dateTimeFormat = 'Y-m-d H:i:s';
-	
+	private $standardSyntax = "html";
+    private $standardArea = "code";
+
     /**
      * @Route("/notebook/code-cache/", name="codeCache")
      */
     public function indexAction(Request $request)
     {
+		$helper = $this->get('app.services.helper');
+
+        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+
 	    // GET PAGES
 	    
 		$pagesResult = $this->getDoctrine()
@@ -36,7 +40,7 @@ class CodeCacheController extends Controller
 		
 		foreach ($pagesResult as $page) {
 			$content = $page->getContent();
-			$previewContent = $this->createPagePreview($content);
+			$previewContent = $helper->createPagePreview($content);
 			
 			$pages[] = array(
 				'id' => $page->getId(),
@@ -45,7 +49,7 @@ class CodeCacheController extends Controller
 				'syntax' => $page->getSyntax(),
 				'folder' => $page->getFolder(),
 				'project' => $page->getProject(),
-				'date' => $page->getDateModified()->format($this->dateTimeFormat)
+				'date' => $page->getDateModified()->format($dateTimeFormat)
 			);
 		}
 		
@@ -88,166 +92,11 @@ class CodeCacheController extends Controller
 		}
 		
         return $this->render('default/code-cache.html.twig', array(
+            'standardArea' => $this->standardArea,
+            'standardSyntax' => $this->standardSyntax,
 	        'pages' => $pages,
 	        'folders' => $folders,
 	        'projects' => $projects
         ));
-    }
-
-    /**
-     * @Route("/notebook/code-cache/create/", name="codeCacheCreate")
-     * @Method("POST")
-     */
-    public function createAction(Request $request)
-    {
-		$folder = $request->request->get('folder');
-		$project = $request->request->get('project');
-		$syntax = $request->request->get('syntax');
-		
-        $date = new \DateTime("now");
-
-        $pages = new Pages();
-        $pages->setUserId(0);
-        $pages->setContent("");
-        $pages->setDateCreated($date);
-        $pages->setDateModified($date);
-        $pages->setFolder($folder);
-        $pages->setProject($project);
-        $pages->setSyntax($syntax);
-        $pages->setArea($this->standardArea);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($pages);
-        $em->flush();
-
-        $response = new JsonResponse(array('id' => $pages->getId(), 'syntax' => $pages->getSyntax(), 'folder' => $pages->getFolder(), 'project' => $pages->getProject(), 'date' => $pages->getDateModified()->format($this->dateTimeFormat)));
-
-        return $response;
-    }
-
-    /**
-     * @Route("/notebook/code-cache/save/", name="codeCacheSave")
-     * @Method("POST")
-     */
-    public function saveAction(Request $request)
-    {
-		$id = $request->request->get('id');
-		$syntax = $request->request->get('syntax');
-		$content = $request->request->get('content');
-		
-		$em = $this->getDoctrine()->getManager();
-	    $pages = $em->getRepository('AppBundle:Pages')->find($id);
-	
-	    if (!$pages) {
-	        throw $this->createNotFoundException('No page found for id '.$id);
-	    }
-	
-	    $pages->setSyntax($syntax);
-	    $pages->setContent($content);	    
-	    $em->flush();
-
-		$response = new JsonResponse(array('previewContent' => $this->createPagePreview($content)));
-
-        return $response;
-    }
-    
-    /**
-     * @Route("/notebook/code-cache/remove/", name="codeCacheRemove")
-     * @Method("POST")
-     */
-    public function removeAction(Request $request)
-    {
-		$id = $request->request->get('id');
-		
-		$em = $this->getDoctrine()->getManager();
-	    $pages = $em->getRepository('AppBundle:Pages')->find($id);
-	
-		$em->remove($pages);
-		$em->flush();
-	   
-        return new Response('success');
-    }
-    
-    /**
-     * @Route("/notebook/code-cache/movePageToFolder/", name="codeCacheMovePageToFolder")
-     * @Method("POST")
-     */
-    public function movePageToFolderAction(Request $request)
-    {
-		$folderId = $request->request->get('folderId');
-		$pageId = $request->request->get('pageId');
-		
-		$em = $this->getDoctrine()->getManager();
-	    $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
-	
-	    $pages->setFolder($folderId);	  
-		$em->flush();
-	   
-		$response = new JsonResponse(array('folder' => $pages->getFolder()));
-
-        return $response;
-    }
-    
-    
-    private function createPagePreview($content) {
-	    $explodedContent = explode("\n", $content);
-		return $explodedContent[0];	
-    }
-    
-    
-    /**
-     * @Route("/notebook/code-cache/createFolder/", name="codeCacheCreateFolder")
-     * @Method("POST")
-     */
-    public function createFolderAction(Request $request)
-    {
-		$name = $request->request->get('name');
-		
-        $date = new \DateTime("now");
-
-        $folders = new Folders();
-        $folders->setUserId(0);
-        $folders->setDateCreated($date);
-        $folders->setDateModified($date);
-        $folders->setName($name);
-        $folders->setArea($this->standardArea);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($folders);
-        $em->flush();
-
-        $response = new JsonResponse(array('id' => $folders->getId(), 'name' => $folders->getName()));
-
-        return $response;
-    }
-    
-    /**
-     * @Route("/notebook/code-cache/removeFolder/", name="codeCacheRemoveFolder")
-     * @Method("POST")
-     */
-    public function removeFolderAction(Request $request)
-    {
-		$id = $request->request->get('id');
-		
-		$em = $this->getDoctrine()->getManager();
-	    $folders = $em->getRepository('AppBundle:Folders')->find($id);
-	
-		$em->remove($folders);
-		
-		$pagesResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Pages')
-        ->findBy(
-		    array('folder' => $id)
-		);
-		
-		foreach($pagesResult as $page) {
-			$page->setFolder(-1);
-		}
-		
-		$em->flush();
-	   
-        return new Response('success');
     }
 }
