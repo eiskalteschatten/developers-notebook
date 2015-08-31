@@ -1,0 +1,29 @@
+AppBundle\Entity\User:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        username:
+            type: string
+            length: '25'
+        password:
+            type: string
+            length: '64'
+        email:
+            type: string
+            length: '60'
+        isActive:
+            type: boolean
+            column: is_active
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+    lifecycleCallbacks: {  }

@@ -7,14 +7,34 @@ security:
         in_memory:
             memory: ~
 
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 15
+
+    providers:
+        user_db:
+            entity: { class: AppBundle\Entity\User, property: username }
+
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        default:
+            anonymous: ~
+            http_basic: ~
+            form_login:
+                login_path: /login/
+                check_path: /login_check/
+            logout:
+                path:   /logout/
+                target: /
+
         main:
             anonymous: ~
+
             # activate different ways to authenticate
 
             # http_basic: ~
@@ -22,3 +42,6 @@ security:
 
             # form_login: ~
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+
+    access_control:
+        - { path: ^/notebook, roles: ROLE_USER }

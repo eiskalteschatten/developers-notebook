@@ -3135,23 +3135,23 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
-	"\/js\/allposts.js": {
+	"\/js\/editor-ace.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/allposts.js",
-		"outputAbbreviatedPath": "\/js\/min\/allposts-min.js",
+		"inputAbbreviatedPath": "\/js\/editor-ace.js",
+		"outputAbbreviatedPath": "\/js\/min\/editor-ace-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
-	"\/js\/categories.js": {
+	"\/js\/editor.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/categories.js",
-		"outputAbbreviatedPath": "\/js\/min\/categories-min.js",
+		"inputAbbreviatedPath": "\/js\/editor.js",
+		"outputAbbreviatedPath": "\/js\/min\/editor-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -3179,34 +3179,12 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
-	"\/js\/login.js": {
+	"\/js\/jquery-ui-1.11.4.min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/login.js",
-		"outputAbbreviatedPath": "\/js\/min\/login-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 0
-		},
-	"\/js\/marked.js": {
-		"fileType": 64,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/marked.js",
-		"outputAbbreviatedPath": "\/js\/min\/marked-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 0
-		},
-	"\/js\/post.js": {
-		"fileType": 64,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/post.js",
-		"outputAbbreviatedPath": "\/js\/min\/post-min.js",
+		"inputAbbreviatedPath": "\/js\/jquery-ui-1.11.4.min.js",
+		"outputAbbreviatedPath": "\/js\/min\/jquery-ui-1.11.4.min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -3248,6 +3226,22 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/scss\/_editor.scss",
 		"outputAbbreviatedPath": "\/css\/_editor.css",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 0,
+		"shouldRunAutoprefixer": 0,
+		"shouldRunBless": 0,
+		"useLibsass": 0
+		},
+	"\/scss\/_login.scss": {
+		"createSourceMap": 1,
+		"debugStyle": 0,
+		"decimalPrecision": 10,
+		"fileType": 4,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/scss\/_login.scss",
+		"outputAbbreviatedPath": "\/css\/_login.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,

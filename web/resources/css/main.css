@@ -19,14 +19,14 @@ a {
 a:hover {
   text-decoration: none; }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="email"], input[type="password"] {
   border: 1px solid #B7B7B7;
   font-size: 13px;
   padding: 5px;
   width: 200px;
   border-radius: 3px; }
 
-form input[type="text"], form input[type="password"] {
+form input[type="text"], form input[type="email"], form input[type="password"] {
   margin-bottom: 20px; }
 
 .visible {
@@ -117,9 +117,7 @@ form input[type="text"], form input[type="password"] {
   text-align: left;
   margin-bottom: 15px;
   font-size: 14px;
-  color: #b81900;
-  display: none;
-  opacity: 0; }
+  color: #b81900; }
 
 .box input {
   margin-bottom: 20px; }
@@ -557,5 +555,23 @@ form input[type="text"], form input[type="password"] {
 
 .popup-close-layer.background {
   background: rgba(255, 255, 255, 0.5); }
+
+.login-box {
+  width: 400px;
+  min-height: 210px;
+  position: absolute;
+  left: 50%;
+  top: 300px;
+  margin-left: -255px;
+  margin-top: -130px;
+  text-align: center; }
+
+.login-box input {
+  width: 300px; }
+
+.login-box .forgot-password {
+  font-size: 12px;
+  margin-top: 15px;
+  display: block; }
 
 /*# sourceMappingURL=main.css.map */

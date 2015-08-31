@@ -16,7 +16,7 @@ use AppBundle\Services\Helper;
 class EditorController extends Controller
 {
     /**
-     * @Route("/notebook/editor/create/", name="codeCacheCreate")
+     * @Route("/notebook/editor/create/", name="editorCreate")
      * @Method("POST")
      */
     public function createAction(Request $request)
@@ -51,7 +51,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/notebook/editor/save/", name="codeCacheSave")
+     * @Route("/notebook/editor/save/", name="editorSave")
      * @Method("POST")
      */
     public function saveAction(Request $request)
@@ -79,7 +79,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/notebook/editor/remove/", name="codeCacheRemove")
+     * @Route("/notebook/editor/remove/", name="editorRemove")
      * @Method("POST")
      */
     public function removeAction(Request $request)
@@ -96,7 +96,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/notebook/editor/movePageToFolder/", name="codeCacheMovePageToFolder")
+     * @Route("/notebook/editor/movePageToFolder/", name="editorMovePageToFolder")
      * @Method("POST")
      */
     public function movePageToFolderAction(Request $request)
@@ -116,7 +116,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/notebook/editor/removePageFromFolders/", name="codeCacheRemovePageFromFolders")
+     * @Route("/notebook/editor/removePageFromFolders/", name="editorRemovePageFromFolders")
      * @Method("POST")
      */
     public function removePageFromFoldersAction(Request $request)
@@ -137,7 +137,7 @@ class EditorController extends Controller
 
 
     /**
-     * @Route("/notebook/editor/createFolder/", name="codeCacheCreateFolder")
+     * @Route("/notebook/editor/createFolder/", name="editorCreateFolder")
      * @Method("POST")
      */
     public function createFolderAction(Request $request)
@@ -165,7 +165,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/notebook/editor/removeFolder/", name="codeCacheRemoveFolder")
+     * @Route("/notebook/editor/removeFolder/", name="editorRemoveFolder")
      * @Method("POST")
      */
     public function removeFolderAction(Request $request)
