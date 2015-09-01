@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use AppBundle\Form\Type\RegistrationType;
-use AppBundle\Form\Model\Registration;
 use AppBundle\Entity\User;
 
 class AccountController extends Controller
