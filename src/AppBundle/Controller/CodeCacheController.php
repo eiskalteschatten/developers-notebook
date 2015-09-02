@@ -35,7 +35,8 @@ class CodeCacheController extends Controller
 		$pagesResult = $this->getDoctrine()
         ->getRepository('AppBundle:Pages')
         ->findBy(
-			array('userId' => $userId, 'area' => $this->standardArea)
+			array('userId' => $userId, 'area' => $this->standardArea),
+			array('dateModified' => 'DESC')
 		);
 		
 		$pages = array();
@@ -60,7 +61,8 @@ class CodeCacheController extends Controller
 		$foldersResult = $this->getDoctrine()
         ->getRepository('AppBundle:Folders')
         ->findBy(
-			array('userId' => $userId, 'area' => $this->standardArea)
+			array('userId' => $userId, 'area' => $this->standardArea),
+			array('name' => 'ASC')
 		);
 		
 		$folders = array();
@@ -77,7 +79,8 @@ class CodeCacheController extends Controller
 		$projectsResult = $this->getDoctrine()
         ->getRepository('AppBundle:Projects')
         ->findBy(
-			array('userId' => $userId)
+			array('userId' => $userId),
+			array('name' => 'ASC')
 		);
 		
 		$projects = array();
