@@ -151,8 +151,6 @@ function selectFolder(obj) {
 		$('.editor-page[data-folder=' + id + ']').show();
 	}
 	
-	editor.setValue("", -1);
-
 	$('.editor-page:visible:first').trigger('click');
 }
 
