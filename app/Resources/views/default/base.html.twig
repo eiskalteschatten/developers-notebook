@@ -27,7 +27,7 @@
                     <input type="text" class="command-search-field" onclick="expandSearch(this)" placeholder="Type a command or search query">
                 </div>
                 <div class="menu">
-                    <a href="{{ path('_homepage') }}"></a>
+                    <a href="{{ path('_homepage') }}"><div class="home-icon"></div></a>
                     <a href="projects/">Projects</a>
                     <a href="journal/">Journal</a>
                     <a href="issues/">Issues</a>
@@ -57,7 +57,13 @@
         </div>
 
         {% block javascripts %}
+            <script type="text/javascript" src="{{ asset('resources/js/basics.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('resources/js/scripts.js') }}"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    bsPreloadImage("{{ asset('resources/img/house-over.svg') }}");
+                });
+            </script>
         {% endblock %}
     </body>
 </html>

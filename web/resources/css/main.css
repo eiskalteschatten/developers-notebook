@@ -197,6 +197,14 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .menubar .menu a:hover, .menubar .dropdown.open .mainlink {
   color: #3b80dc; }
 
+.menubar .home-icon {
+  background: url("../img/house.svg") no-repeat;
+  height: 14px;
+  width: 14px;
+  margin-top: 5px; }
+  .menubar .home-icon:hover {
+    background: url("../img/house-over.svg") no-repeat; }
+
 .menubar .settings {
   float: right; }
 

@@ -46,6 +46,17 @@
 	color: $blue;
 }
 
+.menubar .home-icon {
+  	background: url('../img/house.svg') no-repeat;
+  	height: 14px;
+  	width: 14px;
+  	margin-top: 5px;
+
+  	&:hover {
+	  	background: url('../img/house-over.svg') no-repeat;
+	}
+}
+
 .menubar .settings {
 	float: right;
 }
