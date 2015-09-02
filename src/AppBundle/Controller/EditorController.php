@@ -30,8 +30,11 @@ class EditorController extends Controller
 
         $date = new \DateTime("now");
 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
         $pages = new Pages();
-        $pages->setUserId(0);
+        $pages->setUserId($userId);
         $pages->setContent("");
         $pages->setDateCreated($date);
         $pages->setDateModified($date);
@@ -147,8 +150,11 @@ class EditorController extends Controller
 
         $date = new \DateTime("now");
 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
         $folders = new Folders();
-        $folders->setUserId(0);
+        $folders->setUserId($userId);
         $folders->setDateCreated($date);
         $folders->setDateModified($date);
         $folders->setName($name);
