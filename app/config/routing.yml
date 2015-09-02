@@ -20,3 +20,6 @@ _editor-controller:
 
 logout:
     path:   /logout/
+
+default_security_target:
+    path:     /notebook/

@@ -3,18 +3,15 @@
 security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
-    providers:
-        in_memory:
-            memory: ~
-
     encoders:
-        AppBundle\Entity\User:
-            algorithm: bcrypt
-            cost: 15
+       AppBundle\Entity\User:
+           algorithm: bcrypt
 
     providers:
-        user_db:
-            entity: { class: AppBundle\Entity\User, property: username }
+        our_db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -25,23 +22,15 @@ security:
         default:
             anonymous: ~
             http_basic: ~
+            provider: our_db_provider
             form_login:
                 login_path: /login/
                 check_path: /login_check/
+                default_target_path: default_security_target
+                csrf_provider: security.csrf.token_manager
             logout:
                 path:   /logout/
                 target: /
-
-        main:
-            anonymous: ~
-
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
     access_control:
         - { path: ^/notebook, roles: ROLE_USER }

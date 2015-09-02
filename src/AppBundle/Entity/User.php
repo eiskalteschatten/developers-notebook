@@ -2,59 +2,46 @@
 
 namespace AppBundle\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity
- * @UniqueEntity("username")
- * @UniqueEntity("email")
+ * @ORM\Table(name="app_users")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
+ * @UniqueEntity(fields="email", message="Email already taken")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
-     * @var integer
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="username", type="string", length=255, unique=true)
-     * @Assert\Username()
+     * @ORM\Column(type="string", length=25, unique=true)
      */
     private $username;
 
     /**
-     * @var string
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=60, unique=true)
+     * @Assert\NotBlank()
      * @Assert\Email()
      */
     private $email;
 
     /**
-     * @var boolean
+     * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
-
-    /**
-     * @var \DateTime
-     */
-    private $dateCreated;
-
-    /**
-     * @var \DateTime
-     */
-    private $dateModified;
-
 
     public function __construct()
     {
@@ -63,11 +50,21 @@ class User implements UserInterface
         // $this->salt = md5(uniqid(null, true));
     }
 
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
     public function getSalt()
     {
         // you *may* need a real salt depending on your encoder
         // see section on salt below
         return null;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     public function getRoles()
@@ -102,6 +99,16 @@ class User implements UserInterface
             // $this->salt
             ) = unserialize($serialized);
     }
+    /**
+     * @var \DateTime
+     */
+    private $dateCreated;
+
+    /**
+     * @var \DateTime
+     */
+    private $dateModified;
+
 
     /**
      * Get id
@@ -127,16 +134,6 @@ class User implements UserInterface
     }
 
     /**
-     * Get username
-     *
-     * @return string 
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
      * Set password
      *
      * @param string $password
@@ -147,16 +144,6 @@ class User implements UserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string 
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**
@@ -209,7 +196,7 @@ class User implements UserInterface
      * Set dateCreated
      *
      * @param \DateTime $dateCreated
-     * @return Pages
+     * @return User
      */
     public function setDateCreated($dateCreated)
     {
@@ -221,7 +208,7 @@ class User implements UserInterface
     /**
      * Get dateCreated
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getDateCreated()
     {
@@ -232,7 +219,7 @@ class User implements UserInterface
      * Set dateModified
      *
      * @param \DateTime $dateModified
-     * @return Pages
+     * @return User
      */
     public function setDateModified($dateModified)
     {
@@ -244,7 +231,7 @@ class User implements UserInterface
     /**
      * Get dateModified
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getDateModified()
     {
