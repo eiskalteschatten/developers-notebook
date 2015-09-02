@@ -27,13 +27,15 @@ class CodeCacheController extends Controller
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
 	    // GET PAGES
 	    
 		$pagesResult = $this->getDoctrine()
         ->getRepository('AppBundle:Pages')
         ->findBy(
-		    array('area' => $this->standardArea)//,
-		    //array('user_id' => 0)
+			array('userId' => $userId, 'area' => $this->standardArea)
 		);
 		
 		$pages = array();
@@ -58,8 +60,7 @@ class CodeCacheController extends Controller
 		$foldersResult = $this->getDoctrine()
         ->getRepository('AppBundle:Folders')
         ->findBy(
-		    array('area' => $this->standardArea)//,
-		    //array('user_id' => 0)
+			array('userId' => $userId, 'area' => $this->standardArea)
 		);
 		
 		$folders = array();
@@ -75,12 +76,9 @@ class CodeCacheController extends Controller
 
 		$projectsResult = $this->getDoctrine()
         ->getRepository('AppBundle:Projects')
-        ->findAll();
-/*
         ->findBy(
-		    array('user_id' => 0)
+			array('userId' => $userId)
 		);
-*/
 		
 		$projects = array();
 		
