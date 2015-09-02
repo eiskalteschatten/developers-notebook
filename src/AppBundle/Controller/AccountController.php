@@ -49,6 +49,34 @@ class AccountController extends Controller
             );
         }
 
+        // Check for duplicate usernames
+        $entity = $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findOneBy(array('username' => $username));
+
+        if ($entity != null) {
+            $error = "This username already exists. Please choose a new one.";
+
+            return $this->render(
+                'security/register.html.twig',
+                array(
+                    'error' => $error
+                )
+            );
+        }
+
+        // Check for duplicate email addresses
+        $entity = $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findOneBy(array('email' => $email));
+
+        if ($entity != null) {
+            $error = "This email address already exists. Please choose a new one.";
+
+            return $this->render(
+                'security/register.html.twig',
+                array(
+                    'error' => $error
+                )
+            );
+        }
+
         if ($password == $passwordConfirm) {
             $user = new User();
 
@@ -65,14 +93,13 @@ class AccountController extends Controller
             $user->setPassword($encryptedPassword);
 
             $em = $this->getDoctrine()->getManager();
-
             $em->persist($user);
             $em->flush();
 
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->get('security.token_storage')->setToken($token);
 
-            return $this->redirectToRoute('_homepage');
+            return $this->redirectToRoute('default_security_target');
         }
 
         $error = "The passwords you typed did not match.";
