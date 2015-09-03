@@ -48,7 +48,8 @@ function savePage() {
     
     $.post(editorUrl+"save/", toSend, function(data) {
         updatePagePreview(data.previewContent);
-    	//console.log(data);
+		var content = editor.getValue();
+		$('.editor-page.selected').find('.content').text(content);
     });
 }
 
@@ -64,20 +65,17 @@ function removePage() {
             var previewSibling = selected.prev();
             selected.remove();
 			previewSibling.trigger('click');
-        	//console.log(data);
         });
 	} 
 }
 
 function selectPage(obj) {
-    var content = editor.getValue();
-    $('.editor-page.selected').find('.content').text(content);
-    
 	$('.editor-page').removeClass('selected');
 	obj.addClass('selected');
 	
 	var syntax = obj.attr('data-syntax');
 	$('#mode').val(syntax);
+	changeMode('#mode');
 	
 	var content = obj.find('.content').text();
 	editor.setValue(content, -1);
@@ -150,7 +148,11 @@ function selectFolder(obj) {
 		$('.editor-page').hide();
 		$('.editor-page[data-folder=' + id + ']').show();
 	}
-	
+
+	if ($('.editor-page:visible').length <= 0) {
+		editor.setValue("", -1);
+	}
+
 	$('.editor-page:visible:first').trigger('click');
 }
 
