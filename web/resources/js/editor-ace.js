@@ -154,15 +154,3 @@ function replaceAllText() {
     setFindOptions($('#findText').val());
     editor.replaceAll($('#replaceText').val(), findOptions);
 }
-
-function cancelOptions(button) {
-
-}
-
-function saveEditorOptions() {
-
-}
-
-function saveFindReplaceOptions() {
-
-}

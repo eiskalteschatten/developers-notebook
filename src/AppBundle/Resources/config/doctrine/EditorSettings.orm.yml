@@ -1,0 +1,51 @@
+AppBundle\Entity\EditorSettings:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        defaultTheme:
+            type: string
+            length: 255
+            column: default_theme
+        highlightActiveLine:
+            type: boolean
+            column: highlight_active_line
+        wrapSearch:
+            type: boolean
+            column: wrap_search
+        caseSensitiveSearch:
+            type: boolean
+            column: case_sensitive_search
+        matchWholeWordsSearch:
+            type: boolean
+            column: match_whole_words_search
+        isRegexSearch:
+            type: boolean
+            column: is_regex_search
+        skipCurrentLineSearch:
+            type: boolean
+            column: skip_current_line_search
+        defaultSyntaxModeCode:
+            type: string
+            length: 255
+            column: default_syntax_mode_code
+            nullable: true
+        defaultSyntaxModeJournal:
+            type: string
+            length: 255
+            column: default_syntax_mode_journal
+            nullable: true
+        defaultSyntaxModeNotebook:
+            type: string
+            length: 255
+            column: default_syntax_mode_notebook
+            nullable: true
+    lifecycleCallbacks: {  }

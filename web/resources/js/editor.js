@@ -222,3 +222,32 @@ function setDraggableAndDroppable() {
 		}
 	});
 }
+
+function setSettings() {
+	$('#theme').val(defaultTheme);
+	$('#defaultMode').val(standardSyntax);
+}
+
+function saveAllSettings() {
+	var toSend = {
+		defaultTheme: $('#theme').val(),
+		defaultSyntax: $('#defaultMode').val(),
+		highlightActiveLine: $('#highlightActiveLine').prop('checked'),
+		wrapSearch: $('#wrapSearch').prop('checked'),
+		caseSensitive: $('#caseSensitive').prop('checked'),
+		wholeWord: $('#wholeWord').prop('checked'),
+		regExp: $('#regExp').prop('checked'),
+		skipCurrent: $('#skipCurrent').prop('checked'),
+		area: standardArea
+	}
+
+	$.post(saveSettingsUrl, toSend, function(data) {
+		closePopup();
+	});
+}
+
+function saveFindReplaceOptions() {
+	// Apply settings here too
+
+	saveAllSettings();
+}
