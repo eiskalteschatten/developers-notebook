@@ -99,5 +99,14 @@ function showMessage(type, message) {
 	div.text(message);
 
 	msgCenter.html(div);
-	msgCenter.show();
+	msgCenter.fadeIn(500);
+
+	setTimeout(hideMessage, 3000);
+}
+
+function hideMessage() {
+	var msgCenter = $('.message-center');
+	msgCenter.fadeOut(500, function() {
+		msgCenter.html('');
+	});
 }
