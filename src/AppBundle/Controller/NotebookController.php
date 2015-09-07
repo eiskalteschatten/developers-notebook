@@ -16,10 +16,10 @@ use AppBundle\Services\Helper;
 
 class NotebookController extends Controller
 {
-    private $standardArea = "notebook";
+    private $standardArea = "notes";
 
     /**
-     * @Route("/notebook/notebook/", name="notebook")
+     * @Route("/notebook/notes/", name="notes")
      */
     public function indexAction(Request $request)
     {
