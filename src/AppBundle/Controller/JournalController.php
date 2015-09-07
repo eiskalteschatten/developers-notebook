@@ -14,12 +14,12 @@ use AppBundle\Entity\Projects;
 use AppBundle\Entity\EditorSettings;
 use AppBundle\Services\Helper;
 
-class CodeCacheController extends Controller
+class JournalController extends Controller
 {
-    private $standardArea = "code";
+    private $standardArea = "journal";
 
     /**
-     * @Route("/notebook/code-cache/", name="codeCache")
+     * @Route("/notebook/journal/", name="journal")
      */
     public function indexAction(Request $request)
     {
@@ -36,17 +36,22 @@ class CodeCacheController extends Controller
         ->getRepository('AppBundle:Pages')
         ->findBy(
 			array('userId' => $userId, 'area' => $this->standardArea),
-			array('dateModified' => 'DESC')
+			array('dateCreated' => 'DESC')
 		);
 		
 		$pages = array();
+		$years = array();
 		
 		foreach ($pagesResult as $page) {
 			$content = $page->getContent();
 			$previewContent = $helper->createPagePreview($content);
 
 			$year = $page->getDateCreated()->format('Y');
-			
+
+			if (!in_array($year, $years)) {
+				$years[] = $year;
+			}
+
 			$pages[] = array(
 				'id' => $page->getId(),
 				'content' => $content,
@@ -54,12 +59,14 @@ class CodeCacheController extends Controller
 				'syntax' => $page->getSyntax(),
 				'folder' => $page->getFolder(),
 				'project' => $page->getProject(),
-				'date' => $page->getDateModified()->format($dateTimeFormat),
+				'date' => $page->getDateCreated()->format($dateTimeFormat),
 				'year' => $year
 			);
 		}
-		
-		 // GET FOLDERS
+
+		ksort($years);
+
+		// GET FOLDERS
 		
 		$foldersResult = $this->getDoctrine()
         ->getRepository('AppBundle:Folders')
@@ -103,11 +110,12 @@ class CodeCacheController extends Controller
 			array('userId' => $userId)
 		);
 
-		$standardSyntax = $settingsResult->getDefaultSyntaxModeCode();
+		$standardSyntax = $settingsResult->getDefaultSyntaxModeJournal();
 		
-        return $this->render('default/code-cache.html.twig', array(
+        return $this->render('default/journal.html.twig', array(
             'standardArea' => $this->standardArea,
 	        'pages' => $pages,
+			'years' => $years,
 	        'folders' => $folders,
 	        'projects' => $projects,
 	        'editorSettings' => $settingsResult,

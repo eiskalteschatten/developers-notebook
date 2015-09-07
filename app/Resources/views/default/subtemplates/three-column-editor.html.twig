@@ -20,6 +20,17 @@
 			            </div>
 					{% endfor %}
                 </div>
+
+                {% if standardArea == "journal" %}
+                    <div class="section-label">Years</div>
+                    <div class="editor-folders years">
+                        {% for year in years %}
+                            <div class="editor-folder year" data-id="{{ year }}">
+                                {{ year }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 
                 <div class="section-label">Folders</div>
                 <div class="editor-folders folders">
@@ -39,7 +50,7 @@
             </div>
             <div class="editor-pages">
 	            {% for page in pages %}
-		            <div class="editor-page" data-id="{{ page.id }}" data-syntax="{{ page.syntax }}" data-folder="{{ page.folder }}" data-project="{{ page.project }}">
+		            <div class="editor-page" data-id="{{ page.id }}" data-syntax="{{ page.syntax }}" data-folder="{{ page.folder }}" data-project="{{ page.project }}" data-year="{{ page.year }}">
 		            	<div class="preview">{{ page.previewContent }}</div>
 		            	<div class="date">{{ page.date }}</div>
 		            	<div class="content">{{ page.content }}</div>
@@ -151,10 +162,20 @@
             getCursorPosition();
             setSettings();
             applySettingsToEditor();
-            
-            $('.editor-folder').click(function() {
-        		selectFolder($(this));
-        	});
+
+            $('.editor-folder.all-projects-folders').click(function() {
+                selectFolder($(this));
+            });
+
+            $('.editor-folder.folder').click(function() {
+                selectFolder($(this));
+            });
+
+            {% if standardArea == "journal" %}
+                $('.editor-folder.year').click(function() {
+                    selectYear($(this));
+                });
+            {% endif %}
         	
         	$('.all-projects-folders').trigger('click');
             

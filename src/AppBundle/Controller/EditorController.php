@@ -48,7 +48,7 @@ class EditorController extends Controller
         $em->persist($pages);
         $em->flush();
 
-        $response = new JsonResponse(array('id' => $pages->getId(), 'syntax' => $pages->getSyntax(), 'folder' => $pages->getFolder(), 'project' => $pages->getProject(), 'date' => $pages->getDateModified()->format($dateTimeFormat)));
+        $response = new JsonResponse(array('id' => $pages->getId(), 'syntax' => $pages->getSyntax(), 'folder' => $pages->getFolder(), 'project' => $pages->getProject(), 'date' => $pages->getDateModified()->format($dateTimeFormat), 'year' => $pages->getDateCreated()->format('Y')));
 
         return $response;
     }

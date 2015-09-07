@@ -44,6 +44,8 @@ class NotebookController extends Controller
 		foreach ($pagesResult as $page) {
 			$content = $page->getContent();
 			$previewContent = $helper->createPagePreview($content);
+
+			$year = $page->getDateCreated()->format('Y');
 			
 			$pages[] = array(
 				'id' => $page->getId(),
@@ -52,7 +54,8 @@ class NotebookController extends Controller
 				'syntax' => $page->getSyntax(),
 				'folder' => $page->getFolder(),
 				'project' => $page->getProject(),
-				'date' => $page->getDateModified()->format($dateTimeFormat)
+				'date' => $page->getDateModified()->format($dateTimeFormat),
+				'year' => $year
 			);
 		}
 		

@@ -23,7 +23,8 @@ function createPage() {
     	div.attr('data-id', data.id);
     	div.attr('data-folder', data.folder);
     	div.attr('data-syntax', data.syntax);
-    	div.attr('data-project', data.project);	        	
+		div.attr('data-project', data.project);
+		div.attr('data-year', data.year);
     	div.html('<div class="preview"></div><div class="date">' + data.date + '</div><div class="content"></div>');
     	$('.editor-pages').append(div);
     	
@@ -176,6 +177,22 @@ function removeFolder() {
 	else {
 		alert("You must selected a folder to remove it.");
 	}
+}
+
+function selectYear(obj) {
+	$('.editor-folder').removeClass('selected');
+	obj.addClass('selected');
+
+	var id = $(obj).attr('data-id');
+
+	$('.editor-page').hide();
+	$('.editor-page[data-year=' + id + ']').show();
+
+	if ($('.editor-page:visible').length <= 0) {
+		editor.setValue("", -1);
+	}
+
+	$('.editor-page:visible:first').trigger('click');
 }
 
 function setDraggableAndDroppable() {
