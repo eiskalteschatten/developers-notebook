@@ -242,7 +242,5 @@ function saveAllSettings() {
 }
 
 function saveFindReplaceOptions() {
-	// Apply settings here too
-
 	saveAllSettings();
 }

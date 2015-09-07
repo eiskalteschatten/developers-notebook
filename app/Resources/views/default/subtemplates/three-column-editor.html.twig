@@ -145,18 +145,14 @@
         var saveSettingsUrl = "{{ path('editorSaveSettings') }}";
 
         var editor = ace.edit("editor");
-        editor.setTheme(defaultTheme);
-        editor.getSession().setMode("ace/mode/"+standardSyntax);
-        editor.setDisplayIndentGuides(false);
         editor.session.selection.on("changeCursor", function(e) {
             getCursorPosition();
         });
 
         $(document).ready(function() {
-			$('#theme').val(defaultTheme);
-			$('#mode').val(standardSyntax);
-
             getCursorPosition();
+            setSettings();
+            applySettingsToEditor();
             
             $('.editor-folder').click(function() {
         		selectFolder($(this));
@@ -169,9 +165,8 @@
         	});
         	
 			$('.editor-page:visible:first').trigger('click');
-			
+
 			setDraggableAndDroppable();
-            setSettings();
         });
         
         function setSettings() {
@@ -196,5 +191,14 @@
 				$('#skipCurrent').prop('checked', true);
 			{% endif %}
 		}
+
+        function applySettingsToEditor() {
+            editor.setTheme(defaultTheme);
+            editor.getSession().setMode(standardSyntax);
+            editor.setDisplayIndentGuides(false);
+
+            $('#theme').val(defaultTheme);
+            $('#mode').val(standardSyntax);
+        }
     </script>
 {% endblock %}
