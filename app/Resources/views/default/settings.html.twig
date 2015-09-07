@@ -53,7 +53,7 @@
             }
 
             $.post(saveSettingsUrl, toSend, function(data) {
-                closePopup();
+                showMessage(data.msgType, data.message);
             });
         }
     </script>

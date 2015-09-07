@@ -56,12 +56,9 @@ class SettingsController extends Controller
         $es = $em->getRepository('AppBundle:EditorSettings')
             ->findOneBy(array('userId' => $userId));
 
-        $isNew = false;
-
         if (!$es) {
-            $isNew = true;
-            $es = new EditorSettings();
-            $es->setUserId($userId);
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedError')));
+            return $response;
         }
 
         $es->setDefaultTheme($defaultTheme);
@@ -87,13 +84,10 @@ class SettingsController extends Controller
                 break;
         }
 
-        if ($isNew == true) {
-            $em->persist($es);
-        }
-
         $em->flush();
 
-        return new Response('success');
+        $response = new JsonResponse(array('msgType' => 'success', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedSuccess')));
+        return $response;
     }
 
     /**
@@ -120,12 +114,9 @@ class SettingsController extends Controller
         $es = $em->getRepository('AppBundle:EditorSettings')
             ->findOneBy(array('userId' => $userId));
 
-        $isNew = false;
-
         if (!$es) {
-            $isNew = true;
-            $es = new EditorSettings();
-            $es->setUserId($userId);
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedError')));
+            return $response;
         }
 
         $es->setDefaultTheme($defaultTheme);
@@ -139,12 +130,9 @@ class SettingsController extends Controller
         $es->setDefaultSyntaxModeNotebook($defaultSyntaxNotebook);
         $es->setDefaultSyntaxModeJournal($defaultSyntaxJournal);
 
-        if ($isNew == true) {
-            $em->persist($es);
-        }
-
         $em->flush();
 
-        return new Response('success');
+        $response = new JsonResponse(array('msgType' => 'success', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedSuccess')));
+        return $response;
     }
 }

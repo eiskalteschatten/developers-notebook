@@ -121,6 +121,17 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   background-image: -webkit-linear-gradient(top, #ffffff, #e7e7e7);
   background-image: -ms-linear-gradient(top, #ffffff, #e7e7e7); }
 
+/* Error and success messages */
+.message-center {
+  padding: 20px;
+  display: none; }
+  .message-center .success {
+    color: #3aba34;
+    font-weight: bold; }
+  .message-center .error {
+    color: #ba3434;
+    font-weight: bold; }
+
 /* Styles for boxes */
 .box {
   box-shadow: 0 0 10px #d0d0d0;

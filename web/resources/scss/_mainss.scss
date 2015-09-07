@@ -149,3 +149,23 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     background-image: -webkit-linear-gradient(top, #ffffff, #e7e7e7);
     background-image: -ms-linear-gradient(top, #ffffff, #e7e7e7);
 }
+
+/* Error and success messages */
+
+@mixin message($color) {
+	color: $color;
+	font-weight: bold;
+}
+
+.message-center {
+	padding: 20px;
+	display: none;
+
+	.success {
+		@include message($green);
+	}
+
+	.error {
+		@include message($red);
+	}
+}

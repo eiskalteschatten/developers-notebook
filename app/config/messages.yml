@@ -1,0 +1,3 @@
+parameters:
+    AppBundle.messages.settingsSavedSuccess: 'Your settings were saved successfully!'
+    AppBundle.messages.settingsSavedError: 'An error occurred while saving your settings. Please try again later.'

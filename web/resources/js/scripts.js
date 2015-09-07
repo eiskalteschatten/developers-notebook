@@ -88,3 +88,16 @@ function closePopup() {
 		$('.popup-close-layer').removeClass('background');
 	});
 }
+
+// Error and success messages
+
+function showMessage(type, message) {
+	var msgCenter = $('.message-center');
+
+	var div = $("<div>");
+	div.addClass(type);
+	div.text(message);
+
+	msgCenter.html(div);
+	msgCenter.show();
+}
