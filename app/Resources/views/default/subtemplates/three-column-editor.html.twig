@@ -199,6 +199,8 @@
 
             $('#theme').val(defaultTheme);
             $('#mode').val(standardSyntax);
+
+            editor.setHighlightActiveLine((($('#highlightActiveLine:checked').length > 0) ? true:false));
         }
     </script>
 {% endblock %}
