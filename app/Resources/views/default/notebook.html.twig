@@ -1,0 +1,17 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}Notebook - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    {{ include('default/subtemplates/three-column-editor.html.twig') }}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
