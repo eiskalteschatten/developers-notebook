@@ -99,6 +99,8 @@ class NotebookController extends Controller
         ->findOneBy(
 			array('userId' => $userId)
 		);
+
+		$standardSyntax = $settingsResult->getDefaultSyntaxModeNotebook();
 		
         return $this->render('default/notebook.html.twig', array(
             'standardArea' => $this->standardArea,
@@ -106,6 +108,7 @@ class NotebookController extends Controller
 	        'folders' => $folders,
 	        'projects' => $projects,
 	        'editorSettings' => $settingsResult,
+			'standardSyntax' => $standardSyntax,
 			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
 			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
         ));

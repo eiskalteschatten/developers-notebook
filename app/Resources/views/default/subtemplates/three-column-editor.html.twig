@@ -137,7 +137,7 @@
 
     <script type="text/javascript">
         var defaultTheme = "{{ attribute(editorSettings, 'defaultTheme') }}";
-        var standardSyntax = "{{ attribute(editorSettings, 'defaultSyntaxModeCode') }}";
+        var standardSyntax = "{{ standardSyntax }}";
         var standardArea = "{{ standardArea }}";
         var editorUrl = "{{ path('_editor-controller') }}";
         var saveSettingsUrl = "{{ path('editorSaveSettings') }}";

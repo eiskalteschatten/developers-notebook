@@ -73,7 +73,7 @@ class SettingsController extends Controller
             case "code":
                 $es->setDefaultSyntaxModeCode($defaultSyntax);
                 break;
-            case "notebook":
+            case "notes":
                 $es->setDefaultSyntaxModeNotebook($defaultSyntax);
                 break;
             case "journal":

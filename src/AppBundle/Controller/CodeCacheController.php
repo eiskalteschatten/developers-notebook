@@ -99,6 +99,8 @@ class CodeCacheController extends Controller
         ->findOneBy(
 			array('userId' => $userId)
 		);
+
+		$standardSyntax = $settingsResult->getDefaultSyntaxModeCode();
 		
         return $this->render('default/code-cache.html.twig', array(
             'standardArea' => $this->standardArea,
@@ -106,6 +108,7 @@ class CodeCacheController extends Controller
 	        'folders' => $folders,
 	        'projects' => $projects,
 	        'editorSettings' => $settingsResult,
+			'standardSyntax' => $standardSyntax,
 			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
 			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
         ));
