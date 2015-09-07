@@ -22,8 +22,20 @@
 	margin-bottom: 20px;
 }
 
+/* Styles for content */
+
+.content {
+ 	padding: 20px;
+}
 
 /* Styles for content column */
+
+.content-two-columns {
+	.column {
+		float: left;
+		width: 50%;
+	}
+}
 
 .content-three-columns {
 	width: 100%;

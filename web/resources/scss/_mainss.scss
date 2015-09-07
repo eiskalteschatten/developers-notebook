@@ -60,6 +60,33 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     clear: both;
 }
 
+/* Headers */
+
+.page-title {
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom: 30px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid $bordercolor;
+}
+
+.section {
+	font-size: 16px;
+
+	.section-title {
+		font-weight: bold;
+		font-size: 21px;
+		margin-bottom: 20px;
+	}
+
+	.sub-section {
+		padding: 20px 50px;
+	}
+}
+
+
+/* Buttons */
+
 .blue-button, .white-button {
 	padding: 7px 20px;
 	font-size: 14px;

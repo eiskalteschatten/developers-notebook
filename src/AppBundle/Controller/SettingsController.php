@@ -13,6 +13,27 @@ use AppBundle\Entity\EditorSettings;
 class SettingsController extends Controller
 {
     /**
+     * @Route("/settings/", name="settingsPage")
+     */
+    public function settingsAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $settingsResult = $this->getDoctrine()
+            ->getRepository('AppBundle:EditorSettings')
+            ->findOneBy(
+                array('userId' => $userId)
+            );
+
+        return $this->render('default/settings.html.twig', array(
+            'editorSettings' => $settingsResult,
+            'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
+            'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
+        ));
+    }
+
+    /**
      * @Route("/notebook/editor-settings/save/", name="editorSaveSettings")
      * @Method("POST")
      */
@@ -62,9 +83,61 @@ class SettingsController extends Controller
                 $es->setDefaultSyntaxModeJournal($defaultSyntax);
                 break;
             default:
-				$es->setDefaultSyntaxModeNotebook($defaultSyntax);
+                $es->setDefaultSyntaxModeNotebook($defaultSyntax);
                 break;
         }
+
+        if ($isNew == true) {
+            $em->persist($es);
+        }
+
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
+     * @Route("/notebook/editor-settings/save-all/", name="editorSaveAllSettings")
+     * @Method("POST")
+     */
+    public function saveAllEditorSettingsAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $defaultTheme = $request->request->get('defaultTheme');
+        $defaultSyntaxCode = $request->request->get('defaultSyntaxCode');
+        $defaultSyntaxJournal = $request->request->get('defaultSyntaxJournal');
+        $defaultSyntaxNotebook = $request->request->get('defaultSyntaxNotebook');
+        $highlightActiveLine= ($request->request->get('highlightActiveLine') === 'true');
+        $wrapSearch = ($request->request->get('wrapSearch') === 'true');
+        $caseSensitive = ($request->request->get('caseSensitive') === 'true');
+        $wholeWord = ($request->request->get('wholeWord') === 'true');
+        $regExp = ($request->request->get('regExp') === 'true');
+        $skipCurrent = ($request->request->get('skipCurrent') === 'true');
+
+        $em = $this->getDoctrine()->getManager();
+        $es = $em->getRepository('AppBundle:EditorSettings')
+            ->findOneBy(array('userId' => $userId));
+
+        $isNew = false;
+
+        if (!$es) {
+            $isNew = true;
+            $es = new EditorSettings();
+            $es->setUserId($userId);
+        }
+
+        $es->setDefaultTheme($defaultTheme);
+        $es->setHighlightActiveLine($highlightActiveLine);
+        $es->setWrapSearch($wrapSearch);
+        $es->setCaseSensitiveSearch($caseSensitive);
+        $es->setMatchWholeWordsSearch($wholeWord);
+        $es->setIsRegexSearch($regExp);
+        $es->setSkipCurrentLineSearch($skipCurrent);
+        $es->setDefaultSyntaxModeCode($defaultSyntaxCode);
+        $es->setDefaultSyntaxModeNotebook($defaultSyntaxNotebook);
+        $es->setDefaultSyntaxModeJournal($defaultSyntaxJournal);
 
         if ($isNew == true) {
             $em->persist($es);

@@ -1,0 +1,129 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}Settings - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var defaultTheme = "{{ attribute(editorSettings, 'defaultTheme') }}";
+        var standardSyntaxCode = "{{ attribute(editorSettings, 'defaultSyntaxModeCode') }}";
+        var standardSyntaxJournal = "{{ attribute(editorSettings, 'defaultSyntaxModeJournal') }}";
+        var standardSyntaxNotebook = "{{ attribute(editorSettings, 'defaultSyntaxModeNotebook') }}";
+        var saveSettingsUrl = "{{ path('editorSaveAllSettings') }}";
+
+        $(document).ready(function() {
+            $('#theme').val(defaultTheme);
+            $('#defaultModeCode').val(standardSyntaxCode);
+            $('#defaultModeJournal').val(standardSyntaxJournal);
+            $('#defaultModeNotebook').val(standardSyntaxNotebook);
+
+            {% if attribute(editorSettings, 'highlightActiveLine') is not empty %}
+                $('#highlightActiveLine').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'wrapSearch') is not empty %}
+                $('#wrapSearch').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'caseSensitiveSearch') is not empty %}
+                $('#caseSensitive').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'matchWholeWordsSearch') is not empty %}
+                $('#wholeWord').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'isRegexSearch') is not empty %}
+                $('#regExp').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'skipCurrentLineSearch') is not empty %}
+                $('#skipCurrent').prop('checked', true);
+            {% endif %}
+        });
+
+        function saveEditorSettings() {
+            var toSend = {
+                defaultTheme: $('#theme').val(),
+                defaultSyntaxCode: $('#defaultModeCode').val(),
+                defaultSyntaxJournal: $('#defaultModeJournal').val(),
+                defaultSyntaxNotebook: $('#defaultModeNotebook').val(),
+                highlightActiveLine: $('#highlightActiveLine').prop('checked'),
+                wrapSearch: $('#wrapSearch').prop('checked'),
+                caseSensitive: $('#caseSensitive').prop('checked'),
+                wholeWord: $('#wholeWord').prop('checked'),
+                regExp: $('#regExp').prop('checked'),
+                skipCurrent: $('#skipCurrent').prop('checked')
+            }
+
+            $.post(saveSettingsUrl, toSend, function(data) {
+                closePopup();
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="page-title"><img src="{{ asset('resources/img/gear.svg') }}" style="width: 22px;"> Settings</div>
+        <div class="section">
+            <div class="section-title">Editor Settings</div>
+            <div class="sub-section content-two-columns">
+                <div class="column">
+                    <div class="option">
+                        <div class="label">Editor theme:</div>
+                        <select id="theme">
+                            {{ editorThemes|raw }}
+                        </select>
+                    </div>
+                    <div class="option">
+                        <div class="label">Default Syntax Highlighting for Code Cache:</div>
+                        <select id="defaultModeCode">
+                            {{ syntaxOptions|raw }}
+                        </select>
+                    </div>
+                    <div class="option">
+                        <div class="label">Default Syntax Highlighting for your journal:</div>
+                        <select id="defaultModeJournal">
+                            {{ syntaxOptions|raw }}
+                        </select>
+                    </div>
+                    <div class="option">
+                        <div class="label">Default Syntax Highlighting for your notebook:</div>
+                        <select id="defaultModeNotebook">
+                            {{ syntaxOptions|raw }}
+                        </select>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="highlightActiveLine"><label for="highlightActiveLine">Highlight active line</label><br>
+                    </div>
+                </div>
+                <div class="column">
+                    <input type="checkbox" id="wrapSearch"><label for="wrapSearch">Wrap search</label><br>
+                    <input type="checkbox" id="caseSensitive"><label for="caseSensitive">Case sensitive</label><br>
+                    <input type="checkbox" id="wholeWord"><label for="wholeWord">Match whole words only</label><br>
+                    <input type="checkbox" id="regExp"><label for="regExp">Search is a regular expression</label><br>
+                    <input type="checkbox" id="skipCurrent"><label for="skipCurrent">Skip current line</label>
+                </div>
+
+                <div class="clear-both"></div>
+
+                <div class="align-center">
+                    <button onclick="saveEditorSettings()">Save Editor Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        label {
+            margin-left: 5px;
+        }
+
+        .option {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}

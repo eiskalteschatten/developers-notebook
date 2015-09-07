@@ -105,7 +105,9 @@ class CodeCacheController extends Controller
 	        'pages' => $pages,
 	        'folders' => $folders,
 	        'projects' => $projects,
-	        'editorSettings' => $settingsResult
+	        'editorSettings' => $settingsResult,
+			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
+			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
         ));
     }
 }

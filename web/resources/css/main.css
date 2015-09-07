@@ -47,6 +47,24 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .clear-both {
   clear: both; }
 
+/* Headers */
+.page-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6; }
+
+.section {
+  font-size: 16px; }
+  .section .section-title {
+    font-weight: bold;
+    font-size: 21px;
+    margin-bottom: 20px; }
+  .section .sub-section {
+    padding: 20px 50px; }
+
+/* Buttons */
 .blue-button, .white-button {
   padding: 7px 20px;
   font-size: 14px;
@@ -122,7 +140,15 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .box input {
   margin-bottom: 20px; }
 
+/* Styles for content */
+.content {
+  padding: 20px; }
+
 /* Styles for content column */
+.content-two-columns .column {
+  float: left;
+  width: 50%; }
+
 .content-three-columns {
   width: 100%;
   height: calc(100% - 50px);
