@@ -1,0 +1,6 @@
+parameters:
+    AppBundle.dateTimeFormat: 'Y-m-d H:i:s'
+    AppBundle.editorDefaultMode: 'ace/theme/chrome'
+    AppBundle.defaultSyntaxModeCode: 'html'
+    AppBundle.defaultSyntaxModeNotebook: 'text'
+    AppBundle.defaultSyntaxModeJournal: 'text'
