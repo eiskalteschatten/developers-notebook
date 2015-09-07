@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Projects;
+use AppBundle\Entity\EditorSettings;
 use AppBundle\Services\Helper;
 
 class CodeCacheController extends Controller
 {
-	private $standardSyntax = "html";
     private $standardArea = "code";
 
     /**
@@ -92,12 +92,20 @@ class CodeCacheController extends Controller
 			);
 		}
 		
+		// GET EDITOR SETTINGS
+
+		$settingsResult = $this->getDoctrine()
+        ->getRepository('AppBundle:EditorSettings')
+        ->findOneBy(
+			array('userId' => $userId)
+		);
+		
         return $this->render('default/code-cache.html.twig', array(
             'standardArea' => $this->standardArea,
-            'standardSyntax' => $this->standardSyntax,
 	        'pages' => $pages,
 	        'folders' => $folders,
-	        'projects' => $projects
+	        'projects' => $projects,
+	        'editorSettings' => $settingsResult
         ));
     }
 }

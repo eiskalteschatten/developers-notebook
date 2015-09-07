@@ -138,9 +138,8 @@
     <script type="text/javascript" src="{{ asset('resources/js/editor.js') }}"></script>
 
     <script type="text/javascript">
-        var defaultTheme = "ace/theme/chrome";
-        //var defaultTheme = "ace/theme/clouds_midnight";
-        var standardSyntax = "{{ standardSyntax }}";
+        var defaultTheme = "{{ attribute(editorSettings, 'defaultTheme') }}";
+        var standardSyntax = "{{ attribute(editorSettings, 'defaultSyntaxModeCode') }}";
         var standardArea = "{{ standardArea }}";
         var editorUrl = "{{ path('_editor-controller') }}";
         var saveSettingsUrl = "{{ path('editorSaveSettings') }}";
@@ -154,8 +153,8 @@
         });
 
         $(document).ready(function() {
-            $('#theme option[value="'+defaultTheme+'"]').prop('selected', true);
-            $('#mode option[value="'+standardSyntax+'"]').prop('selected', true);
+			$('#theme').val(defaultTheme);
+			$('#mode').val(standardSyntax);
 
             getCursorPosition();
             
@@ -174,5 +173,28 @@
 			setDraggableAndDroppable();
             setSettings();
         });
+        
+        function setSettings() {
+			$('#theme').val(defaultTheme);
+			$('#defaultMode').val(standardSyntax);
+			{% if attribute(editorSettings, 'highlightActiveLine') is not empty %}
+				$('#highlightActiveLine').prop('checked', true);
+			{% endif %}
+			{% if attribute(editorSettings, 'wrapSearch') is not empty %}
+				$('#wrapSearch').prop('checked', true);
+			{% endif %}
+			{% if attribute(editorSettings, 'caseSensitiveSearch') is not empty %}
+				$('#caseSensitive').prop('checked', true);
+			{% endif %}
+			{% if attribute(editorSettings, 'matchWholeWordsSearch') is not empty %}
+				$('#wholeWord').prop('checked', true);
+			{% endif %}
+			{% if attribute(editorSettings, 'isRegexSearch') is not empty %}
+				$('#regExp').prop('checked', true);
+			{% endif %}
+			{% if attribute(editorSettings, 'skipCurrentLineSearch') is not empty %}
+				$('#skipCurrent').prop('checked', true);
+			{% endif %}
+		}
     </script>
 {% endblock %}

@@ -223,11 +223,6 @@ function setDraggableAndDroppable() {
 	});
 }
 
-function setSettings() {
-	$('#theme').val(defaultTheme);
-	$('#defaultMode').val(standardSyntax);
-}
-
 function saveAllSettings() {
 	var toSend = {
 		defaultTheme: $('#theme').val(),
