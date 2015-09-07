@@ -157,6 +157,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   font-size: 13px;
   padding: 20px 40px;
   border-top: 1px solid #e6e6e6; }
+  .footer .version-number {
+    color: #c0c0c0;
+    font-style: italic; }
 
 /* Styles for the menubar */
 .menubar {
