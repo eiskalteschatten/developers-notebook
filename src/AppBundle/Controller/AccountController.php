@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use AppBundle\Entity\User;
+use AppBundle\Entity\EditorSettings;
 
 class AccountController extends Controller
 {
@@ -94,7 +95,29 @@ class AccountController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
-            $em->flush();
+	        $em->flush();            
+            
+            $userId = $user->getId();
+            $defaultTheme = $this->container->getParameter('AppBundle.editorDefaultMode');
+            $standardSyntaxCode = $this->container->getParameter('AppBundle.defaultSyntaxModeCode');
+            $standardSyntaxNotebook = $this->container->getParameter('AppBundle.defaultSyntaxModeNotebook');
+            $standardSyntaxJournal = $this->container->getParameter('AppBundle.defaultSyntaxModeJournal');
+            
+            $es = new EditorSettings();
+            $es->setUserId($userId);
+	        $es->setDefaultTheme($defaultTheme);
+	        $es->setHighlightActiveLine(0);
+	        $es->setWrapSearch(0);
+	        $es->setCaseSensitiveSearch(0);
+	        $es->setMatchWholeWordsSearch(0);
+	        $es->setIsRegexSearch(0);
+	        $es->setSkipCurrentLineSearch(0);
+	        $es->setDefaultSyntaxModeCode($standardSyntaxCode);
+	        $es->setDefaultSyntaxModeNotebook($standardSyntaxNotebook);
+            $es->setDefaultSyntaxModeJournal($standardSyntaxJournal);
+            $em->persist($es);
+            
+	        $em->flush();
 
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->get('security.token_storage')->setToken($token);
