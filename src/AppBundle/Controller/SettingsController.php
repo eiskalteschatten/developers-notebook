@@ -33,7 +33,7 @@ class SettingsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $es = $em->getRepository('AppBundle:EditorSettings')
-            ->findBy(array('userId' => $userId));
+            ->findOneBy(array('userId' => $userId));
 
         $isNew = false;
 
@@ -60,6 +60,9 @@ class SettingsController extends Controller
                 break;
             case "journal":
                 $es->setDefaultSyntaxModeJournal($defaultSyntax);
+                break;
+            default:
+				$es->setDefaultSyntaxModeNotebook($defaultSyntax);
                 break;
         }
 
