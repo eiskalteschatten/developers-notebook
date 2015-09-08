@@ -47,6 +47,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .clear-both {
   clear: both; }
 
+.delete-row a {
+  color: #ba3434;
+  font-size: 12px; }
+
 /* Headers */
 .page-title {
   font-size: 30px;
@@ -54,6 +58,8 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   margin-bottom: 30px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e6e6e6; }
+  .page-title.grayed-out {
+    color: #c0c0c0; }
 
 .section {
   font-size: 16px; }
@@ -152,9 +158,6 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     .full-size-table .row .delete-row {
       float: right;
       display: none; }
-      .full-size-table .row .delete-row a {
-        color: #ba3434;
-        font-size: 12px; }
     .full-size-table .row .is-completed-box {
       display: inline-block;
       margin-right: 10px; }
@@ -196,6 +199,8 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   float: left;
   padding: 10px;
   width: calc(100% - 340px); }
+.content-two-thirds-columns .tab-section {
+  display: none; }
 
 .content-three-columns {
   width: 100%;

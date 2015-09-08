@@ -60,7 +60,7 @@ class CodeCacheController extends Controller
 			);
 		}
 		
-		 // GET FOLDERS
+		// GET FOLDERS
 		
 		$foldersResult = $this->getDoctrine()
         ->getRepository('AppBundle:Folders')

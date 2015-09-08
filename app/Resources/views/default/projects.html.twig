@@ -6,83 +6,17 @@
     {{ parent() }}
 
     <script type="text/javascript">
-        function addNewProject(event, obj) {
-            if (event.which == 13) {
-                var postUrl = "{{ path('projectCreate') }}";
-                var name = $(obj).val();
+        var postUrlCreate = "{{ path('projectCreate') }}";
+        var postUrlToggle = "{{ path('projectIsComplete') }}";
+        var postUrlDelete = "{{ path('projectDelete') }}";
+        var projectsUrl = "{{ path('projects') }}";
 
-                if (name != "") {
-                    var toSend = {
-                        name: name
-                    }
-
-                    $.post(postUrl, toSend, function(data) {
-                        var html = '<span class="delete-row"><a href="#!" onclick="deleteProject(this)">Delete</a></span>';
-                        html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"></span>';
-                        html += '<span class="name">' + data.name + '</span>';
-                        html += '<span class="date">' + data.date + '</span>';
-
-                        var div = $("<div>");
-                        div.addClass('row');
-                        div.attr('data-id', data.id);
-                        div.html(html);
-
-                        $('.full-size-table').prepend(div);
-
-                        $(obj).val('');
-                    });
-                }
-            }
-        }
-
-        function toggleCompletedProjects() {
-            if ($('#showCompleted').prop('checked')) {
-                $('.is-completed').show();
-            }
-            else {
-                $('.is-completed').hide();
-            }
-        }
-
-        function toggleIsComplete(obj) {
-            var postUrl = "{{ path('projectIsComplete') }}";
-            var row = $(obj).parents('.row');
-            var id = row.attr('data-id');
-            var isComplete = $(obj).prop('checked');
-
-            var toSend = {
-                id: id,
-                isComplete: isComplete
-            }
-
-            $.post(postUrl, toSend, function(data) {
-                if (data.isCompleted) {
-                    row.addClass('is-completed');
-                    row.find('.date').text("Completed: " + data.date);
-                }
-                else {
-                    row.removeClass('is-completed');
-                    row.find('.date').text(data.date);
-                }
-            });
-        }
-
-        function deleteProject(obj) {
-            if (confirm('Are you sure you want to remove this project? All data associated with the project will not be deleted. This action cannot be undone.')) {
-                var postUrl = "{{ path('projectDelete') }}";
-                var row = $(obj).parents('.row');
-                var id = row.attr('data-id');
-
-                var toSend = {
-                    id: id
-                }
-
-                $.post(postUrl, toSend, function (data) {
-                    row.remove();
-                });
-            }
+        function goToProject(url) {
+            window.location.href = url;
         }
     </script>
+
+    <script type="text/javascript" src="{{ asset('resources/js/projects.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -103,12 +37,12 @@
 
                 <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
                     <span class="delete-row"><a href="#!" onclick="deleteProject(this)">Delete</a></span>
-                    <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name">{{ project.name }}</span>
+                    <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">{{ project.name }}</span>
 
                     {% if project.isCompleted is not empty %}
-                        <span class="date">Completed: {{ project.dateCompleted }}</span>
+                        <span class="date" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">Completed: {{ project.dateCompleted }}</span>
                     {% else %}
-                        <span class="date">{{ project.dateModified }}</span>
+                        <span class="date" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">{{ project.dateModified }}</span>
                     {% endif %}
                 </div>
             {% endfor %}

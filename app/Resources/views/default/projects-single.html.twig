@@ -1,0 +1,116 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}{{ project.name }} - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var postUrlCreate = "{{ path('projectCreate') }}";
+        var postUrlToggle = "{{ path('projectIsComplete') }}";
+        var postUrlDelete = "{{ path('projectDelete') }}";
+        var projectsUrl = "{{ path('projects') }}";
+
+        $(document).ready(function() {
+            $('.editor-folder').click(function() {
+                $('.tab-section').hide();
+                $('.editor-folder').removeClass('selected');
+
+                var dataSection = $(this).attr('data-section');
+                $('.'+dataSection).show();
+                $(this).addClass('selected');
+            });
+
+            $('.editor-folder:first').trigger('click');
+        });
+    </script>
+
+    <script type="text/javascript" src="{{ asset('resources/js/projects.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        {% if fail is defined and fail is not empty %}
+            No such project exists!
+        {% else %}
+            {% set isCompletedClass = '' %}
+            {% set isCompletedCheck = '' %}
+
+            {% if project.isCompleted is not empty %}
+                {% set isCompletedClass = ' grayed-out' %}
+                {% set isCompletedCheck = 'checked' %}
+            {% endif %}
+
+            <div class="page-title{{ isCompletedClass }}">
+                <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleProjectIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
+                {{ project.name }}
+            </div>
+
+            <div class="content-two-thirds-columns">
+                <div class="narrow-column">
+                    <div class="editor-folders">
+                        <div class="editor-folder" data-section="journal-project-section">Journal</div>
+                        <div class="editor-folder" data-section="issues-project-section">Issues</div>
+                        <div class="editor-folder" data-section="todos-project-section">To Dos</div>
+                        <div class="editor-folder" data-section="code-project-section">Code Cache</div>
+                        <div class="editor-folder" data-section="notes-project-section">Notes</div>
+                        <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
+                    </div>
+                </div>
+                <div class="large-column">
+                    <div class="tab-section journal-project-section">
+                        {% for page in pages %}
+                            {% if page.area == "journal" %}
+                                <div class="content">
+                                    {{ page.content }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="tab-section issues-project-section">
+
+                    </div>
+                    <div class="tab-section todos-project-section">
+
+                    </div>
+                    <div class="tab-section code-project-section">
+                        {% for page in pages %}
+                            {% if page.area == "code" %}
+                                <div class="content">
+                                    {{ page.content }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="tab-section notes-project-section">
+                        {% for page in pages %}
+                            {% if page.area == "notes" %}
+                                <div class="content">
+                                    {{ page.content }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="tab-section bookmarks-project-section">
+
+                    </div>
+                </div>
+            </div>
+            <div class="clear-both"></div>
+            <div class="delete-row" style="margin-top: 30px;"><a href="#!" onclick="deleteSingleProject('{{ project.id }}')">Delete Project</a></div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .complete-project {
+            float: right;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}

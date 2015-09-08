@@ -60,6 +60,13 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     clear: both;
 }
 
+.delete-row {
+	a {
+		color: $red;
+		font-size: 12px;
+	}
+}
+
 /* Headers */
 
 .page-title {
@@ -68,6 +75,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 	margin-bottom: 30px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid $bordercolor;
+
+	&.grayed-out {
+		color: #c0c0c0;
+	}
 }
 
 .section {
@@ -199,11 +210,6 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		.delete-row {
 			float: right;
 			display: none;
-
-			a {
-				color: $red;
-				font-size: 12px;
-			}
 		}
 
 		.is-completed-box {

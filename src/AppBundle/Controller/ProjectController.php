@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
+use AppBundle\Entity\Pages;
+use AppBundle\Services\Helper;
 
 class ProjectController extends Controller
 {
@@ -52,6 +54,58 @@ class ProjectController extends Controller
 
         return $this->render('default/projects.html.twig', array(
             'projects' => $projects,
+            'currentPage' => $this->currentPage
+        ));
+    }
+
+    /**
+     * @Route("/notebook/projects/{id}/", name="singleProject")
+     */
+    public function singleProjectAction(Request $request, $id)
+    {
+        $helper = $this->get('app.services.helper');
+
+        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $projectsResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Project')
+            ->findOneBy(
+                array('id' => $id, 'userId' => $userId)
+            );
+
+        if (!$projectsResult) {
+            return $this->render('default/projects-single.html.twig', array(
+                'fail' => true,
+                'currentPage' => $this->currentPage
+            ));
+        }
+
+        // GET PAGES FROM JOURNAL, CODE CACHE, AND NOTES
+
+        $pagesResults = $this->getDoctrine()
+            ->getRepository('AppBundle:Pages')
+            ->findBy(
+                array('userId' => $userId, 'project' => $id),
+                array('dateModified' => 'ASC')
+            );
+
+        $pages = array();
+
+        foreach ($pagesResults as $page) {
+            $pages[] = array(
+                'id' => $page->getId(),
+                'content' => $helper->createPagePreview($page->getContent()),
+                'area' => $page->getArea(),
+                'dateModified' => $page->getDateModified()->format($dateTimeFormat)
+            );
+        }
+
+        return $this->render('default/projects-single.html.twig', array(
+            'project' => $projectsResult,
+            'pages' => $pages,
             'currentPage' => $this->currentPage
         ));
     }
