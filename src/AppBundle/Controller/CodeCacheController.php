@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\Folders;
-use AppBundle\Entity\Projects;
+use AppBundle\Entity\Project;
 use AppBundle\Entity\EditorSettings;
 use AppBundle\Services\Helper;
 
@@ -81,10 +81,11 @@ class CodeCacheController extends Controller
 		// GET PROJECTS
 
 		$projectsResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Projects')
+        ->getRepository('AppBundle:Project')
         ->findBy(
 			array('userId' => $userId),
-			array('name' => 'ASC')
+			array('name' => 'ASC'),
+			array('isCompleted' => false)
 		);
 		
 		$projects = array();

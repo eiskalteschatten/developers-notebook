@@ -1,4 +1,4 @@
-AppBundle\Entity\Projects:
+AppBundle\Entity\Project:
     type: entity
     table: null
     id:
@@ -14,10 +14,17 @@ AppBundle\Entity\Projects:
         name:
             type: string
             length: 255
-        dateCreated:
-            type: datetime
-            column: date_created
+        isCompleted:
+            type: boolean
+            column: is_completed
         dateModified:
             type: datetime
             column: date_modified
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateCompleted:
+            type: datetime
+            column: date_completed
+            nullable: true
     lifecycleCallbacks: {  }

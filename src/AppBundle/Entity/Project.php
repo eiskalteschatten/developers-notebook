@@ -5,9 +5,9 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Projects
+ * Project
  */
-class Projects
+class Project
 {
     /**
      * @var integer
@@ -25,6 +25,16 @@ class Projects
     private $name;
 
     /**
+     * @var boolean
+     */
+    private $isCompleted;
+
+    /**
+     * @var \DateTime
+     */
+    private $dateModified;
+
+    /**
      * @var \DateTime
      */
     private $dateCreated;
@@ -32,7 +42,7 @@ class Projects
     /**
      * @var \DateTime
      */
-    private $dateModified;
+    private $dateCompleted;
 
 
     /**
@@ -49,7 +59,7 @@ class Projects
      * Set userId
      *
      * @param integer $userId
-     * @return Projects
+     * @return Project
      */
     public function setUserId($userId)
     {
@@ -72,7 +82,7 @@ class Projects
      * Set name
      *
      * @param string $name
-     * @return Projects
+     * @return Project
      */
     public function setName($name)
     {
@@ -92,33 +102,33 @@ class Projects
     }
 
     /**
-     * Set dateCreated
+     * Set isCompleted
      *
-     * @param \DateTime $dateCreated
-     * @return Projects
+     * @param boolean $isCompleted
+     * @return Project
      */
-    public function setDateCreated($dateCreated)
+    public function setIsCompleted($isCompleted)
     {
-        $this->dateCreated = $dateCreated;
+        $this->isCompleted = $isCompleted;
 
         return $this;
     }
 
     /**
-     * Get dateCreated
+     * Get isCompleted
      *
-     * @return \DateTime 
+     * @return boolean 
      */
-    public function getDateCreated()
+    public function getIsCompleted()
     {
-        return $this->dateCreated;
+        return $this->isCompleted;
     }
 
     /**
      * Set dateModified
      *
      * @param \DateTime $dateModified
-     * @return Projects
+     * @return Project
      */
     public function setDateModified($dateModified)
     {
@@ -135,5 +145,51 @@ class Projects
     public function getDateModified()
     {
         return $this->dateModified;
+    }
+
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     * @return Project
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * Set dateCompleted
+     *
+     * @param \DateTime $dateCompleted
+     * @return Project
+     */
+    public function setDateCompleted($dateCompleted)
+    {
+        $this->dateCompleted = $dateCompleted;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCompleted
+     *
+     * @return \DateTime
+     */
+    public function getDateCompleted()
+    {
+        return $this->dateCompleted;
     }
 }

@@ -1,0 +1,86 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}Projects - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        function addNewProject(event, obj) {
+            if (event.which == 13) {
+                var createUrl = "{{ path('projectCreate') }}";
+                var name = $(obj).val();
+
+                if (name != "") {
+                    var toSend = {
+                        name: name
+                    }
+
+                    $.post(createUrl, toSend, function(data) {
+                        var html = '<span class="is-completed-box"><input type="checkbox" class="is-completed-check"></span>';
+                        html += '<span class="name">' + data.name + '</span>';
+                        html += '<span class="date">' + data.date + '</span>';
+
+                        var div = $("<div>");
+                        div.addClass('row');
+                        div.attr('data-id', data.id);
+                        div.html(html);
+
+                        $('.full-size-table').append(div);
+                    });
+                }
+            }
+        }
+
+        function toggleCompletedProjects() {
+            if ($('#showCompleted').prop('checked')) {
+                $('.is-completed').show();
+            }
+            else {
+                $('.is-completed').hide();
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="show-completed-projects"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed projects</div>
+        <input type="text" id="newproject" placeholder="Add new project" style="width: 700px; margin-bottom: 50px;" onkeyup="addNewProject(event, this)">
+
+        <div class="full-size-table">
+            {% for project in projects %}
+                {% set isCompletedClass = '' %}
+                {% set isCompletedCheck = '' %}
+
+                {% if project.isCompleted is not empty %}
+                    {% set isCompletedClass = ' is-completed' %}
+                    {% set isCompletedCheck = 'checked' %}
+                {% endif %}
+
+                <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
+                    <span class="is-completed-box"><input type="checkbox" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name">{{ project.name }}</span>
+
+                    {% if project.isCompleted is not empty %}
+                        <span class="date">Completed: {{ project.dateCompleted }}</span>
+                    {% else %}
+                        <span class="date">{{ project.dateModified }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .show-completed-projects {
+            float: right;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}

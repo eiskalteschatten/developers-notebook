@@ -28,12 +28,19 @@
  	padding: 20px;
 }
 
-/* Styles for content column */
+/* Styles for content columns */
 
-.content-two-columns {
-	.column {
+.content-two-thirds-columns {
+	.narrow-column {
 		float: left;
-		width: 50%;
+		width: 300px;
+		padding: 10px;
+	}
+
+	.large-column {
+		float: left;
+		padding: 10px;
+		width: calc(100% - 340px);
 	}
 }
 

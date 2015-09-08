@@ -88,14 +88,15 @@ class JournalController extends Controller
 		// GET PROJECTS
 
 		$projectsResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Projects')
-        ->findBy(
-			array('userId' => $userId),
-			array('name' => 'ASC')
-		);
-		
+			->getRepository('AppBundle:Project')
+			->findBy(
+				array('userId' => $userId),
+				array('name' => 'ASC'),
+				array('isCompleted' => false)
+			);
+
 		$projects = array();
-		
+
 		foreach ($projectsResult as $project) {
 			$projects[] = array(
 				'id' => $project->getId(),

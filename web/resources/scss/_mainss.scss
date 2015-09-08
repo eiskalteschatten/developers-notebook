@@ -169,3 +169,39 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		@include message($red);
 	}
 }
+
+/* Tables */
+
+.full-size-table {
+	width: 100%;
+	border-top: 1px solid $bordercolor;
+
+	.row {
+		width: calc(100% - 40px);
+		padding: 20px;
+		border-bottom: 1px solid $bordercolor;
+		cursor: default;
+
+		&:hover {
+			background-color: #fafafa;
+		}
+
+		&.is-completed {
+			color: #a0a0a0;
+			background-color: #fafafa;
+			display: none;
+		}
+
+		.is-completed-box {
+			display: inline-block;
+			margin-right: 10px;
+		}
+
+		.date {
+			font-size: 12px;
+			color: #a0a0a0;
+			display: inline-block;
+			margin-left: 10px;
+		}
+	}
+}
