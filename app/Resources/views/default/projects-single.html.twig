@@ -43,7 +43,7 @@
             {% endif %}
 
             <div class="page-title{{ isCompletedClass }}">
-                <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleProjectIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
+                <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
                 {{ project.name }}
             </div>
 
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="clear-both"></div>
-            <div class="delete-row" style="margin-top: 30px;"><a href="#!" onclick="deleteSingleProject('{{ project.id }}')">Delete Project</a></div>
+            <div class="delete-row" style="margin-top: 30px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
         {% endif %}
     </div>
 

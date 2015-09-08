@@ -36,8 +36,8 @@
                 {% endif %}
 
                 <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
-                    <span class="delete-row"><a href="#!" onclick="deleteProject(this)">Delete</a></span>
-                    <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">{{ project.name }}</span>
+                    <span class="delete-row"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete</a></span>
+                    <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ project.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">{{ project.name }}</span>
 
                     {% if project.isCompleted is not empty %}
                         <span class="date" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">Completed: {{ project.dateCompleted }}</span>

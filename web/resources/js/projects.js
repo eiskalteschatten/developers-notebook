@@ -8,8 +8,8 @@ function addNewProject(event, obj) {
             }
 
             $.post(postUrlCreate, toSend, function(data) {
-                var html = '<span class="delete-row"><a href="#!" onclick="deleteProject(this)">Delete</a></span>';
-                html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"></span>';
+                var html = '<span class="delete-row"><a href="#!" onclick="deleteProject(\'' + data.id + '\')">Delete</a></span>';
+                html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(\'' + data.id + '\', this)" class="is-completed-check"></span>';
                 html += '<span class="name" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">' + data.name + '</span>';
                 html += '<span class="date" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">' + data.date + '</span>';
 
@@ -35,9 +35,7 @@ function toggleCompletedProjects() {
     }
 }
 
-function toggleIsComplete(obj) {
-    var row = $(obj).parents('.row');
-    var id = row.attr('data-id');
+function toggleIsComplete(id, obj) {
     var isComplete = $(obj).prop('checked');
 
     var toSend = {
@@ -46,51 +44,30 @@ function toggleIsComplete(obj) {
     }
 
     $.post(postUrlToggle, toSend, function(data) {
-        if (data.isCompleted) {
-            row.addClass('is-completed');
-            row.find('.date').text("Completed: " + data.date);
-        }
-        else {
-            row.removeClass('is-completed');
-            row.find('.date').text(data.date);
-        }
-    });
-}
-
-function toggleProjectIsComplete(id, obj) {
-    var isComplete = $(obj).prop('checked');
-
-    var toSend = {
-        id: id,
-        isComplete: isComplete
-    }
-
-    $.post(postUrlToggle, toSend, function(data) {
-        if (data.isCompleted) {
-            $('.page-title').addClass('grayed-out');
-        }
-        else {
-            $('.page-title').removeClass('grayed-out');
-        }
-    });
-}
-
-function deleteProject(obj) {
-    if (confirm('Are you sure you want to remove this project? All data associated with the project will not be deleted. This action cannot be undone.')) {
         var row = $(obj).parents('.row');
-        var id = row.attr('data-id');
 
-        var toSend = {
-            id: id
+        if (data.isCompleted) {
+            if (row.hasClass('row')) {
+                row.addClass('is-completed');
+                row.find('.date').text("Completed: " + data.date);
+            }
+            else {
+                $('.page-title').addClass('grayed-out');
+            }
         }
-
-        $.post(postUrlDelete, toSend, function (data) {
-            row.remove();
-        });
-    }
+        else {
+            if (row.hasClass('row')) {
+                row.removeClass('is-completed');
+                row.find('.date').text(data.date);
+            }
+            else {
+                $('.page-title').removeClass('grayed-out');
+            }
+        }
+    });
 }
 
-function deleteSingleProject(id) {
+function deleteProject(id) {
     if (confirm('Are you sure you want to remove this project? All data associated with the project will not be deleted. This action cannot be undone.')) {
         var toSend = {
             id: id
