@@ -8,7 +8,7 @@
     <script type="text/javascript">
         function addNewProject(event, obj) {
             if (event.which == 13) {
-                var createUrl = "{{ path('projectCreate') }}";
+                var postUrl = "{{ path('projectCreate') }}";
                 var name = $(obj).val();
 
                 if (name != "") {
@@ -16,7 +16,7 @@
                         name: name
                     }
 
-                    $.post(createUrl, toSend, function(data) {
+                    $.post(postUrl, toSend, function(data) {
                         var html = '<span class="is-completed-box"><input type="checkbox" class="is-completed-check"></span>';
                         html += '<span class="name">' + data.name + '</span>';
                         html += '<span class="date">' + data.date + '</span>';
@@ -40,6 +40,29 @@
                 $('.is-completed').hide();
             }
         }
+
+        function toggleIsComplete(obj) {
+            var postUrl = "{{ path('projectIsComplete') }}";
+            var row = $(obj).parents('.row');
+            var id = row.attr('data-id');
+            var isComplete = $(obj).prop('checked');
+
+            var toSend = {
+                id: id,
+                isComplete: isComplete
+            }
+
+            $.post(postUrl, toSend, function(data) {
+                if (data.isCompleted) {
+                    row.addClass('is-completed');
+                    row.find('.date').text("Completed: " + data.date);
+                }
+                else {
+                    row.removeClass('is-completed');
+                    row.find('.date').text(data.date);
+                }
+            });
+        }
     </script>
 {% endblock %}
 
@@ -60,7 +83,7 @@
                 {% endif %}
 
                 <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
-                    <span class="is-completed-box"><input type="checkbox" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name">{{ project.name }}</span>
+                    <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(this)" class="is-completed-check"{{ isCompletedCheck }}></span><span class="name">{{ project.name }}</span>
 
                     {% if project.isCompleted is not empty %}
                         <span class="date">Completed: {{ project.dateCompleted }}</span>

@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
 
@@ -83,6 +84,50 @@ class ProjectController extends Controller
         $em->flush();
 
         $response = new JsonResponse(array('id' => $project->getId(), 'name' => $project->getName(), 'date' => $project->getDateModified()->format($dateTimeFormat)));
+
+        return $response;
+    }
+
+
+    /**
+     * @Route("/notebook/project/is-complete/", name="projectIsComplete")
+     * @Method("POST")
+     */
+    public function changeIsCompleteAction(Request $request)
+    {
+        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+
+        $id = $request->request->get('id');
+        $isComplete = ($request->request->get('isComplete') === 'true');
+
+        $date = new \DateTime("now");
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $project = $em->getRepository('AppBundle:Project')->find($id);
+
+        if (!$project) {
+            throw $this->createNotFoundException('No project found for id '.$id);
+        }
+
+        $project->setDateModified($date);
+        $project->setIsCompleted($isComplete);
+
+        if ($isComplete == true) {
+            $project->setDateCompleted($date);
+            $date = $project->getDateCompleted()->format($dateTimeFormat);
+        }
+        else {
+            $project->setDateCompleted(null);
+            $date = $project->getDateModified()->format($dateTimeFormat);
+        }
+
+        $em->flush();
+
+        $response = new JsonResponse(array('id' => $project->getId(), 'isCompleted' => $project->getIsCompleted(), 'date' => $date));
 
         return $response;
     }
