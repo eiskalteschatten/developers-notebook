@@ -84,17 +84,18 @@ class NotebookController extends Controller
 			->getRepository('AppBundle:Project')
 			->findBy(
 				array('userId' => $userId),
-				array('name' => 'ASC'),
-				array('isCompleted' => false)
+				array('name' => 'ASC')
 			);
 
 		$projects = array();
 
 		foreach ($projectsResult as $project) {
-			$projects[] = array(
-				'id' => $project->getId(),
-				'name' => $project->getName()
-			);
+			if (!$project->getIsCompleted()) {
+				$projects[] = array(
+					'id' => $project->getId(),
+					'name' => $project->getName()
+				);
+			}
 		}
 		
 		// GET EDITOR SETTINGS
