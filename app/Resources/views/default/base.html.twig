@@ -28,7 +28,7 @@
                 </div>
                 <div class="menu">
                     <a href="{{ path('_homepage') }}" id="homeLink"><div class="home-icon"></div></a>
-                    <a href="projects/" id="projectsLink">Projects</a>
+                    <a href="{{ path('projects') }}" id="projectsLink">Projects</a>
                     <a href="{{ path('journal') }}" id="journalLink">Journal</a>
                     <a href="issues/" id="issuesLink">Issues</a>
                     <a href="todo/" id="todosLink">To Dos</a>
@@ -65,7 +65,7 @@
                 $(document).ready(function() {
                     bsPreloadImage("{{ asset('resources/img/house-over.svg') }}");
 
-                    {% if currentPage is not empty %}
+                    {% if currentPage is defined and currentPage is not empty %}
                         $('#{{ currentPage }}Link').addClass('selected');
                     {% endif %}
                 });
