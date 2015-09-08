@@ -55,7 +55,7 @@ function savePage() {
 }
 
 function removePage() {
-    if (confirm('Are you sure you want to remove this page?')) {
+    if (confirm('Are you sure you want to remove this page? This action cannot be undone.')) {
 	    var selected = $('.editor-page.selected');
     
         var toSend = {
@@ -161,7 +161,7 @@ function removeFolder() {
     var selected = $('.editor-folder.selected');
     
     if (selected.hasClass('folder')) {
-        if (confirm('Are you sure you want to remove this folder? Its contents will not be deleted.')) {
+        if (confirm('Are you sure you want to remove this folder? Its contents will not be deleted. This action cannot be undone.')) {
 		    var toSend = {
 		        id: selected.attr('data-id')
 	        }

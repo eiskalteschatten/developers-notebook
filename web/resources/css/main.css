@@ -143,10 +143,18 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     cursor: default; }
     .full-size-table .row:hover {
       background-color: #fafafa; }
+      .full-size-table .row:hover .delete-row {
+        display: inline; }
     .full-size-table .row.is-completed {
       color: #a0a0a0;
       background-color: #fafafa;
       display: none; }
+    .full-size-table .row .delete-row {
+      float: right;
+      display: none; }
+      .full-size-table .row .delete-row a {
+        color: #ba3434;
+        font-size: 12px; }
     .full-size-table .row .is-completed-box {
       display: inline-block;
       margin-right: 10px; }

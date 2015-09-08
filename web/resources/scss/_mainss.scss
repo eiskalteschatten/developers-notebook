@@ -184,12 +184,26 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 
 		&:hover {
 			background-color: #fafafa;
+
+			.delete-row {
+				display: inline;
+			}
 		}
 
 		&.is-completed {
 			color: #a0a0a0;
 			background-color: #fafafa;
 			display: none;
+		}
+
+		.delete-row {
+			float: right;
+			display: none;
+
+			a {
+				color: $red;
+				font-size: 12px;
+			}
 		}
 
 		.is-completed-box {

@@ -92,6 +92,10 @@ class EditorController extends Controller
         $em = $this->getDoctrine()->getManager();
         $pages = $em->getRepository('AppBundle:Pages')->find($id);
 
+        if (!$pages) {
+            throw $this->createNotFoundException('No page found for id '.$id);
+        }
+
         $em->remove($pages);
         $em->flush();
 

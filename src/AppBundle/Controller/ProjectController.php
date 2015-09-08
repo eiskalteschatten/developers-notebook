@@ -102,11 +102,7 @@ class ProjectController extends Controller
 
         $date = new \DateTime("now");
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $userId = $user->getId();
-
         $em = $this->getDoctrine()->getManager();
-
         $project = $em->getRepository('AppBundle:Project')->find($id);
 
         if (!$project) {
@@ -130,5 +126,28 @@ class ProjectController extends Controller
         $response = new JsonResponse(array('id' => $project->getId(), 'isCompleted' => $project->getIsCompleted(), 'date' => $date));
 
         return $response;
+    }
+
+    /**
+     * @Route("/notebook/project/delete/", name="projectDelete")
+     * @Method("POST")
+     */
+    public function deleteProjectAction(Request $request)
+    {
+        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+
+        $id = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppBundle:Project')->find($id);
+
+        if (!$project) {
+            throw $this->createNotFoundException('No project found for id '.$id);
+        }
+
+        $em->remove($project);
+        $em->flush();
+
+        return new Response('success');
     }
 }
