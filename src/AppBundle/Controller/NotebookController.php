@@ -17,6 +17,7 @@ use AppBundle\Services\Helper;
 class NotebookController extends Controller
 {
     private $standardArea = "notes";
+	private $currentPage = "notes";
 
     /**
      * @Route("/notebook/notes/", name="notes")
@@ -113,7 +114,8 @@ class NotebookController extends Controller
 	        'editorSettings' => $settingsResult,
 			'standardSyntax' => $standardSyntax,
 			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
-			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
+			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes'),
+			'currentPage' => $this->currentPage
         ));
     }
 }

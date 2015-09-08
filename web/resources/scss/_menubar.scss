@@ -40,9 +40,17 @@
 	height: 21px;
 	font-weight: 300;
 	float: left;
+
+	&.selected {
+		color: $blue;
+	}
+
+	&:hover {
+		color: $blue;
+	}
 }
 
-.menubar .menu a:hover, .menubar .dropdown.open .mainlink {
+.menubar .dropdown.open .mainlink {
 	color: $blue;
 }
 

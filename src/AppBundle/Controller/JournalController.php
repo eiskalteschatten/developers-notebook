@@ -17,6 +17,7 @@ use AppBundle\Services\Helper;
 class JournalController extends Controller
 {
     private $standardArea = "journal";
+	private $currentPage = "journal";
 
     /**
      * @Route("/notebook/journal/", name="journal")
@@ -121,7 +122,8 @@ class JournalController extends Controller
 	        'editorSettings' => $settingsResult,
 			'standardSyntax' => $standardSyntax,
 			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
-			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
+			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes'),
+			'currentPage' => $this->currentPage
         ));
     }
 }

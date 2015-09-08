@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
+    private $currentPage = "home";
+
     /**
      * @Route("/notebook/", name="homepage")
      */
@@ -15,7 +17,7 @@ class DefaultController extends Controller
     {
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', array(
-            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
+            'currentPage' => $this->currentPage
         ));
     }
 }

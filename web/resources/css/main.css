@@ -233,8 +233,12 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   height: 21px;
   font-weight: 300;
   float: left; }
+  .menubar .menu a.selected {
+    color: #3b80dc; }
+  .menubar .menu a:hover {
+    color: #3b80dc; }
 
-.menubar .menu a:hover, .menubar .dropdown.open .mainlink {
+.menubar .dropdown.open .mainlink {
   color: #3b80dc; }
 
 .menubar .home-icon {

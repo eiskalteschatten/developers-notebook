@@ -17,6 +17,7 @@ use AppBundle\Services\Helper;
 class CodeCacheController extends Controller
 {
     private $standardArea = "code";
+	private $currentPage = "codeCache";
 
     /**
      * @Route("/notebook/code-cache/", name="codeCache")
@@ -113,7 +114,8 @@ class CodeCacheController extends Controller
 	        'editorSettings' => $settingsResult,
 			'standardSyntax' => $standardSyntax,
 			'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
-			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
+			'editorThemes' => $this->container->getParameter('AppBundle.editorThemes'),
+			'currentPage' => $this->currentPage
         ));
     }
 }

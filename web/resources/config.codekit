@@ -3126,6 +3126,17 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
+	"\/js\/basics.min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/basics.min.js",
+		"outputAbbreviatedPath": "\/js\/min\/basics.min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 0
+		},
 	"\/js\/editor-ace.js": {
 		"fileType": 64,
 		"ignore": 1,
@@ -3165,17 +3176,6 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/jquery-ui-1.11.4.min.js",
 		"outputAbbreviatedPath": "\/js\/min\/jquery-ui-1.11.4.min-min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 0
-		},
-	"\/js\/scripts.js": {
-		"fileType": 64,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/scripts.js",
-		"outputAbbreviatedPath": "\/js\/min\/scripts-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -3229,15 +3229,15 @@
 		"shouldRunBless": 0,
 		"useLibsass": 0
 		},
-	"\/scss\/_mainss.scss": {
+	"\/scss\/_menubar.scss": {
 		"createSourceMap": 1,
 		"debugStyle": 0,
 		"decimalPrecision": 10,
 		"fileType": 4,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/scss\/_mainss.scss",
-		"outputAbbreviatedPath": "\/css\/_mainss.css",
+		"inputAbbreviatedPath": "\/scss\/_menubar.scss",
+		"outputAbbreviatedPath": "\/css\/_menubar.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
@@ -3261,22 +3261,6 @@
 		"shouldRunBless": 0,
 		"useLibsass": 0
 		},
-	"\/scss\/_structure.scss": {
-		"createSourceMap": 1,
-		"debugStyle": 0,
-		"decimalPrecision": 10,
-		"fileType": 4,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/scss\/_structure.scss",
-		"outputAbbreviatedPath": "\/css\/_structure.css",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 0,
-		"shouldRunAutoprefixer": 0,
-		"shouldRunBless": 0,
-		"useLibsass": 0
-		},
 	"\/scss\/_toolbars.scss": {
 		"createSourceMap": 1,
 		"debugStyle": 0,
@@ -3286,22 +3270,6 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/scss\/_toolbars.scss",
 		"outputAbbreviatedPath": "\/css\/_toolbars.css",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 0,
-		"shouldRunAutoprefixer": 0,
-		"shouldRunBless": 0,
-		"useLibsass": 0
-		},
-	"\/scss\/main.scss": {
-		"createSourceMap": 1,
-		"debugStyle": 0,
-		"decimalPrecision": 10,
-		"fileType": 4,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/scss\/main.scss",
-		"outputAbbreviatedPath": "\/css\/main.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
