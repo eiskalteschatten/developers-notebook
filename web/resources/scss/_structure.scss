@@ -30,6 +30,13 @@
 
 /* Styles for content columns */
 
+.content-two-columns {
+	.column {
+		float: left;
+		width: 50%;
+	}
+}
+
 .content-two-thirds-columns {
 	.narrow-column {
 		float: left;
