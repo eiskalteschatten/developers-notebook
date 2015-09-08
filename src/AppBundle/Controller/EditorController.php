@@ -142,7 +142,6 @@ class EditorController extends Controller
         return $response;
     }
 
-
     /**
      * @Route("/notebook/editor/createFolder/", name="editorCreateFolder")
      * @Method("POST")
@@ -200,5 +199,25 @@ class EditorController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    /**
+     * @Route("/notebook/editor/movePageToProject/", name="editorMovePageToProject")
+     * @Method("POST")
+     */
+    public function movePageToProjectAction(Request $request)
+    {
+        $projectId = $request->request->get('projectId');
+        $pageId = $request->request->get('pageId');
+
+        $em = $this->getDoctrine()->getManager();
+        $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+
+        $pages->setProject($projectId);
+        $em->flush();
+
+        $response = new JsonResponse(array('project' => $pages->getProject()));
+
+        return $response;
     }
 }

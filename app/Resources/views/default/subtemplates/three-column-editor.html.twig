@@ -15,7 +15,7 @@
                 <div class="section-label">Projects</div>
                 <div class="editor-folders projects">
 					{% for project in projects %}
-			            <div class="editor-folder" data-id="{{ project.id }}">
+			            <div class="editor-folder project" data-id="{{ project.id }}">
 			            	{{ project.name }}
 			            </div>
 					{% endfor %}
@@ -169,6 +169,10 @@
 
             $('.editor-folder.folder').click(function() {
                 selectFolder($(this));
+            });
+
+            $('.editor-folder.project').click(function() {
+                selectProject($(this));
             });
 
             {% if standardArea == "journal" %}

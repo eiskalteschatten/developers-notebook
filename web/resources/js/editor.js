@@ -179,6 +179,22 @@ function removeFolder() {
 	}
 }
 
+function selectProject(obj) {
+	$('.editor-folder').removeClass('selected');
+	obj.addClass('selected');
+
+	var id = $(obj).attr('data-id');
+
+	$('.editor-page').hide();
+	$('.editor-page[data-project=' + id + ']').show();
+
+	if ($('.editor-page:visible').length <= 0) {
+		editor.setValue("", -1);
+	}
+
+	$('.editor-page:visible:first').trigger('click');
+}
+
 function selectYear(obj) {
 	$('.editor-folder').removeClass('selected');
 	obj.addClass('selected');
@@ -238,6 +254,25 @@ function setDraggableAndDroppable() {
 			});
 		}
 	});
+
+	$('.editor-folder.project').droppable({
+		hoverClass: "folder-hover",
+		drop: function( event, ui ) {
+			var project = $(this);
+			var page = $(ui.draggable);
+
+			var toSend = {
+				projectId: project.attr('data-id'),
+				pageId: page.attr('data-id')
+			}
+
+			$.post(editorUrl+"movePageToProject/", toSend, function(data) {
+				page.attr('data-project', data.project);
+				$('.editor-folder.selected').trigger('click');
+			});
+		}
+	});
+
 }
 
 function saveAllSettings() {
