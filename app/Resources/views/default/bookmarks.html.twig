@@ -20,15 +20,24 @@
                 $(this).addClass('selected');
             });
 
+            $('.editor-folder.all-projects-folders').click(function() {
+                selectFolder($(this));
+            });
+
+            $('.editor-folder.folder').click(function() {
+                selectFolder($(this));
+            });
+
+            $('.editor-folder.project').click(function() {
+                selectProject($(this));
+            });
+
             $('.all-projects-folders').trigger('click');
 
             var selectedItem = getUrlParameter("selectedItem");
 
             if (selectedItem !== undefined) {
-                $('.editor-page[data-id="'+selectedItem+'"]').trigger('click');
-            }
-            else {
-                $('.editor-page:visible:first').trigger('click');
+                $('.row[data-id="'+selectedItem+'"]').trigger('click');
             }
         });
 
@@ -144,8 +153,6 @@
                 $('.row').hide();
                 $('.row[data-folder=' + id + ']').show();
             }
-
-            $('.row:visible:first').trigger('click');
         }
 
         function selectProject(obj) {
@@ -156,8 +163,6 @@
 
             $('.row').hide();
             $('.row[data-project=' + id + ']').show();
-
-            $('.row:visible:first').trigger('click');
         }
 
         function setDraggableAndDroppable() {
