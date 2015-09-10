@@ -1,0 +1,31 @@
+AppBundle\Entity\Bookmark:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        project:
+            type: integer
+        folder:
+            type: integer
+        name:
+            type: string
+            length: 255
+        url:
+            type: text
+        notes:
+            type: text
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+    lifecycleCallbacks: {  }

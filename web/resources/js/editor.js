@@ -1,10 +1,15 @@
 function createPage() {
-	var folderId = $('.editor-folder.selected').attr('data-id');
+	var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
+	var projectId = $('.projects').find('.editor-folder.selected').attr('data-id');
     var syntax = $('.editor-page.selected').attr('data-syntax');
 
-    if (folderId == "") {
-        folderId = -1;
-    }
+	if (folderId === undefined || folderId == "") {
+		folderId = -1;
+	}
+
+	if (projectId === undefined || projectId == "") {
+		projectId = -1;
+	}
 
     if (syntax === undefined || syntax == "") {
         syntax = standardSyntax;
@@ -13,7 +18,7 @@ function createPage() {
     var toSend = {
         standardArea: standardArea,
         folder: folderId,
-        project: 0,
+        project: projectId,
         syntax: syntax
     }
     
@@ -86,62 +91,12 @@ function updatePagePreview(content) {
     $('.editor-page.selected').find('.preview').text(content);
 }
 
-function createFolder() {
-	var div = $("<div>");
-	div.addClass('editor-folder');
-	div.addClass('folder');
-	div.addClass('temp-new');
-	div.html('<input type="text" onkeyup="checkCreateFolderKeyDown(event, this)" id="newFolder" placeholder="Folder Name">');
-	$('.editor-folders.folders').append(div);
-	
-	$("#newFolder").focus();
-}
-
-function checkCreateFolderKeyDown(event, obj) {
-    if (event.which == 13) {
-        sendCreateFolder(obj);
-    }
-    else if (event.which == 27) {
-	    $('.editor-folder.temp-new').remove();
-    }
-}
-    
-function sendCreateFolder(obj) {
-    var div = $('.editor-folder.temp-new');
-    var name = $(obj).val();
-    
-    if (name != "") {
-	    var toSend = {
-            standardArea: standardArea,
-	        name: name
-        }
-	    
-        $.post(editorUrl+"createFolder/", toSend, function(data) {
-		    $(obj).remove();
-		    
-            div.attr('data-id', data.id);
-            div.text(data.name);
-			
-			div.click(function() {
-        		selectFolder($(this));
-        	});
-        	
-        	div.removeClass('temp-new');
-        	
-        	setDraggableAndDroppable();
-        });
-    }
-    else {
-	    div.remove();
-    }
-}
-
 function selectFolder(obj) {
 	$('.editor-folder').removeClass('selected');
 	obj.addClass('selected');
-	
+
 	var id = $(obj).attr('data-id');
-	
+
 	if (id == "-1") {
 		$('.editor-page').show();
 	}
@@ -149,44 +104,6 @@ function selectFolder(obj) {
 		$('.editor-page').hide();
 		$('.editor-page[data-folder=' + id + ']').show();
 	}
-
-	if ($('.editor-page:visible').length <= 0) {
-		editor.setValue("", -1);
-	}
-
-	$('.editor-page:visible:first').trigger('click');
-}
-
-function removeFolder() {
-    var selected = $('.editor-folder.selected');
-    
-    if (selected.hasClass('folder')) {
-        if (confirm('Are you sure you want to remove this folder? Its contents will not be deleted. This action cannot be undone.')) {
-		    var toSend = {
-		        id: selected.attr('data-id')
-	        }
-	        
-            $.post(editorUrl+"removeFolder/", toSend, function(data) {
-				var previewSibling = selected.prev();
-	            selected.remove();
-				previewSibling.trigger('click');
-            	//console.log(data);
-            });
-	    }
-	} 
-	else {
-		alert("You must selected a folder to remove it.");
-	}
-}
-
-function selectProject(obj) {
-	$('.editor-folder').removeClass('selected');
-	obj.addClass('selected');
-
-	var id = $(obj).attr('data-id');
-
-	$('.editor-page').hide();
-	$('.editor-page[data-project=' + id + ']').show();
 
 	if ($('.editor-page:visible').length <= 0) {
 		editor.setValue("", -1);
@@ -203,6 +120,22 @@ function selectYear(obj) {
 
 	$('.editor-page').hide();
 	$('.editor-page[data-year=' + id + ']').show();
+
+	if ($('.editor-page:visible').length <= 0) {
+		editor.setValue("", -1);
+	}
+
+	$('.editor-page:visible:first').trigger('click');
+}
+
+function selectProject(obj) {
+	$('.editor-folder').removeClass('selected');
+	obj.addClass('selected');
+
+	var id = $(obj).attr('data-id');
+
+	$('.editor-page').hide();
+	$('.editor-page[data-project=' + id + ']').show();
 
 	if ($('.editor-page:visible').length <= 0) {
 		editor.setValue("", -1);
@@ -272,7 +205,6 @@ function setDraggableAndDroppable() {
 			});
 		}
 	});
-
 }
 
 function saveAllSettings() {

@@ -3,7 +3,7 @@
         <div class="first-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder()" title="Remove selected folder">&ndash;</a>
+                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder('{{ path('editorRemoveFolder') }}')" title="Remove selected folder">&ndash;</a>
                 </div>
             </div>
             <div class="column-content">
@@ -33,7 +33,7 @@
                 {% endif %}
                 
                 <div class="section-label">Folders</div>
-                <div class="editor-folders folders">
+                <div class="editor-folders folders" data-url-create="{{ path('editorCreateFolder') }}">
                 	{% for folder in folders %}
 			            <div class="editor-folder folder" data-id="{{ folder.id }}">
 			            	{{ folder.name }}
@@ -145,6 +145,7 @@
     <script type="text/javascript" src="{{ asset('resources/js/ace/ace.js') }}"></script>
     <script type="text/javascript" src="{{ asset('resources/js/editor-ace.js') }}"></script>
     <script type="text/javascript" src="{{ asset('resources/js/editor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('resources/js/folders.js') }}"></script>
 
     <script type="text/javascript">
         var defaultTheme = "{{ attribute(editorSettings, 'defaultTheme') }}";

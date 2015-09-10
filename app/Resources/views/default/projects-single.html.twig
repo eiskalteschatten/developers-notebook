@@ -56,7 +56,7 @@
         </div>
 
         <div class="content-two-thirds-columns">
-            <div class="narrow-column">
+            <div class="narrow-column with-border-top">
                 <div class="editor-folders">
                     <div class="editor-folder" data-section="journal-project-section">Journal</div>
                     <div class="editor-folder" data-section="issues-project-section">Issues</div>
@@ -91,7 +91,7 @@
                     <div class="full-size-table small-rows">
                         {% for page in pages %}
                             {% if page.area == "code" %}
-                                <div class="row" onclick="goToContent('{{ path('_codecache') }}', '{{ page.id }}')">
+                                <div class="row" onclick="goToContent('{{ path('codeCache') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}

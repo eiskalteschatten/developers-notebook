@@ -206,12 +206,15 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .content-two-thirds-columns .narrow-column {
   float: left;
   width: 300px;
-  border-top: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
-  background: #f6f6f6; }
+  background: #f6f6f6;
+  overflow: auto; }
+  .content-two-thirds-columns .narrow-column.with-border-top {
+    border-top: 1px solid #e6e6e6; }
 .content-two-thirds-columns .large-column {
   float: left;
-  width: calc(100% - 302px); }
+  width: calc(100% - 302px);
+  overflow: auto; }
 .content-two-thirds-columns .tab-section {
   display: none; }
 
@@ -237,7 +240,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   width: calc(100% - 602px);
   overflow: hidden; }
 
-.content-three-columns .column-content .section-label {
+.section-label {
   padding: 15px 10px;
   font-size: 15px;
   font-weight: bold;

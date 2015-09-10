@@ -41,14 +41,19 @@
 	.narrow-column {
 		float: left;
 		width: 300px;
-		border-top: 1px solid $bordercolor;
 		border-right: 1px solid $bordercolor;
 		background: #f6f6f6;
+		overflow: auto;
+
+		&.with-border-top {
+			border-top: 1px solid $bordercolor;
+		}
 	}
 
 	.large-column {
 		float: left;
 		width: calc(100% - 302px);
+		overflow: auto;
 	}
 
 	.tab-section {
@@ -84,7 +89,7 @@
  	overflow: hidden;
 }
 
-.content-three-columns .column-content .section-label {
+.section-label {
 	padding: 15px 10px;
 	font-size: 15px;
 	font-weight: bold;
