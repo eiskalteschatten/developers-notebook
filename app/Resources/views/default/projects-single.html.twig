@@ -34,77 +34,89 @@
 
 {% block body %}
 
-    <div class="content">
-        {% if fail is defined and fail is not empty %}
+
+    {% if fail is defined and fail is not empty %}
+        <div class="content">
             No such project exists!
-        {% else %}
-            {% set isCompletedClass = '' %}
-            {% set isCompletedCheck = '' %}
+        </div>
+    {% else %}
+        {% set isCompletedClass = '' %}
+        {% set isCompletedCheck = '' %}
 
-            {% if project.isCompleted is not empty %}
-                {% set isCompletedClass = ' grayed-out' %}
-                {% set isCompletedCheck = 'checked' %}
-            {% endif %}
+        {% if project.isCompleted is not empty %}
+            {% set isCompletedClass = ' grayed-out' %}
+            {% set isCompletedCheck = 'checked' %}
+        {% endif %}
 
+        <div class="content">
             <div class="page-title{{ isCompletedClass }}">
                 <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
                 {{ project.name }}
             </div>
+        </div>
 
-            <div class="content-two-thirds-columns">
-                <div class="narrow-column">
-                    <div class="editor-folders">
-                        <div class="editor-folder" data-section="journal-project-section">Journal</div>
-                        <div class="editor-folder" data-section="issues-project-section">Issues</div>
-                        <div class="editor-folder" data-section="todos-project-section">To Dos</div>
-                        <div class="editor-folder" data-section="code-project-section">Code Cache</div>
-                        <div class="editor-folder" data-section="notes-project-section">Notes</div>
-                        <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
-                    </div>
+        <div class="content-two-thirds-columns">
+            <div class="narrow-column">
+                <div class="editor-folders">
+                    <div class="editor-folder" data-section="journal-project-section">Journal</div>
+                    <div class="editor-folder" data-section="issues-project-section">Issues</div>
+                    <div class="editor-folder" data-section="todos-project-section">To Dos</div>
+                    <div class="editor-folder" data-section="code-project-section">Code Cache</div>
+                    <div class="editor-folder" data-section="notes-project-section">Notes</div>
+                    <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
+                    <div class="delete-red" style="margin: 10px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
                 </div>
-                <div class="large-column">
-                    <div class="tab-section journal-project-section">
+            </div>
+            <div class="large-column">
+                <div class="tab-section journal-project-section">
+                    <div class="full-size-table small-rows">
                         {% for page in pages %}
                             {% if page.area == "journal" %}
-                                <div class="content" onclick="goToContent('{{ path('journal') }}', '{{ page.id }}')">
+                                <div class="row" onclick="goToContent('{{ path('journal') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="tab-section issues-project-section">
-
+                </div>
+                <div class="tab-section issues-project-section">
+                    <div class="full-size-table small-rows">
                     </div>
-                    <div class="tab-section todos-project-section">
-
+                </div>
+                <div class="tab-section todos-project-section">
+                    <div class="full-size-table small-rows">
                     </div>
-                    <div class="tab-section code-project-section">
+                </div>
+                <div class="tab-section code-project-section">
+                    <div class="full-size-table small-rows">
                         {% for page in pages %}
                             {% if page.area == "code" %}
-                                <div class="content" onclick="goToContent('{{ path('_codecache') }}', '{{ page.id }}')">
+                                <div class="row" onclick="goToContent('{{ path('_codecache') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="tab-section notes-project-section">
+                </div>
+                <div class="tab-section notes-project-section">
+                    <div class="full-size-table small-rows">
                         {% for page in pages %}
                             {% if page.area == "notes" %}
-                                <div class="content" onclick="goToContent('{{ path('notes') }}', '{{ page.id }}')">
+                                <div class="row" onclick="goToContent('{{ path('notes') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="tab-section bookmarks-project-section">
-
+                </div>
+                <div class="tab-section bookmarks-project-section">
+                    <div class="full-size-table small-rows">
                     </div>
                 </div>
             </div>
-            <div class="clear-both"></div>
-            <div class="delete-row" style="margin-top: 30px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
-        {% endif %}
-    </div>
+        </div>
+        <div class="clear-both"></div>
+    {% endif %}
 
 {% endblock %}
 
@@ -115,6 +127,7 @@
         .complete-project {
             float: right;
             font-size: 14px;
+            font-weight: normal;
         }
     </style>
 {% endblock %}

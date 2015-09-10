@@ -60,11 +60,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     clear: both;
 }
 
-.delete-row {
-	a {
-		color: $red;
-		font-size: 12px;
-	}
+.delete-row, .delete-red, .delete-row a, .delete-red a {
+	color: $red;
+	font-size: 12px;
 }
 
 /* Headers */
@@ -186,6 +184,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .full-size-table {
 	width: 100%;
 	border-top: 1px solid $bordercolor;
+
+	&.small-rows .row {
+		font-size: 16px;
+	}
 
 	.row {
 		width: calc(100% - 40px);

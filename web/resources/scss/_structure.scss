@@ -41,25 +41,18 @@
 	.narrow-column {
 		float: left;
 		width: 300px;
-		padding: 10px;
+		border-top: 1px solid $bordercolor;
+		border-right: 1px solid $bordercolor;
+		background: #f6f6f6;
 	}
 
 	.large-column {
 		float: left;
-		padding: 10px;
-		width: calc(100% - 340px);
+		width: calc(100% - 302px);
 	}
 
 	.tab-section {
 		display: none;
-
-		.content {
-			cursor: default;
-
-			&:hover {
-				background: #f5f5f5;
-			}
-		}
 	}
 }
 
