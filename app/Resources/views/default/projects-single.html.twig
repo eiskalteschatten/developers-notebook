@@ -23,6 +23,10 @@
 
             $('.editor-folder:first').trigger('click');
         });
+
+        function goToContent(url, id) {
+            window.location.href = url + "?selectedItem=" + id;
+        }
     </script>
 
     <script type="text/javascript" src="{{ asset('resources/js/projects.js') }}"></script>
@@ -62,7 +66,7 @@
                     <div class="tab-section journal-project-section">
                         {% for page in pages %}
                             {% if page.area == "journal" %}
-                                <div class="content">
+                                <div class="content" onclick="goToContent('{{ path('journal') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}
@@ -77,7 +81,7 @@
                     <div class="tab-section code-project-section">
                         {% for page in pages %}
                             {% if page.area == "code" %}
-                                <div class="content">
+                                <div class="content" onclick="goToContent('{{ path('_codecache') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}
@@ -86,7 +90,7 @@
                     <div class="tab-section notes-project-section">
                         {% for page in pages %}
                             {% if page.area == "notes" %}
-                                <div class="content">
+                                <div class="content" onclick="goToContent('{{ path('notes') }}', '{{ page.id }}')">
                                     {{ page.content }}
                                 </div>
                             {% endif %}

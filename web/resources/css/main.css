@@ -205,6 +205,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   width: calc(100% - 340px); }
 .content-two-thirds-columns .tab-section {
   display: none; }
+  .content-two-thirds-columns .tab-section .content {
+    cursor: default; }
+    .content-two-thirds-columns .tab-section .content:hover {
+      background: #f5f5f5; }
 
 .content-three-columns {
   width: 100%;

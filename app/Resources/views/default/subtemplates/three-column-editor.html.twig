@@ -186,8 +186,15 @@
             $('.editor-page').click(function() {
         		selectPage($(this));
         	});
-        	
-			$('.editor-page:visible:first').trigger('click');
+
+            var selectedItem = getUrlParameter("selectedItem");
+
+            if (selectedItem !== undefined) {
+                $('.editor-page[data-id="'+selectedItem+'"]').trigger('click');
+            }
+            else {
+                $('.editor-page:visible:first').trigger('click');
+            }
 
 			setDraggableAndDroppable();
         });
