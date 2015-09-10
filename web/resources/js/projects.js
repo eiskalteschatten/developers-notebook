@@ -10,8 +10,10 @@ function addNewProject(event, obj) {
             $.post(postUrlCreate, toSend, function(data) {
                 var html = '<span class="delete-row"><a href="#!" onclick="deleteProject(\'' + data.id + '\')">Delete</a></span>';
                 html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(\'' + data.id + '\', this)" class="is-completed-check"></span>';
-                html += '<span class="name" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">' + data.name + '</span>';
-                html += '<span class="date" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">' + data.date + '</span>';
+                html += '<span class="clickable-area" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">';
+                html += '<span class="name">' + data.name + '</span>';
+                html += '<span class="date">' + data.date + '</span>';
+                html += '</span>';
 
                 var div = $("<div>");
                 div.addClass('row');
