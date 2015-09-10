@@ -37,10 +37,6 @@
         }
 
         function createBookmark() {
-
-        }
-
-        function sendCreateBookmark(obj) {
             var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
             var projectId = $('.projects').find('.editor-folder.selected').attr('data-id');
 
@@ -53,29 +49,30 @@
             }
 
             var toSend = {
-                standardArea: standardArea,
                 folder: folderId,
-                project: projectId
+                project: projectId,
             }
 
             $.post("{{ path('bookmarksCreateBookmark') }}", toSend, function(data) {
+                var html = '<div class="info"><span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span><span class="name"></span><span class="url gray-info"><a href="" target="_blank"></a></span></div>';
+                html += '<div class="edit"><input type="text" class="text-bookmark-name" placeholder="Bookmark Name"><input type="text" class="text-bookmark-url" placeholder="Bookmark URL"><textarea class="text-bookmark-note" placeholder="Bookmark Notes"></textarea><button onclick="saveBookmark()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button></div>';
+
                 var div = $("<div>");
                 div.addClass('row');
                 div.attr('data-id', data.id);
                 div.attr('data-folder', data.folder);
-                div.attr('data-syntax', data.syntax);
                 div.attr('data-project', data.project);
-                div.attr('data-year', data.year);
-                div.html('<div class="preview"></div><div class="date">' + data.date + '</div><div class="content"></div>');
-                $('.editor-pages').append(div);
+                div.html(html);
+                $('#bookmarksTable').prepend(div);
 
                 div.click(function() {
-                    selectPage($(this));
+                    selectBookmark($(this));
                 });
 
-                div.trigger('click');
+                openEdit(div.find('.edit-button').find('a'));
+                div.find('.text-bookmark-name').select();
 
-                setDraggableAndDroppable();
+                //setDraggableAndDroppable();
             });
         }
 
@@ -84,31 +81,54 @@
 
             var toSend = {
                 id: selected.attr('data-id'),
-                syntax: selected.attr('data-syntax'),
-                content: editor.getValue()
+                name: selected.find('.text-bookmark-name').val(),
+                url: selected.find('.text-bookmark-url').val(),
+                notes: selected.find('.text-bookmark-notes').text()
             }
 
-            $.post(editorUrl+"save/", toSend, function(data) {
-                updatePagePreview(data.previewContent);
-                var content = editor.getValue();
-                $('.editor-page.selected').find('.content').text(content);
+            $.post("{{ path('bookmarksSaveBookmark') }}", toSend, function(data) {
+                var info = selected.find('.info');
+                info.find('.name').text(data.name);
+                info.find('.url').find('a').attr('href', data.url);
+                info.find('.url').find('a').text(data.croppedUrl);
+
+                closeEdit(selected.find('.edit'));
             });
         }
 
         function removeBookmark() {
             if (confirm('Are you sure you want to remove this bookmark? This action cannot be undone.')) {
-                var selected = $('.editor-page.selected');
+                var selected = $('.row.selected');
 
                 var toSend = {
                     id: selected.attr('data-id')
                 }
 
-                $.post(editorUrl+"remove/", toSend, function(data) {
+                $.post("{{ path('bookmarksRemove') }}", toSend, function(data) {
                     var previewSibling = selected.prev();
                     selected.remove();
                     previewSibling.trigger('click');
                 });
             }
+        }
+
+        function selectBookmark(obj) {
+            $('.row').removeClass('selected');
+            $(obj).addClass('selected');
+        }
+
+        function openEdit(obj) {
+            var row = $(obj).parents('.row');
+            row.find('.info').hide();
+            row.find('.edit').show();
+
+            selectBookmark(row);
+        }
+
+        function closeEdit(obj) {
+            var row = $(obj).parents('.row');
+            row.find('.info').show();
+            row.find('.edit').hide();
         }
 
         function selectFolder(obj) {
@@ -245,11 +265,20 @@
                     <a href="#!" onclick="createBookmark()" title="Create a new bookmark">+</a><a href="#!" onclick="removeBookmark()" title="Remove selected bookmark">&ndash;</a>
                 </div>
             </div>
-            <div class="full-size-table small-rows">
+            <div class="full-size-table small-rows" id="bookmarksTable">
                 {% for bookmark in bookmarks %}
-                    <div class="row" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}">
-                        <span class="name">{{ bookmark.name }}</span>
-                        <span class="url">{{ bookmark.url }}</span>
+                    <div class="row" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectBookmark(this)">
+                        <div class="info">
+                            <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
+                            <span class="name">{{ bookmark.name }}</span>
+                            <span class="url gray-info"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
+                        </div>
+                        <div class="edit">
+                            <input type="text" class="text-bookmark-name" value="{{ bookmark.name }}" placeholder="Bookmark Name">
+                            <input type="text" class="text-bookmark-url" value="{{ bookmark.url }}" placeholder="Bookmark URL">
+                            <textarea class="text-bookmark-note" placeholder="Bookmark Notes">{{ bookmark.notes }}</textarea>
+                            <button onclick="saveBookmark()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -260,5 +289,20 @@
 {% endblock %}
 
 {% block stylesheets %}
+    <style>
+        .text-bookmark-name, .text-bookmark-url {
+            width: calc(50% - 30px) !important;
+            float: left;
+            margin-left: 10px;
+        }
+
+        .text-bookmark-note {
+            width: calc(100% - 40px);
+            height: 50px;
+            margin-left: 10px;
+            margin-top: 20px;
+        }
+    </style>
+
     {{ parent() }}
 {% endblock %}

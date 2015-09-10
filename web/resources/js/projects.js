@@ -12,7 +12,7 @@ function addNewProject(event, obj) {
                 html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(\'' + data.id + '\', this)" class="is-completed-check"></span>';
                 html += '<span class="clickable-area" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">';
                 html += '<span class="name">' + data.name + '</span>';
-                html += '<span class="date">' + data.date + '</span>';
+                html += '<span class="date gray-info">' + data.date + '</span>';
                 html += '</span>';
 
                 var div = $("<div>");

@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Bookmark;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Project;
-use AppBundle\Services\Helper;
 
 class BookmarkController extends Controller
 {
@@ -23,8 +22,6 @@ class BookmarkController extends Controller
      */
     public function indexAction(Request $request)
     {
-		$helper = $this->get('app.services.helper');
-
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -42,13 +39,11 @@ class BookmarkController extends Controller
 		$bookmarks = array();
 		
 		foreach ($bookmarksResult as $bookmark) {
-			$content = $bookmark->getContent();
-			$previewContent = $helper->createPagePreview($content);
-
 			$bookmarks[] = array(
 				'id' => $bookmark->getId(),
 				'name' => $bookmark->getName(),
 				'url' => $bookmark->getUrl(),
+				'croppedUrl' => $this->cropUrl($bookmark->getUrl()),
 				'notes' => $bookmark->getNotes(),
 				'folder' => $bookmark->getFolder(),
 				'project' => $bookmark->getProject(),
@@ -168,9 +163,6 @@ class BookmarkController extends Controller
 	 */
 	public function createBookmarkAction(Request $request)
 	{
-		$name = $request->request->get('name');
-		$url = $request->request->get('url');
-		$notes = $request->request->get('notes');
 		$project = $request->request->get('project');
 		$folder = $request->request->get('folder');
 
@@ -183,9 +175,9 @@ class BookmarkController extends Controller
 		$bookmark->setUserId($userId);
 		$bookmark->setDateCreated($date);
 		$bookmark->setDateModified($date);
-		$bookmark->setName($name);
-		$bookmark->setUrl($url);
-		$bookmark->setNotes($notes);
+		$bookmark->setName("");
+		$bookmark->setUrl("");
+		$bookmark->setNotes("");
 		$bookmark->setProject($project);
 		$bookmark->setFolder($folder);
 
@@ -194,8 +186,69 @@ class BookmarkController extends Controller
 		$em->persist($bookmark);
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'notes' => $bookmark->getNotes(), 'project' => $bookmark->getProject(), 'folder' => $bookmark->getFolder()));
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'project' => $bookmark->getProject(), 'folder' => $bookmark->getFolder()));
 
 		return $response;
+	}
+
+	/**
+	 * @Route("/notebook/bookmarks/saveBookmark/", name="bookmarksSaveBookmark")
+	 * @Method("POST")
+	 */
+	public function saveBookmarkAction(Request $request)
+	{
+		$id = $request->request->get('id');
+		$name = $request->request->get('name');
+		$url = $request->request->get('url');
+		$notes = $request->request->get('notes');
+
+		$date = new \DateTime("now");
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$em = $this->getDoctrine()->getManager();
+		$bookmark = $em->getRepository('AppBundle:Bookmark')->find($id);
+
+		if (!$bookmark) {
+			throw $this->createNotFoundException('No bookmark found for id '.$id);
+		}
+
+		$bookmark->setDateModified($date);
+		$bookmark->setName($name);
+		$bookmark->setUrl($url);
+		$bookmark->setNotes($notes);
+
+		$em->flush();
+
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $this->cropUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes()));
+
+		return $response;
+	}
+
+	/**
+	 * @Route("/notebook/bookmarks/remove/", name="bookmarksRemove")
+	 * @Method("POST")
+	 */
+	public function removeAction(Request $request)
+	{
+		$id = $request->request->get('id');
+
+		$em = $this->getDoctrine()->getManager();
+		$bookmark = $em->getRepository('AppBundle:Bookmark')->find($id);
+
+		if (!$bookmark) {
+			throw $this->createNotFoundException('No bookmark found for id '.$id);
+		}
+
+		$em->remove($bookmark);
+		$em->flush();
+
+		return new Response('success');
+	}
+
+	private function cropUrl($url) {
+		$explodedContent = explode("\n", $url);
+		return substr($explodedContent[0], 0, 50);
 	}
 }

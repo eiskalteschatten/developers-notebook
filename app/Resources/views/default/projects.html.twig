@@ -44,9 +44,9 @@
                         <span class="name">{{ project.name }}</span>
 
                         {% if project.isCompleted is not empty %}
-                            <span class="date">Completed: {{ project.dateCompleted }}</span>
+                            <span class="date gray-info">Completed: {{ project.dateCompleted }}</span>
                         {% else %}
-                            <span class="date">{{ project.dateModified }}</span>
+                            <span class="date gray-info">{{ project.dateModified }}</span>
                         {% endif %}
                     </span>
                 </div>
