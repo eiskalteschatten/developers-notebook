@@ -1,0 +1,42 @@
+AppBundle\Entity\Todo:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+        todo:
+            type: string
+            length: 255
+        notes:
+            type: text
+        isCompleted:
+            type: boolean
+            column: is_completed
+        dateCompleted:
+            type: datetime
+            column: date_completed
+            nullable: true
+        datePlanned:
+            type: datetime
+            column: date_planned
+            nullable: true
+        priority:
+            type: integer
+        folder:
+            type: integer
+        project:
+            type: integer
+    lifecycleCallbacks: {  }
