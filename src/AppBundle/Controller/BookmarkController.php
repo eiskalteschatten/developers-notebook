@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Bookmark;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Project;
+use AppBundle\Services\Helper;
 
 class BookmarkController extends Controller
 {
@@ -22,6 +23,8 @@ class BookmarkController extends Controller
      */
     public function indexAction(Request $request)
     {
+		$helper = $this->get('app.services.helper');
+
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -43,7 +46,7 @@ class BookmarkController extends Controller
 				'id' => $bookmark->getId(),
 				'name' => $bookmark->getName(),
 				'url' => $bookmark->getUrl(),
-				'croppedUrl' => $this->cropUrl($bookmark->getUrl()),
+				'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
 				'notes' => $bookmark->getNotes(),
 				'folder' => $bookmark->getFolder(),
 				'project' => $bookmark->getProject(),
@@ -261,7 +264,7 @@ class BookmarkController extends Controller
 
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $this->cropUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes()));
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes()));
 
 		return $response;
 	}
@@ -305,10 +308,5 @@ class BookmarkController extends Controller
 		$response = new JsonResponse(array('project' => $pages->getProject()));
 
 		return $response;
-	}
-
-	private function cropUrl($url) {
-		$explodedContent = explode("\n", $url);
-		return substr($explodedContent[0], 0, 50);
 	}
 }

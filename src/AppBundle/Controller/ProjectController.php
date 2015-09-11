@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
 use AppBundle\Entity\Pages;
+use AppBundle\Entity\Bookmark;
 use AppBundle\Services\Helper;
 
 class ProjectController extends Controller
@@ -103,9 +104,34 @@ class ProjectController extends Controller
             );
         }
 
+        // GET BOOKMARKS
+
+        $bookmarksResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Bookmark')
+            ->findBy(
+                array('userId' => $userId, 'project' => $id),
+                array('dateModified' => 'DESC')
+            );
+
+        $bookmarks = array();
+
+        foreach ($bookmarksResult as $bookmark) {
+            $bookmarks[] = array(
+                'id' => $bookmark->getId(),
+                'name' => $bookmark->getName(),
+                'url' => $bookmark->getUrl(),
+                'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
+                'notes' => $bookmark->getNotes(),
+                'folder' => $bookmark->getFolder(),
+                'project' => $bookmark->getProject(),
+                'date' => $bookmark->getDateModified()->format($dateTimeFormat)
+            );
+        }
+
         return $this->render('default/projects-single.html.twig', array(
             'project' => $projectsResult,
             'pages' => $pages,
+            'bookmarks' => $bookmarks,
             'currentPage' => $this->currentPage
         ));
     }

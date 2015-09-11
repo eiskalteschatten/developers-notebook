@@ -9,4 +9,9 @@ class Helper
         $explodedContent = explode("\n", $content);
         return substr($explodedContent[0], 0, 35);
     }
+
+    public static  function cropBookmarkUrl($url) {
+        $explodedContent = explode("\n", $url);
+        return substr($explodedContent[0], 0, 50);
+    }
 }

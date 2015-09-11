@@ -111,6 +111,14 @@
                 </div>
                 <div class="tab-section bookmarks-project-section">
                     <div class="full-size-table small-rows">
+                        {% for bookmark in bookmarks %}
+                            <div class="row"  onclick="goToContent('{{ path('bookmarks') }}', '{{ bookmark.id }}')">
+                                <div class="info">
+                                    <span class="name">{{ bookmark.name }}</span>
+                                    <span class="url gray-info"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
