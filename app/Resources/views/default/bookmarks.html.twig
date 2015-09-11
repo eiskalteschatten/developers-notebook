@@ -39,11 +39,9 @@
             if (selectedItem !== undefined) {
                 $('.row[data-id="'+selectedItem+'"]').trigger('click');
             }
-        });
 
-        function goToContent(url, id) {
-            window.location.href = url + "?selectedItem=" + id;
-        }
+            setDraggableAndDroppable();
+        });
 
         function createBookmark() {
             var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
@@ -81,7 +79,7 @@
                 openEdit(div.find('.edit-button').find('a'));
                 div.find('.text-bookmark-name').select();
 
-                //setDraggableAndDroppable();
+                setDraggableAndDroppable();
             });
         }
 
@@ -106,18 +104,23 @@
         }
 
         function removeBookmark() {
-            if (confirm('Are you sure you want to remove this bookmark? This action cannot be undone.')) {
-                var selected = $('.row.selected');
+            var selected = $('.row.selected');
 
-                var toSend = {
-                    id: selected.attr('data-id')
+            if (selected.length) {
+                if (confirm('Are you sure you want to remove this bookmark? This action cannot be undone.')) {
+                    var toSend = {
+                        id: selected.attr('data-id')
+                    }
+
+                    $.post("{{ path('bookmarksRemove') }}", toSend, function(data) {
+                        var previewSibling = selected.prev();
+                        selected.remove();
+                        previewSibling.trigger('click');
+                    });
                 }
-
-                $.post("{{ path('bookmarksRemove') }}", toSend, function(data) {
-                    var previewSibling = selected.prev();
-                    selected.remove();
-                    previewSibling.trigger('click');
-                });
+            }
+            else {
+                alert('You must select a bookmark to delete.');
             }
         }
 
@@ -166,9 +169,21 @@
         }
 
         function setDraggableAndDroppable() {
+            var draggableHelper = function() {
+                var div = $("<div>");
+
+                var clone = $(this).find('.info').clone();
+                clone.find('.edit-button').remove();
+                clone.css('width', 'auto');
+
+                div.html(clone);
+
+                return div;
+            };
+
             $('.row').draggable({
                 revert: 'invalid',
-                helper: "clone",
+                helper: draggableHelper,
                 appendTo: 'body',
                 containment: 'window'
             });
@@ -184,7 +199,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post(editorUrl+"movePageToFolder/", toSend, function(data) {
+                    $.post("{{ path('bookmarksMovePageToFolder') }}", toSend, function(data) {
                         page.attr('data-folder', data.folder);
                         $('.editor-folder.selected').trigger('click');
                     });
@@ -202,7 +217,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post(editorUrl+"removePageFromFolders/", toSend, function(data) {
+                    $.post("{{ path('bookmarksRemovePageFromFolders') }}", toSend, function(data) {
                         page.attr('data-folder', data.folder);
                         $('.editor-folder.selected').trigger('click');
                     });
@@ -220,7 +235,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post(editorUrl+"movePageToProject/", toSend, function(data) {
+                    $.post("{{ path('bookmarksMovePageToProject') }}", toSend, function(data) {
                         page.attr('data-project', data.project);
                         $('.editor-folder.selected').trigger('click');
                     });

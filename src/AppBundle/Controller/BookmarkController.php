@@ -99,6 +99,46 @@ class BookmarkController extends Controller
     }
 
 	/**
+	 * @Route("/notebook/bookmarks/movePageToFolder/", name="bookmarksMovePageToFolder")
+	 * @Method("POST")
+	 */
+	public function movePageToFolderAction(Request $request)
+	{
+		$folderId = $request->request->get('folderId');
+		$pageId = $request->request->get('pageId');
+
+		$em = $this->getDoctrine()->getManager();
+		$pages = $em->getRepository('AppBundle:Bookmark')->find($pageId);
+
+		$pages->setFolder($folderId);
+		$em->flush();
+
+		$response = new JsonResponse(array('folder' => $pages->getFolder()));
+
+		return $response;
+	}
+
+	/**
+	 * @Route("/notebook/bookmarks/removePageFromFolders/", name="bookmarksRemovePageFromFolders")
+	 * @Method("POST")
+	 */
+	public function removePageFromFoldersAction(Request $request)
+	{
+		$folderId = -1;
+		$pageId = $request->request->get('pageId');
+
+		$em = $this->getDoctrine()->getManager();
+		$pages = $em->getRepository('AppBundle:Bookmark')->find($pageId);
+
+		$pages->setFolder($folderId);
+		$em->flush();
+
+		$response = new JsonResponse(array('folder' => $pages->getFolder()));
+
+		return $response;
+	}
+
+	/**
 	 * @Route("/notebook/bookmarks/createFolder/", name="bookmarksCreateFolder")
 	 * @Method("POST")
 	 */
@@ -143,7 +183,7 @@ class BookmarkController extends Controller
 		$em->remove($folders);
 
 		$pagesResult = $this->getDoctrine()
-			->getRepository('AppBundle:Pages')
+			->getRepository('AppBundle:Bookmark')
 			->findBy(
 				array('folder' => $id)
 			);
@@ -245,6 +285,26 @@ class BookmarkController extends Controller
 		$em->flush();
 
 		return new Response('success');
+	}
+
+	/**
+	 * @Route("/notebook/bookmarks/movePageToProject/", name="bookmarksMovePageToProject")
+	 * @Method("POST")
+	 */
+	public function movePageToProjectAction(Request $request)
+	{
+		$projectId = $request->request->get('projectId');
+		$pageId = $request->request->get('pageId');
+
+		$em = $this->getDoctrine()->getManager();
+		$pages = $em->getRepository('AppBundle:Bookmark')->find($pageId);
+
+		$pages->setProject($projectId);
+		$em->flush();
+
+		$response = new JsonResponse(array('project' => $pages->getProject()));
+
+		return $response;
 	}
 
 	private function cropUrl($url) {

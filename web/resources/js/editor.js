@@ -60,19 +60,24 @@ function savePage() {
 }
 
 function removePage() {
-    if (confirm('Are you sure you want to remove this page? This action cannot be undone.')) {
-	    var selected = $('.editor-page.selected');
-    
-        var toSend = {
-	        id: selected.attr('data-id')
-        }
-        
-        $.post(editorUrl+"remove/", toSend, function(data) {
-            var previewSibling = selected.prev();
-            selected.remove();
-			previewSibling.trigger('click');
-        });
-	} 
+	var selected = $('.editor-page.selected');
+
+	if (selected.length) {
+		if (confirm('Are you sure you want to remove this page? This action cannot be undone.')) {
+			var toSend = {
+				id: selected.attr('data-id')
+			}
+
+			$.post(editorUrl + "remove/", toSend, function (data) {
+				var previewSibling = selected.prev();
+				selected.remove();
+				previewSibling.trigger('click');
+			});
+		}
+	}
+	else {
+		alert('You must select a page to delete.');
+	}
 }
 
 function selectPage(obj) {
