@@ -41,6 +41,10 @@
             }
 
             setDraggableAndDroppable();
+
+            $('.text-todo-dateplanned').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
         });
 
         function createTodo() {
@@ -60,7 +64,7 @@
                 project: projectId,
             }
 
-            $.post("{{ path('bookmarksCreateBookmark') }}", toSend, function(data) {
+            $.post("{{ path('todosCreateTodo') }}", toSend, function(data) {
                 var html = '<div class="info"><span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span><span class="name"></span><span class="url gray-info"><a href="" target="_blank"></a></span></div>';
                 html += '<div class="edit"><input type="text" class="text-bookmark-name" placeholder="Bookmark Name"><input type="text" class="text-bookmark-url" placeholder="Bookmark URL"><textarea class="text-bookmark-note" placeholder="Bookmark Notes"></textarea><button onclick="saveBookmark()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button></div>';
 
@@ -73,7 +77,7 @@
                 $('#bookmarksTable').prepend(div);
 
                 div.click(function() {
-                    selectBookmark($(this));
+                    selectTodo($(this));
                 });
 
                 openEdit(div.find('.edit-button').find('a'));
@@ -93,7 +97,7 @@
                 notes: selected.find('.text-bookmark-notes').text()
             }
 
-            $.post("{{ path('bookmarksSaveBookmark') }}", toSend, function(data) {
+            $.post("{{ path('todosSaveTodo') }}", toSend, function(data) {
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
                 info.find('.url').find('a').attr('href', data.url);
@@ -112,7 +116,7 @@
                         id: selected.attr('data-id')
                     }
 
-                    $.post("{{ path('bookmarksRemove') }}", toSend, function(data) {
+                    $.post("{{ path('todosRemove') }}", toSend, function(data) {
                         var previewSibling = selected.prev();
                         selected.remove();
                         previewSibling.trigger('click');
@@ -120,21 +124,25 @@
                 }
             }
             else {
-                alert('You must select a bookmark to delete.');
+                alert('You must select a to do to delete.');
             }
         }
 
-        function selectBookmark(obj) {
+        function selectTodo(obj) {
             $('.row').removeClass('selected');
             $(obj).addClass('selected');
         }
 
         function openEdit(obj) {
             var row = $(obj).parents('.row');
+            var priority = row.find('.priority').text();
+
+            row.find('.select-priority').val(priority);
+
             row.find('.info').hide();
             row.find('.edit').show();
 
-            selectBookmark(row);
+            selectTodo(row);
         }
 
         function closeEdit(obj) {
@@ -199,7 +207,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post("{{ path('bookmarksMovePageToFolder') }}", toSend, function(data) {
+                    $.post("{{ path('todosMovePageToFolder') }}", toSend, function(data) {
                         page.attr('data-folder', data.folder);
                         $('.editor-folder.selected').trigger('click');
                     });
@@ -217,7 +225,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post("{{ path('bookmarksRemovePageFromFolders') }}", toSend, function(data) {
+                    $.post("{{ path('todosRemovePageFromFolders') }}", toSend, function(data) {
                         page.attr('data-folder', data.folder);
                         $('.editor-folder.selected').trigger('click');
                     });
@@ -235,7 +243,7 @@
                         pageId: page.attr('data-id')
                     }
 
-                    $.post("{{ path('bookmarksMovePageToProject') }}", toSend, function(data) {
+                    $.post("{{ path('todosMovePageToProject') }}", toSend, function(data) {
                         page.attr('data-project', data.project);
                         $('.editor-folder.selected').trigger('click');
                     });
@@ -251,7 +259,7 @@
         <div class="narrow-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder('{{ path('bookmarksRemoveFolder') }}')" title="Remove selected folder">&ndash;</a>
+                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder('{{ path('todosRemoveFolder') }}')" title="Remove selected folder">&ndash;</a>
                 </div>
             </div>
             <div class="editor-folders">
@@ -270,7 +278,7 @@
                 </div>
 
                 <div class="section-label">Folders</div>
-                <div class="editor-folders folders" data-url-create="{{ path('bookmarksCreateFolder') }}">
+                <div class="editor-folders folders" data-url-create="{{ path('todosCreateFolder') }}">
                     {% for folder in folders %}
                         <div class="editor-folder folder" data-id="{{ folder.id }}">
                             {{ folder.name }}
@@ -308,8 +316,15 @@
                             </span>
                         </div>
                         <div class="edit">
-                            <input type="text" class="text-bookmark-name" value="{{ todo.name }}" placeholder="To do Name">
-                            <textarea class="text-bookmark-note" placeholder="To do Notes">{{ todo.notes }}</textarea>
+                            <input type="text" class="text-todo-name" value="{{ todo.name }}" placeholder="To do Name">
+                            <input type="text" class="text-todo-dateplanned" value="{{ todo.datePlanned }}" placeholder="Date planned">
+                            Priority:
+                            <select class="select-priority">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <textarea class="text-todo-note" placeholder="To do Notes">{{ todo.notes }}</textarea>
                             <button onclick="saveTodo()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
                         </div>
                     </div>

@@ -42,13 +42,23 @@ class TodosController extends Controller
 		$todos = array();
 		
 		foreach ($todosResult as $todo) {
+			$dateCompleted = $todo->getDateCompleted();
+			if ($dateCompleted) {
+				$dateCompleted = $dateCompleted->format($dateTimeFormat);
+			}
+
+			$datePlanned = $todo->getDatePlanned();
+			if ($datePlanned) {
+				$datePlanned = $datePlanned->format($dateTimeFormat);
+			}
+
 			$todos[] = array(
 				'id' => $todo->getId(),
 				'name' => $todo->getTodo(),
 				'notes' => $todo->getNotes(),
 				'isCompleted' => $todo->getIsCompleted(),
-				'dateCompleted' => $todo->getDateCompleted()->format($dateTimeFormat),
-				'datePlanned' => $todo->getDatePlanned()->format($dateTimeFormat),
+				'dateCompleted' => $dateCompleted,
+				'datePlanned' => $datePlanned,
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),
