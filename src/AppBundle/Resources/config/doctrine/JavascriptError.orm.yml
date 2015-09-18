@@ -1,0 +1,37 @@
+AppBundle\Entity\JavascriptError:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        error:
+            type: text
+        userAgent:
+            type: string
+            length: 255
+        url:
+            type: string
+            length: 255
+        columnNumber:
+            type: string
+            length: '10'
+            column: column_number
+        lineNumber:
+            type: string
+            length: '10'
+            column: line_number
+        dateCreated:
+            type: datetime
+            column: date_created
+        scriptUrl:
+            type: string
+            length: 255
+            column: script_url
+    lifecycleCallbacks: {  }
