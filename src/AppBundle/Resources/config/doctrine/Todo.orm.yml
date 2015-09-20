@@ -33,6 +33,10 @@ AppBundle\Entity\Todo:
             type: datetime
             column: date_planned
             nullable: true
+        dateDue:
+            type: datetime
+            column: date_due
+            nullable: true
         priority:
             type: integer
         folder:

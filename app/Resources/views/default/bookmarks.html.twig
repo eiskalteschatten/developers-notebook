@@ -5,95 +5,46 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ asset('resources/js/folders.js') }}"></script>
-
     <script type="text/javascript">
         var standardArea = "{{ standardArea }}";
+        var createItemUrl = "{{ path('bookmarksCreateBookmark') }}";
+        var saveItemUrl = "{{ path('bookmarksSaveBookmark') }}";
+        var removeItemUrl = "{{ path('bookmarksRemove') }}";
+        var movePageToFolderUrl = "{{ path('bookmarksMovePageToFolder') }}";
+        var removePageFromFoldersUrl = "{{ path('bookmarksRemovePageFromFolders') }}";
+        var movePageToProjectUrl = "{{ path('bookmarksMovePageToProject') }}";
 
-        $(document).ready(function() {
-            $('.editor-folder').click(function() {
-                $('.tab-section').hide();
-                $('.editor-folder').removeClass('selected');
+        function createCallback(data) {
+            var div = $('.row:first').clone();
+            div.attr('data-id', data.id);
+            div.attr('data-folder', data.folder);
+            div.attr('data-project', data.project)
+            div.find('input').val("");
+            div.find('textarea').val("");
+            $('#bookmarksTable').prepend(div);
 
-                var dataSection = $(this).attr('data-section');
-                $('.'+dataSection).show();
-                $(this).addClass('selected');
+            div.click(function() {
+                selectItem($(this));
             });
 
-            $('.editor-folder.all-projects-folders').click(function() {
-                selectFolder($(this));
-            });
-
-            $('.editor-folder.folder').click(function() {
-                selectFolder($(this));
-            });
-
-            $('.editor-folder.project').click(function() {
-                selectProject($(this));
-            });
-
-            $('.all-projects-folders').trigger('click');
-
-            var selectedItem = getUrlParameter("selectedItem");
-
-            if (selectedItem !== undefined) {
-                $('.row[data-id="'+selectedItem+'"]').trigger('click');
-            }
+            openEdit(div.find('.edit-button').find('a'));
+            div.find('.text-item-name').select();
 
             setDraggableAndDroppable();
-        });
-
-        function createBookmark() {
-            var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
-            var projectId = $('.projects').find('.editor-folder.selected').attr('data-id');
-
-            if (folderId === undefined || folderId == "") {
-                folderId = -1;
-            }
-
-            if (projectId === undefined || projectId == "") {
-                projectId = -1;
-            }
-
-            var toSend = {
-                folder: folderId,
-                project: projectId,
-            }
-
-            $.post("{{ path('bookmarksCreateBookmark') }}", toSend, function(data) {
-                var html = '<div class="info"><span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span><span class="name"></span><span class="url gray-info"><a href="" target="_blank"></a></span></div>';
-                html += '<div class="edit"><input type="text" class="text-bookmark-name" placeholder="Bookmark Name"><input type="text" class="text-bookmark-url" placeholder="Bookmark URL"><textarea class="text-bookmark-note" placeholder="Bookmark Notes"></textarea><button onclick="saveBookmark()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button></div>';
-
-                var div = $("<div>");
-                div.addClass('row');
-                div.attr('data-id', data.id);
-                div.attr('data-folder', data.folder);
-                div.attr('data-project', data.project);
-                div.html(html);
-                $('#bookmarksTable').prepend(div);
-
-                div.click(function() {
-                    selectBookmark($(this));
-                });
-
-                openEdit(div.find('.edit-button').find('a'));
-                div.find('.text-bookmark-name').select();
-
-                setDraggableAndDroppable();
-            });
         }
 
-        function saveBookmark() {
+        function saveItem() {
             var selected = $('.row.selected');
 
             var toSend = {
                 id: selected.attr('data-id'),
-                name: selected.find('.text-bookmark-name').val(),
-                url: selected.find('.text-bookmark-url').val(),
-                notes: selected.find('.text-bookmark-notes').text()
+                name: selected.find('.text-item-name').val(),
+                url: selected.find('.text-item-url').val(),
+                notes: selected.find('.text-item-notes').text()
             }
 
-            $.post("{{ path('bookmarksSaveBookmark') }}", toSend, function(data) {
+            $.post(saveItemUrl, toSend, function(data) {
+                var selected = $('.row.selected');
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
                 info.find('.url').find('a').attr('href', data.url);
@@ -103,146 +54,16 @@
             });
         }
 
-        function removeBookmark() {
-            var selected = $('.row.selected');
-
-            if (selected.length) {
-                if (confirm('Are you sure you want to remove this bookmark? This action cannot be undone.')) {
-                    var toSend = {
-                        id: selected.attr('data-id')
-                    }
-
-                    $.post("{{ path('bookmarksRemove') }}", toSend, function(data) {
-                        var previewSibling = selected.prev();
-                        selected.remove();
-                        previewSibling.trigger('click');
-                    });
-                }
-            }
-            else {
-                alert('You must select a bookmark to delete.');
-            }
-        }
-
-        function selectBookmark(obj) {
-            $('.row').removeClass('selected');
-            $(obj).addClass('selected');
-        }
-
         function openEdit(obj) {
             var row = $(obj).parents('.row');
             row.find('.info').hide();
             row.find('.edit').show();
 
-            selectBookmark(row);
-        }
-
-        function closeEdit(obj) {
-            var row = $(obj).parents('.row');
-            row.find('.info').show();
-            row.find('.edit').hide();
-        }
-
-        function selectFolder(obj) {
-            $('.editor-folder').removeClass('selected');
-            obj.addClass('selected');
-
-            var id = $(obj).attr('data-id');
-
-            if (id == "-1") {
-                $('.row').show();
-            }
-            else {
-                $('.row').hide();
-                $('.row[data-folder=' + id + ']').show();
-            }
-        }
-
-        function selectProject(obj) {
-            $('.editor-folder').removeClass('selected');
-            obj.addClass('selected');
-
-            var id = $(obj).attr('data-id');
-
-            $('.row').hide();
-            $('.row[data-project=' + id + ']').show();
-        }
-
-        function setDraggableAndDroppable() {
-            var draggableHelper = function() {
-                var div = $("<div>");
-
-                var clone = $(this).find('.info').clone();
-                clone.find('.edit-button').remove();
-                clone.css('width', 'auto');
-
-                div.html(clone);
-
-                return div;
-            };
-
-            $('.row').draggable({
-                revert: 'invalid',
-                helper: draggableHelper,
-                appendTo: 'body',
-                containment: 'window'
-            });
-
-            $('.editor-folder.folder').droppable({
-                hoverClass: "folder-hover",
-                drop: function( event, ui ) {
-                    var folder = $(this);
-                    var page = $(ui.draggable);
-
-                    var toSend = {
-                        folderId: folder.attr('data-id'),
-                        pageId: page.attr('data-id')
-                    }
-
-                    $.post("{{ path('bookmarksMovePageToFolder') }}", toSend, function(data) {
-                        page.attr('data-folder', data.folder);
-                        $('.editor-folder.selected').trigger('click');
-                    });
-                }
-            });
-
-            $('.editor-folder.all-projects-folders').droppable({
-                hoverClass: "folder-hover",
-                drop: function( event, ui ) {
-                    var folder = $(this);
-                    var page = $(ui.draggable);
-
-                    var toSend = {
-                        folderId: -1,
-                        pageId: page.attr('data-id')
-                    }
-
-                    $.post("{{ path('bookmarksRemovePageFromFolders') }}", toSend, function(data) {
-                        page.attr('data-folder', data.folder);
-                        $('.editor-folder.selected').trigger('click');
-                    });
-                }
-            });
-
-            $('.editor-folder.project').droppable({
-                hoverClass: "folder-hover",
-                drop: function( event, ui ) {
-                    var project = $(this);
-                    var page = $(ui.draggable);
-
-                    var toSend = {
-                        projectId: project.attr('data-id'),
-                        pageId: page.attr('data-id')
-                    }
-
-                    $.post("{{ path('bookmarksMovePageToProject') }}", toSend, function(data) {
-                        page.attr('data-project', data.project);
-                        $('.editor-folder.selected').trigger('click');
-                    });
-                }
-            });
+            selectItem(row);
         }
     </script>
+    <script type="text/javascript" src="{{ asset('resources/js/folders.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('resources/js/bookmarks-todos.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -282,22 +103,33 @@
         <div class="large-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createBookmark()" title="Create a new bookmark">+</a><a href="#!" onclick="removeBookmark()" title="Remove selected bookmark">&ndash;</a>
+                    <a href="#!" onclick="createItem()" title="Create a new bookmark">+</a><a href="#!" onclick="removeItem()" title="Remove selected bookmark">&ndash;</a>
                 </div>
             </div>
             <div class="full-size-table small-rows" id="bookmarksTable">
                 {% for bookmark in bookmarks %}
-                    <div class="row" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectBookmark(this)">
+                    <div class="row" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
                             <span class="name">{{ bookmark.name }}</span>
                             <span class="url gray-info"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
                         </div>
                         <div class="edit">
-                            <input type="text" class="text-bookmark-name" value="{{ bookmark.name }}" placeholder="Bookmark Name">
-                            <input type="text" class="text-bookmark-url" value="{{ bookmark.url }}" placeholder="Bookmark URL">
-                            <textarea class="text-bookmark-note" placeholder="Bookmark Notes">{{ bookmark.notes }}</textarea>
-                            <button onclick="saveBookmark()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
+                            <div class="left item-name">
+                                Name:<br>
+                                <input type="text" class="text-item-name" value="{{ bookmark.name }}" placeholder="Bookmark Name">
+                            </div>
+
+                            <div class="left item-url">
+                                URL:<br>
+                                <input type="text" class="text-item-url" value="{{ bookmark.url }}" placeholder="Bookmark URL">
+                            </div>
+
+                            <div class="clear-both"></div>
+
+                            <div class="input-label" style="margin-top: 20px;">Notes:</div>
+                            <textarea class="text-item-note" placeholder="Bookmark Notes">{{ bookmark.notes }}</textarea>
+                            <button onclick="saveItem()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
                         </div>
                     </div>
                 {% endfor %}
@@ -310,17 +142,24 @@
 
 {% block stylesheets %}
     <style>
-        .text-bookmark-name, .text-bookmark-url {
+        .item-name, .item-url {
             width: calc(50% - 30px) !important;
             float: left;
             margin-left: 10px;
         }
 
-        .text-bookmark-note {
+        .text-item-name, .text-item-url  {
+            width: calc(100% - 10px) !important;
+        }
+
+        .input-label {
+            margin-left: 10px;
+        }
+
+        .text-item-note {
             width: calc(100% - 40px);
             height: 50px;
             margin-left: 10px;
-            margin-top: 20px;
         }
     </style>
 

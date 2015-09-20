@@ -52,6 +52,11 @@ class TodosController extends Controller
 				$datePlanned = $datePlanned->format($dateTimeFormat);
 			}
 
+			$dateDue = $todo->getDateDue();
+			if ($dateDue) {
+				$dateDue = $dateDue->format($dateTimeFormat);
+			}
+
 			$todos[] = array(
 				'id' => $todo->getId(),
 				'name' => $todo->getTodo(),
@@ -59,6 +64,7 @@ class TodosController extends Controller
 				'isCompleted' => $todo->getIsCompleted(),
 				'dateCompleted' => $dateCompleted,
 				'datePlanned' => $datePlanned,
+				'dateDue' => $dateDue,
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),

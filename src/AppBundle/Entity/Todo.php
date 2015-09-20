@@ -55,6 +55,11 @@ class Todo
     private $datePlanned;
 
     /**
+     * @var \DateTime
+     */
+    private $dateDue;
+
+    /**
      * @var integer
      */
     private $priority;
@@ -257,11 +262,34 @@ class Todo
     /**
      * Get datePlanned
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatePlanned()
     {
         return $this->datePlanned;
+    }
+
+    /**
+     * Set dateDue
+     *
+     * @param \DateTime $dateDue
+     * @return Todo
+     */
+    public function setDateDue($dateDue)
+    {
+        $this->datePlanned = $dateDue;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDue
+     *
+     * @return \DateTime
+     */
+    public function getDateDue()
+    {
+        return $this->dateDue;
     }
 
     /**
