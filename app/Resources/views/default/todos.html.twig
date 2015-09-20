@@ -27,7 +27,10 @@
             div.attr('data-project', data.project)
             div.find('input').val("");
             div.find('textarea').val("");
-            $('#bookmarksTable').prepend(div);
+            div.find('.to-empty').text('');
+            div.find('.is-completed-check').prop('checked', false);
+            div.removeClass('to-be-cloned');
+            $('#itemTable').prepend(div);
 
             div.click(function() {
                 selectItem($(this));
@@ -35,6 +38,8 @@
 
             openEdit(div.find('.edit-button').find('a'));
             div.find('.text-item-name').select();
+
+            $('.to-be-cloned').remove();
 
             setDraggableAndDroppable();
         }
@@ -62,6 +67,10 @@
         function openEdit(obj) {
             var row = $(obj).parents('.row');
             var priority = row.find('.priority').text();
+
+            if (priority == "") {
+                priority = "1";
+            }
 
             row.find('.select-item-priority').val(priority);
 
@@ -112,10 +121,10 @@
         <div class="large-column">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createTodo()" title="Create a new to do">+</a><a href="#!" onclick="removeTodo()" title="Remove selected to do">&ndash;</a>
+                    <a href="#!" onclick="createItem()" title="Create a new to do">+</a><a href="#!" onclick="removeItem()" title="Remove selected to do">&ndash;</a>
                 </div>
             </div>
-            <div class="full-size-table small-rows" id="todoTable">
+            <div class="full-size-table small-rows" id="itemTable">
                 {% for todo in todos %}
                     {% set isCompletedClass = '' %}
                     {% set isCompletedCheck = '' %}
@@ -125,16 +134,22 @@
                         {% set isCompletedCheck = 'checked' %}
                     {% endif %}
 
-                    <div class="row" data-id="{{ todo.id }}" data-folder="{{ todo.folder }}" data-project="{{ todo.project }}" onclick="selectTodo(this)">
+                    {% set toBeCloned = '' %}
+
+                    {% if noTodos %}
+                        {% set toBeCloned = ' to-be-cloned' %}
+                    {% endif %}
+
+                    <div class="row{{ toBeCloned }}" data-id="{{ todo.id }}" data-folder="{{ todo.folder }}" data-project="{{ todo.project }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
                             <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span>
-                            <span class="name">{{ todo.name }}</span>
+                            <span class="name to-empty">{{ todo.name }}</span>
                             <span class="gray-info">
-                                <span class="priority">{{ todo.priority }}</span>
-                                <span class="date-planned">{{ todo.datePlanned }}</span>
+                                <span class="priority to-empty">{{ todo.priority }}</span>
+                                <span class="date-planned to-empty">{{ todo.datePlanned }}</span>
                                 {% if todo.isCompleted is not empty %}
-                                    <span class="date-completed">{{ todo.dateCompleted }}</span>
+                                    <span class="date-completed to-empty">{{ todo.dateCompleted }}</span>
                                 {% endif %}
                             </span>
                         </div>
@@ -169,7 +184,7 @@
                             <div class="clear-both"></div>
                             <div class="input-label" style="margin-top: 20px;">Notes:</div>
                             <textarea class="text-item-note" placeholder="To do Notes">{{ todo.notes }}</textarea>
-                            <button onclick="saveTodo()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
+                            <button onclick="saveItem()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
                         </div>
                     </div>
                 {% endfor %}
@@ -214,6 +229,10 @@
             width: calc(100% - 40px);
             height: 50px;
             margin-left: 10px;
+        }
+
+        .to-be-cloned {
+            display: none !important;
         }
     </style>
 

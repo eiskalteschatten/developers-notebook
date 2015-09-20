@@ -71,6 +71,26 @@ class TodosController extends Controller
 				'date' => $todo->getDateModified()->format($dateTimeFormat)
 			);
 		}
+
+		$noTodos = false;
+
+		if (empty($todos)) {
+			$noTodos = true;
+
+			$todos[] = array(
+				'id' => '-1',
+				'name' => '',
+				'notes' => '',
+				'isCompleted' => '',
+				'dateCompleted' => '',
+				'datePlanned' => '',
+				'dateDue' => '',
+				'priority' => '',
+				'folder' => '',
+				'project' => '',
+				'date' => ''
+			);
+		}
 		
 		// GET FOLDERS
 		
@@ -112,6 +132,7 @@ class TodosController extends Controller
 
         return $this->render('default/todos.html.twig', array(
 			'todos' => $todos,
+			'noTodos' => $noTodos,
 			'folders' => $folders,
 			'projects' => $projects,
             'standardArea' => $this->standardArea,
@@ -297,13 +318,13 @@ class TodosController extends Controller
 		$id = $request->request->get('id');
 
 		$em = $this->getDoctrine()->getManager();
-		$bookmark = $em->getRepository('AppBundle:Todo')->find($id);
+		$todo = $em->getRepository('AppBundle:Todo')->find($id);
 
-		if (!$bookmark) {
+		if (!$todo) {
 			throw $this->createNotFoundException('No to do found for id '.$id);
 		}
 
-		$em->remove($bookmark);
+		$em->remove($todo);
 		$em->flush();
 
 		return new Response('success');

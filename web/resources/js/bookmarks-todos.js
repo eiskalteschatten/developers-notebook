@@ -123,11 +123,15 @@ function setDraggableAndDroppable() {
         return div;
     };
 
-    $('.row').draggable({
-        revert: 'invalid',
-        helper: draggableHelper,
-        appendTo: 'body',
-        containment: 'window'
+    $('.row').each(function() {
+        if (!$(this).hasClass('to-be-cloned')) {
+            $(this).draggable({
+                revert: 'invalid',
+                helper: draggableHelper,
+                appendTo: 'body',
+                containment: 'window'
+            });
+        }
     });
 
     $('.editor-folder.folder').droppable({
