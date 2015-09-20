@@ -249,9 +249,6 @@ class BookmarkController extends Controller
 
 		$date = new \DateTime("now");
 
-		$user = $this->get('security.token_storage')->getToken()->getUser();
-		$userId = $user->getId();
-
 		$em = $this->getDoctrine()->getManager();
 		$bookmark = $em->getRepository('AppBundle:Bookmark')->find($id);
 

@@ -50,12 +50,12 @@ class Todo
     private $dateCompleted;
 
     /**
-     * @var \DateTime
+     * @var \Date
      */
     private $datePlanned;
 
     /**
-     * @var \DateTime
+     * @var \Date
      */
     private $dateDue;
 
@@ -249,7 +249,7 @@ class Todo
     /**
      * Set datePlanned
      *
-     * @param \DateTime $datePlanned
+     * @param \Date $datePlanned
      * @return Todo
      */
     public function setDatePlanned($datePlanned)
@@ -262,7 +262,7 @@ class Todo
     /**
      * Get datePlanned
      *
-     * @return \DateTime
+     * @return \Date
      */
     public function getDatePlanned()
     {
@@ -272,7 +272,7 @@ class Todo
     /**
      * Set dateDue
      *
-     * @param \DateTime $dateDue
+     * @param \Date $dateDue
      * @return Todo
      */
     public function setDateDue($dateDue)
@@ -285,7 +285,7 @@ class Todo
     /**
      * Get dateDue
      *
-     * @return \DateTime
+     * @return \Date
      */
     public function getDateDue()
     {

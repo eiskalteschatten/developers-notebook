@@ -49,9 +49,11 @@
 
             var toSend = {
                 id: selected.attr('data-id'),
-                name: selected.find('.text-bookmark-name').val(),
-                url: selected.find('.text-bookmark-url').val(),
-                notes: selected.find('.text-bookmark-notes').text()
+                name: selected.find('.text-item-name').val(),
+                priority: selected.find('.select-item-priority').val(),
+                datePlanned: selected.find('.text-item-dateplanned').val(),
+                dateDue: selected.find('.text-item-datedue').val(),
+                notes: selected.find('.text-item-note').val()
             }
 
             $.post(saveItemUrl, toSend, function(data) {

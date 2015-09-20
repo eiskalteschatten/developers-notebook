@@ -30,11 +30,11 @@ AppBundle\Entity\Todo:
             column: date_completed
             nullable: true
         datePlanned:
-            type: datetime
+            type: date
             column: date_planned
             nullable: true
         dateDue:
-            type: datetime
+            type: date
             column: date_due
             nullable: true
         priority:

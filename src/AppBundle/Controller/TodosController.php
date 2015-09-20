@@ -282,29 +282,30 @@ class TodosController extends Controller
 	{
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
-		$url = $request->request->get('url');
+		$priority = $request->request->get('priority');
+		$datePlanned = date('Y-m-d', strtotime($request->request->get('datePlanned')));
+		$dateDue = date('Y-m-d', strtotime($request->request->get('dateDue')));
 		$notes = $request->request->get('notes');
 
 		$date = new \DateTime("now");
 
-		$user = $this->get('security.token_storage')->getToken()->getUser();
-		$userId = $user->getId();
-
 		$em = $this->getDoctrine()->getManager();
-		$bookmark = $em->getRepository('AppBundle:Todo')->find($id);
+		$todo = $em->getRepository('AppBundle:Todo')->find($id);
 
-		if (!$bookmark) {
+		if (!$todo) {
 			throw $this->createNotFoundException('No to do found for id '.$id);
 		}
 
-		$bookmark->setDateModified($date);
-		$bookmark->setName($name);
-		$bookmark->setUrl($url);
-		$bookmark->setNotes($notes);
+		$todo->setDateModified($date);
+		$todo->setTodo($name);
+		$todo->setPriority($priority);
+		$todo->setDatePlanned($datePlanned);
+		$todo->setDateDue($dateDue->getTimestamp());
+		$todo->setNotes($notes);
 
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'priority' => $todo->getPriority(), 'datePlanned' => $todo->getDatePlanned(), 'dateDue' => $todo->getDateDue(), 'notes' => $todo->getNotes()));
 
 		return $response;
 	}

@@ -41,7 +41,7 @@
                 id: selected.attr('data-id'),
                 name: selected.find('.text-item-name').val(),
                 url: selected.find('.text-item-url').val(),
-                notes: selected.find('.text-item-notes').text()
+                notes: selected.find('.text-item-note').val()
             }
 
             $.post(saveItemUrl, toSend, function(data) {
