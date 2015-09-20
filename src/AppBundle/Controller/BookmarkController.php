@@ -240,6 +240,8 @@ class BookmarkController extends Controller
 	 */
 	public function saveBookmarkAction(Request $request)
 	{
+		$helper = $this->get('app.services.helper');
+
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$url = $request->request->get('url');
