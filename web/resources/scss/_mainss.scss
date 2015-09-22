@@ -256,3 +256,40 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		}
 	}
 }
+
+/* Date Picker */
+
+.ui-datepicker {
+	background: #ffffff;
+	padding: 10px;
+	font-size: 14px;
+	box-shadow: 3px 3px 3px $shadowcolor;
+
+	a {
+		font-size: 14px;
+	}
+
+	.ui-datepicker-prev {
+		float: left;
+		cursor: pointer;
+	}
+
+	.ui-datepicker-next {
+		float: right;
+		text-align: right;
+		cursor: pointer;
+	}
+
+	.ui-datepicker-title {
+		font-size: 17px;
+		clear: both;
+		padding: 5px;
+		background: #efefef;
+	}
+
+	.ui-datepicker-calendar {
+		th, td {
+			min-width: 25px;
+		}
+	}
+}

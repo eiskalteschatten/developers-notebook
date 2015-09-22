@@ -186,6 +186,29 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     .full-size-table .row.selected {
       background: #e6e6e6; }
 
+/* Date Picker */
+.ui-datepicker {
+  background: #ffffff;
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: 3px 3px 3px #d0d0d0; }
+  .ui-datepicker a {
+    font-size: 14px; }
+  .ui-datepicker .ui-datepicker-prev {
+    float: left;
+    cursor: pointer; }
+  .ui-datepicker .ui-datepicker-next {
+    float: right;
+    text-align: right;
+    cursor: pointer; }
+  .ui-datepicker .ui-datepicker-title {
+    font-size: 17px;
+    clear: both;
+    padding: 5px;
+    background: #efefef; }
+  .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
+    min-width: 25px; }
+
 /* Styles for boxes */
 .box {
   box-shadow: 0 0 10px #d0d0d0;
