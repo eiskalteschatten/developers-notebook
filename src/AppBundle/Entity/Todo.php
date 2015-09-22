@@ -277,7 +277,7 @@ class Todo
      */
     public function setDateDue($dateDue)
     {
-        $this->datePlanned = $dateDue;
+        $this->dateDue = $dateDue;
 
         return $this;
     }

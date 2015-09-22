@@ -56,11 +56,14 @@
                 notes: selected.find('.text-item-note').val()
             }
 
+            console.log(toSend);
+
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
-                info.find('.url').find('a').attr('href', data.url);
-                info.find('.url').find('a').text(data.croppedUrl);
+                info.find('.priority').text(data.priority);
+                info.find('.date-planned').text(data.datePlanned);
+                info.find('.date-due').text(data.dateDue);
 
                 closeEdit(selected.find('.edit'));
             });
@@ -150,6 +153,7 @@
                             <span class="gray-info">
                                 <span class="priority to-empty">{{ todo.priority }}</span>
                                 <span class="date-planned to-empty">{{ todo.datePlanned }}</span>
+                                <span class="date-due to-empty">{{ todo.dateDue }}</span>
                                 {% if todo.isCompleted is not empty %}
                                     <span class="date-completed to-empty">{{ todo.dateCompleted }}</span>
                                 {% endif %}

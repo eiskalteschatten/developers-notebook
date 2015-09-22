@@ -25,7 +25,8 @@ class TodosController extends Controller
     {
 		$helper = $this->get('app.services.helper');
 
-        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
@@ -49,12 +50,12 @@ class TodosController extends Controller
 
 			$datePlanned = $todo->getDatePlanned();
 			if ($datePlanned) {
-				$datePlanned = $datePlanned->format($dateTimeFormat);
+				$datePlanned = $datePlanned->format($dateFormat);
 			}
 
 			$dateDue = $todo->getDateDue();
 			if ($dateDue) {
-				$dateDue = $dateDue->format($dateTimeFormat);
+				$dateDue = $dateDue->format($dateFormat);
 			}
 
 			$todos[] = array(
@@ -280,11 +281,13 @@ class TodosController extends Controller
 	 */
 	public function saveTodoAction(Request $request)
 	{
+		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
+
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$priority = $request->request->get('priority');
-		$datePlanned = date('Y-m-d', strtotime($request->request->get('datePlanned')));
-		$dateDue = date('Y-m-d', strtotime($request->request->get('dateDue')));
+		$datePlanned = new \DateTime($request->request->get('datePlanned'));
+		$dateDue = new \DateTime($request->request->get('dateDue'));
 		$notes = $request->request->get('notes');
 
 		$date = new \DateTime("now");
@@ -300,12 +303,22 @@ class TodosController extends Controller
 		$todo->setTodo($name);
 		$todo->setPriority($priority);
 		$todo->setDatePlanned($datePlanned);
-		$todo->setDateDue($dateDue->getTimestamp());
+		$todo->setDateDue($dateDue);
 		$todo->setNotes($notes);
 
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'priority' => $todo->getPriority(), 'datePlanned' => $todo->getDatePlanned(), 'dateDue' => $todo->getDateDue(), 'notes' => $todo->getNotes()));
+		$datePlannedResponse = $todo->getDatePlanned();
+		if ($datePlannedResponse) {
+			$datePlannedResponse = $datePlannedResponse->format($dateFormat);
+		}
+
+		$dateDueResponse = $todo->getDateDue();
+		if ($dateDueResponse) {
+			$dateDueResponse = $dateDueResponse->format($dateFormat);
+		}
+
+		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}
