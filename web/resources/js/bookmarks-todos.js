@@ -92,11 +92,17 @@ function selectFolder(obj) {
     var id = $(obj).attr('data-id');
 
     if (id == "-1") {
-        $('.row').show();
+        $('.row:not(.is-completed)').show();
     }
     else {
         $('.row').hide();
-        $('.row[data-folder=' + id + ']').show();
+
+        if ($('#toggleIsCompleted').hasClass('selected')) {
+            $('.row[data-folder=' + id + ']').show();
+        }
+        else {
+            $('.row[data-folder=' + id + ']:not(.is-completed)').show();
+        }
     }
 }
 
@@ -107,7 +113,13 @@ function selectProject(obj) {
     var id = $(obj).attr('data-id');
 
     $('.row').hide();
-    $('.row[data-project=' + id + ']').show();
+
+    if ($('#toggleIsCompleted').hasClass('selected')) {
+        $('.row[data-project=' + id + ']').show();
+    }
+    else {
+        $('.row[data-project=' + id + ']:not(.is-completed)').show();
+    }
 }
 
 function setDraggableAndDroppable() {

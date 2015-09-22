@@ -345,6 +345,45 @@ class TodosController extends Controller
 	}
 
 	/**
+	 * @Route("/notebook/todos/is-complete/", name="todosIsComplete")
+	 * @Method("POST")
+	 */
+	public function changeIsCompleteAction(Request $request)
+	{
+		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+
+		$id = $request->request->get('id');
+		$isComplete = ($request->request->get('isComplete') === 'true');
+
+		$date = new \DateTime("now");
+
+		$em = $this->getDoctrine()->getManager();
+		$todo = $em->getRepository('AppBundle:Todo')->find($id);
+
+		if (!$todo) {
+			throw $this->createNotFoundException('No to do found for id '.$id);
+		}
+
+		$todo->setDateModified($date);
+		$todo->setIsCompleted($isComplete);
+
+		if ($isComplete == true) {
+			$todo->setDateCompleted($date);
+			$date = $todo->getDateCompleted()->format($dateTimeFormat);
+		}
+		else {
+			$todo->setDateCompleted(null);
+			$date = $todo->getDateModified()->format($dateTimeFormat);
+		}
+
+		$em->flush();
+
+		$response = new JsonResponse(array('id' => $todo->getId(), 'isCompleted' => $todo->getIsCompleted(), 'date' => $date));
+
+		return $response;
+	}
+
+	/**
 	 * @Route("/notebook/todos/movePageToProject/", name="todosMovePageToProject")
 	 * @Method("POST")
 	 */
