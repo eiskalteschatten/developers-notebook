@@ -15,14 +15,10 @@
         var movePageToProjectUrl = "{{ path('todosMovePageToProject') }}";
 
         $(document).ready(function() {
-            setDatePicker();
-        });
-
-        function setDatePicker() {
             $('.date-picker').datepicker({
                 dateFormat: "yy-mm-dd"
             });
-        }
+        });
 
         function createCallback(data) {
             var div = $('.row:first').clone();
@@ -36,6 +32,12 @@
             div.removeClass('to-be-cloned');
             $('#itemTable').prepend(div);
 
+            div.find('.hasDatepicker').removeClass('hasDatepicker');
+            div.find('.date-picker').datepicker("destroy");
+            div.find('.date-picker').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+
             div.click(function() {
                 selectItem($(this));
             });
@@ -46,7 +48,6 @@
             $('.to-be-cloned').remove();
 
             setDraggableAndDroppable();
-            setDatePicker();
         }
 
         function saveItem() {
