@@ -193,25 +193,20 @@
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
                             <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span>
+                            <span class="priority to-empty">{{ todo.priority }}</span>
                             <span class="name to-empty">{{ todo.name }}</span>
                             <span class="gray-info">
-                                <span class="priority to-empty">{{ todo.priority }}</span>
-                                <span class="date-completed to-empty">
-                                    {% if todo.isCompleted is not empty %}
-                                        todo.isCompleted
-                                    {% endif %}
-                                </span>
-                                <span class="date-planned to-empty">{{ todo.datePlanned }}</span>
-                                <span class="date-due to-empty">{{ todo.dateDue }}</span>
+                                <span class="date-planned to-empty">Date Planned: {{ todo.datePlanned }}</span>
+                                <span class="date-due to-empty">Due: {{ todo.dateDue }}</span>
                                 {% if todo.isCompleted is not empty %}
-                                    <span class="date-completed to-empty">{{ todo.dateCompleted }}</span>
+                                    <span class="date-completed to-empty">Completed: {{ todo.dateCompleted }}</span>
                                 {% endif %}
                             </span>
                         </div>
                         <div class="edit">
                             <div class="left item-name">
                                 Name:<br>
-                                <input type="text" class="text-item-name" value="{{ todo.name }}" placeholder="To do Name">
+                                <input type="text" class="text-item-name" value="{{ todo.name }}" placeholder="To do name">
                             </div>
 
                             <div class="left item-priority">
