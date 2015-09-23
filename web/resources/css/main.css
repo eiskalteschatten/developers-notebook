@@ -187,6 +187,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       background: #e6e6e6; }
 
 /* Date Picker */
+#ui-datepicker-div {
+  display: none; }
+
 .ui-datepicker {
   background: #ffffff;
   padding: 10px;
