@@ -92,7 +92,12 @@ function selectFolder(obj) {
     var id = $(obj).attr('data-id');
 
     if (id == "-1") {
-        $('.row:not(.is-completed)').show();
+        if ($('#toggleIsCompleted').hasClass('selected')) {
+            $('.row').show();
+        }
+        else {
+            $('.row:not(.is-completed)').show();
+        }
     }
     else {
         $('.row').hide();
