@@ -255,6 +255,11 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			margin-left: 10px;
 		}
 
+		.gray-info .single-row {
+			display: inline-block;
+			margin-right: 25px;
+		}
+
 		&.selected {
 			background: #e6e6e6;
 		}

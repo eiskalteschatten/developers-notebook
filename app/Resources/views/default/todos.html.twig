@@ -197,11 +197,11 @@
                                 <div class="name to-empty">{{ todo.name }}</div>
                                 <div class="gray-info no-margin">
                                     {% if todo.isCompleted is not empty %}
-                                        <span class="date-completed to-empty"><b>Completed:</b> {{ todo.dateCompleted }}</span>
+                                        <span class="date-completed to-empty single-row"><b>Completed:</b> {{ todo.dateCompleted }}</span>
                                     {% endif %}
-                                    <span class="priority to-empty"><b>Priority:</b> {{ todo.priority }}</span>
-                                    <span class="date-planned to-empty"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
-                                    <span class="date-due to-empty"><b>Due:</b> {{ todo.dateDue }}</span>
+                                    <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
+                                    <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
+                                    <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>
@@ -286,11 +286,6 @@
 
         .to-be-cloned {
             display: none !important;
-        }
-
-        .gray-info span {
-            display: inline-block;
-            margin-right: 25px;
         }
     </style>
 

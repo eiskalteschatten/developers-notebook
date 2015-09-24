@@ -85,6 +85,24 @@
                 </div>
                 <div class="tab-section todos-project-section">
                     <div class="full-size-table small-rows">
+                        {% for todo in todos %}
+                            {% if todo.isCompleted is empty %}
+                                <div class="row" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
+                                    <div class="info">
+                                        <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
+                                        <div class="left">
+                                            <div class="name to-empty">{{ todo.name }}</div>
+                                            <div class="gray-info no-margin">
+                                                <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
+                                                <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
+                                                <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="clear-both"></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="tab-section code-project-section">

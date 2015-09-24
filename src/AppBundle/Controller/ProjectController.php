@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\Bookmark;
+use AppBundle\Entity\Todo;
 use AppBundle\Services\Helper;
 
 class ProjectController extends Controller
@@ -67,6 +68,7 @@ class ProjectController extends Controller
         $helper = $this->get('app.services.helper');
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+        $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
@@ -128,10 +130,54 @@ class ProjectController extends Controller
             );
         }
 
+
+        // GET TO DOS
+
+        $todosResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Todo')
+            ->findBy(
+                array('userId' => $userId),
+                array('dateModified' => 'DESC')
+            );
+
+        $todos = array();
+
+        foreach ($todosResult as $todo) {
+            $dateCompleted = $todo->getDateCompleted();
+            if ($dateCompleted) {
+                $dateCompleted = $dateCompleted->format($dateTimeFormat);
+            }
+
+            $datePlanned = $todo->getDatePlanned();
+            if ($datePlanned) {
+                $datePlanned = $datePlanned->format($dateFormat);
+            }
+
+            $dateDue = $todo->getDateDue();
+            if ($dateDue) {
+                $dateDue = $dateDue->format($dateFormat);
+            }
+
+            $todos[] = array(
+                'id' => $todo->getId(),
+                'name' => $todo->getTodo(),
+                'notes' => $todo->getNotes(),
+                'isCompleted' => $todo->getIsCompleted(),
+                'dateCompleted' => $dateCompleted,
+                'datePlanned' => $datePlanned,
+                'dateDue' => $dateDue,
+                'priority' => $todo->getPriority(),
+                'folder' => $todo->getFolder(),
+                'project' => $todo->getProject(),
+                'date' => $todo->getDateModified()->format($dateTimeFormat)
+            );
+        }
+
         return $this->render('default/projects-single.html.twig', array(
             'project' => $projectsResult,
             'pages' => $pages,
             'bookmarks' => $bookmarks,
+            'todos' => $todos,
             'currentPage' => $this->currentPage
         ));
     }

@@ -186,6 +186,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       font-size: 12px;
       display: inline-block;
       margin-left: 10px; }
+    .full-size-table .row .gray-info .single-row {
+      display: inline-block;
+      margin-right: 25px; }
     .full-size-table .row.selected {
       background: #e6e6e6; }
 
