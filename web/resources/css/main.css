@@ -51,6 +51,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   color: #ba3434;
   font-size: 12px; }
 
+.no-margin {
+  margin: 0 !important; }
+
 /* Headers */
 .page-title {
   font-size: 30px;

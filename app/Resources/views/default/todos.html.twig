@@ -192,16 +192,19 @@
                     <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ todo.id }}" data-folder="{{ todo.folder }}" data-project="{{ todo.project }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
-                            <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span>
-                            <span class="priority to-empty">{{ todo.priority }}</span>
-                            <span class="name to-empty">{{ todo.name }}</span>
-                            <span class="gray-info">
-                                <span class="date-planned to-empty">Date Planned: {{ todo.datePlanned }}</span>
-                                <span class="date-due to-empty">Due: {{ todo.dateDue }}</span>
-                                {% if todo.isCompleted is not empty %}
-                                    <span class="date-completed to-empty">Completed: {{ todo.dateCompleted }}</span>
-                                {% endif %}
-                            </span>
+                            <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
+                            <div class="left">
+                                <div class="name to-empty">{{ todo.name }}</div>
+                                <div class="gray-info no-margin">
+                                    {% if todo.isCompleted is not empty %}
+                                        <span class="date-completed to-empty"><b>Completed:</b> {{ todo.dateCompleted }}</span>
+                                    {% endif %}
+                                    <span class="priority to-empty"><b>Priority:</b> {{ todo.priority }}</span>
+                                    <span class="date-planned to-empty"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
+                                    <span class="date-due to-empty"><b>Due:</b> {{ todo.dateDue }}</span>
+                                </div>
+                            </div>
+                            <div class="clear-both"></div>
                         </div>
                         <div class="edit">
                             <div class="left item-name">
@@ -283,6 +286,11 @@
 
         .to-be-cloned {
             display: none !important;
+        }
+
+        .gray-info span {
+            display: inline-block;
+            margin-right: 25px;
         }
     </style>
 
