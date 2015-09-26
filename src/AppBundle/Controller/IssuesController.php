@@ -256,10 +256,11 @@ class IssuesController extends Controller
 		$issue->setUserId($userId);
 		$issue->setDateCreated($date);
 		$issue->setDateModified($date);
-		$issue->setTodo("");
-		$issue->setNotes("");
+		$issue->setTitle("");
+		$issue->setDescription("");
 		$issue->setIsCompleted(false);
-		$issue->setPriority(1);
+		$issue->setLabels("");
+		$issue->setTodos("");
 		$issue->setProject($project);
 		$issue->setFolder($folder);
 
@@ -268,7 +269,7 @@ class IssuesController extends Controller
 		$em->persist($issue);
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder(), 'priority' => $issue->getPriority(), 'isCompleted' => $issue->getIsCompleted()));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder()));
 
 		return $response;
 	}
@@ -330,10 +331,10 @@ class IssuesController extends Controller
 		$id = $request->request->get('id');
 
 		$em = $this->getDoctrine()->getManager();
-		$issue = $em->getRepository('AppBundle:Todo')->find($id);
+		$issue = $em->getRepository('AppBundle:Issue')->find($id);
 
 		if (!$issue) {
-			throw $this->createNotFoundException('No to do found for id '.$id);
+			throw $this->createNotFoundException('No issue found for id '.$id);
 		}
 
 		$em->remove($issue);

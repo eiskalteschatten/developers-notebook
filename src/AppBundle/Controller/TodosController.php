@@ -265,7 +265,7 @@ class TodosController extends Controller
 		$em->persist($todo);
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'project' => $todo->getProject(), 'folder' => $todo->getFolder(), 'priority' => $todo->getPriority(), 'isCompleted' => $todo->getIsCompleted()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'project' => $todo->getProject(), 'folder' => $todo->getFolder(), 'priority' => $todo->getPriority()));
 
 		return $response;
 	}

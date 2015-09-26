@@ -23,12 +23,15 @@ AppBundle\Entity\Issue:
         dateCompleted:
             type: datetime
             column: date_completed
+            nullable: true
         datePlanned:
             type: date
             column: date_planned
+            nullable: true
         dateDue:
             type: date
             column: date_due
+            nullable: true
         folder:
             type: integer
         project:
