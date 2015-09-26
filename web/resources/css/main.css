@@ -54,6 +54,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .no-margin {
   margin: 0 !important; }
 
+.to-be-cloned {
+  display: none !important; }
+
 /* Headers */
 .page-title {
   font-size: 30px;

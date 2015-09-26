@@ -53,6 +53,19 @@ class BookmarkController extends Controller
 				'date' => $bookmark->getDateModified()->format($dateTimeFormat)
 			);
 		}
+
+		// ADD A BLANK HIDDEN ROW FOR CLONING WHEN CREATING A NEW BOOKMARK
+
+		$bookmarks[] = array(
+			'id' => '-1',
+			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
+			'url' => '',
+			'croppedUrl' => '',
+			'notes' => '',
+			'folder' => '',
+			'project' => '',
+			'date' => ''
+		);
 		
 		// GET FOLDERS
 		

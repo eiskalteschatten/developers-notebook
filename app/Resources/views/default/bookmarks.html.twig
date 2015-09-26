@@ -22,6 +22,8 @@
             div.find('input').val("");
             div.find('textarea').val("");
             div.find('.to-empty').text('');
+            div.find('.url').html('<a href=""></a>');
+            div.removeClass('to-be-cloned');
             $('#itemTable').prepend(div);
 
             div.click(function() {
@@ -109,7 +111,13 @@
             </div>
             <div class="full-size-table small-rows" id="itemTable">
                 {% for bookmark in bookmarks %}
-                    <div class="row" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectItem(this)">
+                    {% set toBeCloned = '' %}
+
+                    {% if bookmark.name == "dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==" %}
+                        {% set toBeCloned = ' to-be-cloned' %}
+                    {% endif %}
+
+                    <div class="row{{ toBeCloned }}" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
                             <span class="name to-empty">{{ bookmark.name }}</span>

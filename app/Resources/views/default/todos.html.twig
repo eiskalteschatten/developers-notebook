@@ -30,6 +30,7 @@
             div.find('.to-empty').text('');
             div.find('.is-completed-check').prop('checked', false);
             div.removeClass('to-be-cloned');
+            div.removeClass('is-completed');
             $('#itemTable').prepend(div);
 
             div.find('.hasDatepicker').removeClass('hasDatepicker');
@@ -44,8 +45,6 @@
 
             openEdit(div.find('.edit-button').find('a'));
             div.find('.text-item-name').select();
-
-            $('.to-be-cloned').remove();
 
             setDraggableAndDroppable();
         }
@@ -62,14 +61,12 @@
                 notes: selected.find('.text-item-note').val()
             }
 
-            console.log(toSend);
-
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
-                info.find('.priority').text(data.priority);
-                info.find('.date-planned').text(data.datePlanned);
-                info.find('.date-due').text(data.dateDue);
+                info.find('.priority').html("<b>Priority:</b>: " + data.priority);
+                info.find('.date-planned').html("<b>Date Planned:</b>: " + data.datePlanned);
+                info.find('.date-due').html("<b>Due:</b>: " + data.dateDue);
 
                 closeEdit(selected.find('.edit'));
             });
@@ -185,7 +182,7 @@
 
                     {% set toBeCloned = '' %}
 
-                    {% if noTodos %}
+                    {% if todo.name == "dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==" %}
                         {% set toBeCloned = ' to-be-cloned' %}
                     {% endif %}
 
@@ -282,10 +279,6 @@
             width: calc(100% - 40px);
             height: 50px;
             margin-left: 10px;
-        }
-
-        .to-be-cloned {
-            display: none !important;
         }
     </style>
 

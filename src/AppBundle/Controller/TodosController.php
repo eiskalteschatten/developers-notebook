@@ -73,26 +73,22 @@ class TodosController extends Controller
 			);
 		}
 
-		$noTodos = false;
+		// ADD A BLANK HIDDEN ROW FOR CLONING WHEN CREATING A NEW TO DO
 
-		if (empty($todos)) {
-			$noTodos = true;
+		$todos[] = array(
+			'id' => '-1',
+			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
+			'notes' => '',
+			'isCompleted' => '',
+			'dateCompleted' => '',
+			'datePlanned' => '',
+			'dateDue' => '',
+			'priority' => '',
+			'folder' => '',
+			'project' => '',
+			'date' => ''
+		);
 
-			$todos[] = array(
-				'id' => '-1',
-				'name' => '',
-				'notes' => '',
-				'isCompleted' => '',
-				'dateCompleted' => '',
-				'datePlanned' => '',
-				'dateDue' => '',
-				'priority' => '',
-				'folder' => '',
-				'project' => '',
-				'date' => ''
-			);
-		}
-		
 		// GET FOLDERS
 		
 		$foldersResult = $this->getDoctrine()
@@ -133,7 +129,6 @@ class TodosController extends Controller
 
         return $this->render('default/todos.html.twig', array(
 			'todos' => $todos,
-			'noTodos' => $noTodos,
 			'folders' => $folders,
 			'projects' => $projects,
             'standardArea' => $this->standardArea,
