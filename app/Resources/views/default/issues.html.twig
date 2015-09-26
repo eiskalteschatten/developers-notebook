@@ -55,16 +55,16 @@
             var toSend = {
                 id: selected.attr('data-id'),
                 name: selected.find('.text-item-name').val(),
-                priority: selected.find('.select-item-priority').val(),
+                labels: selected.find('.text-item-labels').val(),
+                todos: selected.find('.text-item-todos').val(),
                 datePlanned: selected.find('.text-item-dateplanned').val(),
                 dateDue: selected.find('.text-item-datedue').val(),
-                notes: selected.find('.text-item-note').val()
+                description: selected.find('.text-item-note').val()
             }
 
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
-                info.find('.priority').html("<b>Priority:</b>: " + data.priority);
                 info.find('.date-planned').html("<b>Date Planned:</b>: " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b>: " + data.dateDue);
 
@@ -109,7 +109,7 @@
                 }
                 else {
                     row.removeClass('is-completed');
-                    row.find('.date-completed').text('');
+                    row.find('.date-completed').remove();
                 }
             });
         }
@@ -203,6 +203,18 @@
 
                             <div class="clear-both"></div>
 
+                            <div class="left item-labels" style="margin-top: 20px;">
+                                Labels:<br>
+                                <input type="text" class="text-item-labels" value="{{ issue.labels }}" placeholder="Labels, comma seperated">
+                            </div>
+
+                            <div class="left item-todos" style="margin-top: 20px;">
+                                Connected to dos:<br>
+                                <input type="text" class="text-item-todos" value="{{ issue.todos }}" placeholder="Connected to dos, comma seperated">
+                            </div>
+
+                            <div class="clear-both"></div>
+
                             <div class="left item-dateplanned" style="margin-top: 20px;">
                                 Date Planned:<br>
                                 <input type="text" class="text-item-dateplanned date-picker" value="{{ issue.datePlanned }}" placeholder="Date planned">
@@ -215,7 +227,7 @@
 
 
                             <div class="clear-both"></div>
-                            <div class="input-label" style="margin-top: 20px;">Notes:</div>
+                            <div class="input-label" style="margin-top: 20px;">Description:</div>
                             <textarea class="text-item-note" placeholder="Description">{{ issue.description }}</textarea>
                             <button onclick="saveItem()" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" style="margin-left: 10px;">Cancel</button>
                         </div>
@@ -231,7 +243,7 @@
 {% block stylesheets %}
     <style>
         .item-name {
-            width: calc(100% - 120px);
+            width: calc(100% - 50px);
             margin-left: 10px;
         }
 
@@ -239,13 +251,13 @@
             width: calc(100% - 10px) !important;
          }
 
-        .item-dateplanned, .item-datedue {
+        .item-dateplanned, .item-datedue, .item-labels, .item-todos {
             width: calc(50% - 30px) !important;
             float: left;
             margin-left: 10px;
         }
 
-        .text-item-dateplanned, .text-item-datedue  {
+        .text-item-dateplanned, .text-item-datedue, .text-item-labels, .text-item-todos  {
             width: calc(100% - 10px) !important;
         }
 
@@ -254,8 +266,8 @@
         }
 
         .text-item-note {
-            width: calc(100% - 40px);
-            height: 50px;
+            width: calc(100% - 60px);
+            height: 150px;
             margin-left: 10px;
         }
     </style>

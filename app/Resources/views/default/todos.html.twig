@@ -116,7 +116,7 @@
                 }
                 else {
                     row.removeClass('is-completed');
-                    row.find('.date-completed').text('');
+                    row.find('.date-completed').remove();
                 }
             });
         }
@@ -276,7 +276,7 @@
         }
 
         .text-item-note {
-            width: calc(100% - 40px);
+            width: calc(100% - 60px);
             height: 50px;
             margin-left: 10px;
         }

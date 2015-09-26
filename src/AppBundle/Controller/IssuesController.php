@@ -149,7 +149,7 @@ class IssuesController extends Controller
 		$pageId = $request->request->get('pageId');
 
 		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Todo')->find($pageId);
+		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
 
 		$pages->setFolder($folderId);
 		$em->flush();
@@ -169,7 +169,7 @@ class IssuesController extends Controller
 		$pageId = $request->request->get('pageId');
 
 		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Todo')->find($pageId);
+		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
 
 		$pages->setFolder($folderId);
 		$em->flush();
@@ -224,7 +224,7 @@ class IssuesController extends Controller
 		$em->remove($folders);
 
 		$pagesResult = $this->getDoctrine()
-			->getRepository('AppBundle:Todo')
+			->getRepository('AppBundle:Issue')
 			->findBy(
 				array('folder' => $id)
 			);
@@ -239,7 +239,7 @@ class IssuesController extends Controller
 	}
 
 	/**
-	 * @Route("/notebook/issues/createTodo/", name="issuesCreateIssue")
+	 * @Route("/notebook/issues/createIssue/", name="issuesCreateIssue")
 	 * @Method("POST")
 	 */
 	public function createIssueAction(Request $request)
@@ -275,7 +275,7 @@ class IssuesController extends Controller
 	}
 
 	/**
-	 * @Route("/notebook/issues/saveTodo/", name="issuesSaveIssue")
+	 * @Route("/notebook/issues/saveIssue/", name="issuesSaveIssue")
 	 * @Method("POST")
 	 */
 	public function saveIssueAction(Request $request)
@@ -284,10 +284,11 @@ class IssuesController extends Controller
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
-		$priority = $request->request->get('priority');
+		$labels = $request->request->get('labels');
+		$todos = $request->request->get('todos');
 		$datePlanned = new \DateTime($request->request->get('datePlanned'));
 		$dateDue = new \DateTime($request->request->get('dateDue'));
-		$notes = $request->request->get('notes');
+		$description = $request->request->get('description');
 
 		$date = new \DateTime("now");
 
@@ -299,11 +300,12 @@ class IssuesController extends Controller
 		}
 
 		$issue->setDateModified($date);
-		$issue->setTodo($name);
-		$issue->setPriority($priority);
+		$issue->setTitle($name);
+		$issue->setLabels($labels);
+		$issue->setTodos($todos);
 		$issue->setDatePlanned($datePlanned);
 		$issue->setDateDue($dateDue);
-		$issue->setNotes($notes);
+		$issue->setDescription($description);
 
 		$em->flush();
 
@@ -317,7 +319,7 @@ class IssuesController extends Controller
 			$dateDueResponse = $dateDueResponse->format($dateFormat);
 		}
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTodo(), 'priority' => $issue->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $issue->getNotes()));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $issue->getTodos(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
 		return $response;
 	}
@@ -357,10 +359,10 @@ class IssuesController extends Controller
 		$date = new \DateTime("now");
 
 		$em = $this->getDoctrine()->getManager();
-		$issue = $em->getRepository('AppBundle:Todo')->find($id);
+		$issue = $em->getRepository('AppBundle:Issue')->find($id);
 
 		if (!$issue) {
-			throw $this->createNotFoundException('No to do found for id '.$id);
+			throw $this->createNotFoundException('No issue found for id '.$id);
 		}
 
 		$issue->setDateModified($date);
@@ -392,7 +394,7 @@ class IssuesController extends Controller
 		$pageId = $request->request->get('pageId');
 
 		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Todo')->find($pageId);
+		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
 
 		$pages->setProject($projectId);
 		$em->flush();
