@@ -397,4 +397,34 @@ class TodosController extends Controller
 
 		return $response;
 	}
+
+	/**
+	 * @Route("/notebook/todos/getListOfTodos/", name="todosGetListOfTodos")
+	 * @Method("GET")
+	 */
+	public function getListOfTodosAction(Request $request)
+	{
+		$term = $request->query->get('term');
+		$searchTerm = "%" . $term . "%";
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$em = $this->getDoctrine()->getManager();
+		$query = $em->createQuery("SELECT t.todo, t.id FROM AppBundle:Todo t WHERE t.todo LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+		$todosResult = $query->getResult();
+
+		$todos = array();
+
+		foreach ($todosResult as $todo) {
+			$todos[] = array(
+				'label' => $todo['todo'],
+				'value' => $todo['id']
+			);
+		}
+
+		$response = new JsonResponse($todos);
+
+		return $response;
+	}
 }
