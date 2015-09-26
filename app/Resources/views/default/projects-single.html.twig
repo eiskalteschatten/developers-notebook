@@ -81,6 +81,23 @@
                 </div>
                 <div class="tab-section issues-project-section">
                     <div class="full-size-table small-rows">
+                        {% for issue in issues %}
+                            {% if issue.isCompleted is empty %}
+                                <div class="row" onclick="goToContent('{{ path('issues') }}', '{{ issue.id }}')">
+                                    <div class="info">
+                                        <div class="left">
+                                            <div class="name to-empty">{{ issue.name }}</div>
+                                            <div class="gray-info no-margin">
+                                                <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
+                                                <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
+                                                <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="clear-both"></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="tab-section todos-project-section">
@@ -89,7 +106,6 @@
                             {% if todo.isCompleted is empty %}
                                 <div class="row" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
                                     <div class="info">
-                                        <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ todo.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
                                         <div class="left">
                                             <div class="name to-empty">{{ todo.name }}</div>
                                             <div class="gray-info no-margin">

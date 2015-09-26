@@ -65,6 +65,7 @@
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
                 info.find('.name').text(data.name);
+                info.find('.labels').html("<b>Labels:</b>: " + data.labels);
                 info.find('.date-planned').html("<b>Date Planned:</b>: " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b>: " + data.dateDue);
 
@@ -189,6 +190,7 @@
                                     {% if issue.isCompleted is not empty %}
                                         <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
                                     {% endif %}
+                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
                                     <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
                                 </div>

@@ -136,7 +136,7 @@ class ProjectController extends Controller
         $todosResult = $this->getDoctrine()
             ->getRepository('AppBundle:Todo')
             ->findBy(
-                array('userId' => $userId),
+                array('userId' => $userId, 'project' => $id),
                 array('dateModified' => 'DESC')
             );
 
@@ -173,11 +173,55 @@ class ProjectController extends Controller
             );
         }
 
+        // GET ISSUES
+
+        $issuesResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Issue')
+            ->findBy(
+                array('userId' => $userId, 'project' => $id),
+                array('dateModified' => 'DESC')
+            );
+
+        $issues = array();
+
+        foreach ($issuesResult as $issue) {
+            $dateCompleted = $issue->getDateCompleted();
+            if ($dateCompleted) {
+                $dateCompleted = $dateCompleted->format($dateTimeFormat);
+            }
+
+            $datePlanned = $issue->getDatePlanned();
+            if ($datePlanned) {
+                $datePlanned = $datePlanned->format($dateFormat);
+            }
+
+            $dateDue = $issue->getDateDue();
+            if ($dateDue) {
+                $dateDue = $dateDue->format($dateFormat);
+            }
+
+            $issues[] = array(
+                'id' => $issue->getId(),
+                'name' => $issue->getTitle(),
+                'description' => $issue->getDescription(),
+                'isCompleted' => $issue->getIsCompleted(),
+                'dateCompleted' => $dateCompleted,
+                'datePlanned' => $datePlanned,
+                'dateDue' => $dateDue,
+                'labels' => $issue->getLabels(),
+                'todos' => $issue->getTodos(),
+                'folder' => $issue->getFolder(),
+                'project' => $issue->getProject(),
+                'date' => $issue->getDateModified()->format($dateTimeFormat)
+            );
+        }
+
         return $this->render('default/projects-single.html.twig', array(
             'project' => $projectsResult,
             'pages' => $pages,
             'bookmarks' => $bookmarks,
             'todos' => $todos,
+            'issues' => $issues,
             'currentPage' => $this->currentPage
         ));
     }
