@@ -73,6 +73,20 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 	display: none !important;
 }
 
+.draggable-item {
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+
+	$fontSize: 14px;
+
+	font-size: $fontSize;
+
+	a {
+		font-size: $fontSize;
+	}
+}
+
 /* Headers */
 
 .page-title {

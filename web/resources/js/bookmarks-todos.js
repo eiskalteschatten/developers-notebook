@@ -133,7 +133,9 @@ function setDraggableAndDroppable() {
 
         var clone = $(this).find('.info').clone();
         clone.find('.edit-button').remove();
-        clone.css('width', 'auto');
+        clone.addClass('draggable-item');
+        clone.find('input').remove();
+        clone.find('.gray-info').remove();
 
         div.html(clone);
 

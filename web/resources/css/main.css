@@ -57,6 +57,14 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .to-be-cloned {
   display: none !important; }
 
+.draggable-item {
+  width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px; }
+  .draggable-item a {
+    font-size: 14px; }
+
 /* Headers */
 .page-title {
   font-size: 30px;
