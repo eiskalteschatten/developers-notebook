@@ -1,0 +1,45 @@
+AppBundle\Entity\Issue:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        dateCreated:
+            type: datetime
+            column: date_created
+        dateModified:
+            type: datetime
+            column: date_modified
+        isCompleted:
+            type: boolean
+            column: is_completed
+        dateCompleted:
+            type: datetime
+            column: date_completed
+        datePlanned:
+            type: date
+            column: date_planned
+        dateDue:
+            type: date
+            column: date_due
+        folder:
+            type: integer
+        project:
+            type: integer
+        title:
+            type: string
+            length: 255
+        description:
+            type: text
+        labels:
+            type: text
+        todos:
+            type: text
+    lifecycleCallbacks: {  }
