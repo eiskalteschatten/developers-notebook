@@ -86,11 +86,20 @@
                                 <div class="row" onclick="goToContent('{{ path('issues') }}', '{{ issue.id }}')">
                                     <div class="info">
                                         <div class="left">
-                                            <div class="name to-empty">{{ issue.name }}</div>
-                                            <div class="gray-info no-margin">
-                                                <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
+                                            <div>
+                                                <span class="item-id to-empty">#{{ issue.id }}</span>
+                                                <span class="name to-empty">{{ issue.name }}</span>
+                                            </div>
+                                            <div class="gray-info">
+                                                {% if issue.isCompleted is not empty %}
+                                                    <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
+                                                {% endif %}
                                                 <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
                                                 <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
+                                            </div>
+                                            <div class="gray-info">
+                                                <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
+                                                <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todos }}</span>
                                             </div>
                                         </div>
                                         <div class="clear-both"></div>
@@ -107,7 +116,10 @@
                                 <div class="row" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
                                     <div class="info">
                                         <div class="left">
-                                            <div class="name to-empty">{{ todo.name }}</div>
+                                            <div>
+                                                <span class="item-id to-empty">#{{ todo.id }}</span>
+                                                <span class="name to-empty">{{ todo.name }}</span>
+                                            </div>
                                             <div class="gray-info no-margin">
                                                 <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
                                                 <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
