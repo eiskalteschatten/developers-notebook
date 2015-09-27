@@ -210,7 +210,7 @@
                                 </div>
                                 <div class="gray-info">
                                     <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
-                                    <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todos }}</span>
+                                    <span class="todos to-empty single-row"><b>To dos:</b> <a href="{{ path('todos') }}?selectedItem={{ issue.todos }}">{{ issue.todos }}</a></span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>
