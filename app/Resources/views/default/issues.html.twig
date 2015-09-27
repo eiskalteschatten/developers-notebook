@@ -67,7 +67,7 @@
                 info.find('.item-id').text("#" + data.id);
                 info.find('.name').text(data.name);
                 info.find('.labels').html("<b>Labels:</b> " + data.labels);
-                info.find('.todos').html("<b>To dos:</b> " + data.todos);
+                info.find('.todos').html("<b>To dos:</b> <a href=\"{{ path('todos') }}?selectedItem=" + data.todos + "\">" + data.todos + "</a>");
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
 
