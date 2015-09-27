@@ -67,7 +67,7 @@
                 info.find('.item-id').text("#" + data.id);
                 info.find('.name').text(data.name);
                 info.find('.labels').html("<b>Labels:</b> " + data.labels);
-                info.find('.todos').html("<b>To dos:</b> <a href=\"{{ path('todos') }}?selectedItem=" + data.todos + "\">" + data.todos + "</a>");
+                info.find('.todos').html("<b>To dos:</b> <a href=\"{{ path('todos') }}?selectedItem=" + data.todos + "\">#" + data.todos + "</a>");
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
 
@@ -210,7 +210,7 @@
                                 </div>
                                 <div class="gray-info">
                                     <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
-                                    <span class="todos to-empty single-row"><b>To dos:</b> <a href="{{ path('todos') }}?selectedItem={{ issue.todos }}">{{ issue.todos }}</a></span>
+                                    <span class="todos to-empty single-row"><b>To dos:</b> <a href="{{ path('todos') }}?selectedItem={{ issue.todos }}">#{{ issue.todos }}</a></span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>
