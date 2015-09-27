@@ -18,16 +18,6 @@
             $('.date-picker').datepicker({
                 dateFormat: "yy-mm-dd"
             });
-
-            $('.text-item-todos').autocomplete({
-                source: "{{ path('todosGetListOfTodos') }}",
-                minLength: 2,
-                select: function (event, ui) {
-//                    log(ui.item ?
-//                    "Selected: " + ui.item.value + " aka " + ui.item.id :
-//                    "Nothing selected, input was " + this.value);
-                }
-            });
         });
 
         function createCallback(data) {
@@ -74,10 +64,12 @@
 
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
+                info.find('.item-id').text("#" + data.id);
                 info.find('.name').text(data.name);
-                info.find('.labels').html("<b>Labels:</b>: " + data.labels);
-                info.find('.date-planned').html("<b>Date Planned:</b>: " + data.datePlanned);
-                info.find('.date-due').html("<b>Due:</b>: " + data.dateDue);
+                info.find('.labels').html("<b>Labels:</b> " + data.labels);
+                info.find('.todos').html("<b>To dos:</b> " + data.todos);
+                info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
+                info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
 
                 closeEdit(selected.find('.edit'));
             });
@@ -90,6 +82,16 @@
             row.find('.edit').show();
 
             selectItem(row);
+
+            row.find('.text-item-todos').autocomplete({
+                source: "{{ path('todosGetListOfTodos') }}",
+                minLength: 2,
+                select: function (event, ui) {
+//                    log(ui.item ?
+//                    "Selected: " + ui.item.value + " aka " + ui.item.id :
+//                    "Nothing selected, input was " + this.value);
+                }
+            });
         }
 
         function toggleCompletedProjects(button) {
@@ -195,14 +197,20 @@
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
                             <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ issue.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
                             <div class="left">
-                                <div class="name to-empty">{{ issue.name }}</div>
-                                <div class="gray-info no-margin">
+                                <div>
+                                    <span class="item-id to-empty">#{{ issue.id }}</span>
+                                    <span class="name to-empty">{{ issue.name }}</span>
+                                </div>
+                                <div class="gray-info">
                                     {% if issue.isCompleted is not empty %}
                                         <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
                                     {% endif %}
-                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
                                     <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
+                                </div>
+                                <div class="gray-info">
+                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
+                                    <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todos }}</span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>

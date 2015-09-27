@@ -411,14 +411,14 @@ class TodosController extends Controller
 		$userId = $user->getId();
 
 		$em = $this->getDoctrine()->getManager();
-		$query = $em->createQuery("SELECT t.todo, t.id FROM AppBundle:Todo t WHERE t.todo LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+		$query = $em->createQuery("SELECT t.todo, t.id FROM AppBundle:Todo t WHERE (t.todo LIKE :searchTerm OR t.id LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
 		$todosResult = $query->getResult();
 
 		$todos = array();
 
 		foreach ($todosResult as $todo) {
 			$todos[] = array(
-				'label' => $todo['todo'],
+				'label' => "#" . $todo['id'] . " " . $todo['todo'],
 				'value' => $todo['id']
 			);
 		}

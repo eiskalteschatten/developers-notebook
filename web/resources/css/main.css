@@ -65,6 +65,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   .draggable-item a {
     font-size: 14px; }
 
+.item-id {
+  color: #a0a0a0;
+  padding-right: 15px; }
+
 /* Headers */
 .page-title {
   font-size: 30px;
@@ -195,8 +199,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     .full-size-table .row .gray-info, .full-size-table .row .gray-info a {
       color: #a0a0a0;
       font-size: 12px;
-      display: inline-block;
-      margin-left: 10px; }
+      margin-top: 5px; }
     .full-size-table .row .gray-info .single-row {
       display: inline-block;
       margin-right: 25px; }
@@ -712,15 +715,23 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   margin-top: 15px;
   display: block; }
 
+/* General */
+.ui-widget-content {
+  background: #ffffff;
+  font-size: 14px;
+  box-shadow: 3px 3px 3px #d0d0d0; }
+
+.ui-menu-item {
+  padding: 10px; }
+  .ui-menu-item.ui-state-focus {
+    background: #efefef; }
+
 /* Date Picker */
 #ui-datepicker-div {
   display: none; }
 
 .ui-datepicker {
-  background: #ffffff;
-  padding: 10px;
-  font-size: 14px;
-  box-shadow: 3px 3px 3px #d0d0d0; }
+  padding: 10px; }
   .ui-datepicker a {
     font-size: 14px; }
   .ui-datepicker .ui-datepicker-prev {
@@ -743,6 +754,14 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   position: absolute;
   top: 0;
   left: 0;
-  cursor: default; }
+  cursor: default;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  max-height: 500px;
+  max-width: 500px; }
+  .ui-autocomplete li {
+    list-style: none;
+    white-space: nowrap; }
 
 /*# sourceMappingURL=main.css.map */

@@ -87,6 +87,12 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 	}
 }
 
+.item-id {
+	color: #a0a0a0;
+	padding-right: 15px;
+}
+
+
 /* Headers */
 
 .page-title {
@@ -269,8 +275,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		.gray-info, .gray-info a {
 			color: #a0a0a0;
 			font-size: 12px;
-			display: inline-block;
-			margin-left: 10px;
+			margin-top: 5px;
 		}
 
 		.gray-info .single-row {
