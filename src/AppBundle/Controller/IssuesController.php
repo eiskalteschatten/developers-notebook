@@ -59,6 +59,9 @@ class IssuesController extends Controller
 				$dateDue = $dateDue->format($dateFormat);
 			}
 
+			$todos = str_replace(' ', '', $issue->getTodos());
+			$todosArray = explode(",", $todos);
+
 			$issues[] = array(
 				'id' => $issue->getId(),
 				'name' => $issue->getTitle(),
@@ -68,7 +71,8 @@ class IssuesController extends Controller
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
 				'labels' => $issue->getLabels(),
-				'todos' => $issue->getTodos(),
+				'todos' => $todosArray,
+				'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
 				'folder' => $issue->getFolder(),
 				'project' => $issue->getProject(),
 				'date' => $issue->getDateModified()->format($dateTimeFormat)
@@ -87,6 +91,7 @@ class IssuesController extends Controller
 			'dateDue' => '',
 			'labels' => '',
 			'todos' => '',
+			'todosHtml' => '',
 			'folder' => '',
 			'project' => '',
 			'date' => '',
@@ -280,12 +285,14 @@ class IssuesController extends Controller
 	 */
 	public function saveIssueAction(Request $request)
 	{
+		$helper = $this->get('app.services.helper');
+
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$labels = $request->request->get('labels');
-		$todos = $request->request->get('todos');
+		$todos = rtrim($request->request->get('todos'), ', ');
 		$datePlanned = new \DateTime($request->request->get('datePlanned'));
 		$dateDue = new \DateTime($request->request->get('dateDue'));
 		$description = $request->request->get('description');
@@ -319,7 +326,10 @@ class IssuesController extends Controller
 			$dateDueResponse = $dateDueResponse->format($dateFormat);
 		}
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $issue->getTodos(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
+		$todos = str_replace(' ', '', $issue->getTodos());
+		$todosArray = explode(",", $todos);
+
+		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
 		return $response;
 	}

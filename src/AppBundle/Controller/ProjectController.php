@@ -200,6 +200,9 @@ class ProjectController extends Controller
                 $dateDue = $dateDue->format($dateFormat);
             }
 
+            $todos = str_replace(' ', '', $issue->getTodos());
+            $todosArray = explode(",", $todos);
+
             $issues[] = array(
                 'id' => $issue->getId(),
                 'name' => $issue->getTitle(),
@@ -209,7 +212,7 @@ class ProjectController extends Controller
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
                 'labels' => $issue->getLabels(),
-                'todos' => $issue->getTodos(),
+                'todos' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
                 'folder' => $issue->getFolder(),
                 'project' => $issue->getProject(),
                 'date' => $issue->getDateModified()->format($dateTimeFormat)

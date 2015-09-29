@@ -125,3 +125,13 @@ function hideMessage() {
 		msgCenter.html('');
 	});
 }
+
+// Functions for Autocomplete with comma separated values
+
+function autocompleteSplit(val) {
+	return val.split(/,\s*/);
+}
+
+function autocompleteExtractLast(term) {
+	return autocompleteSplit(term).pop();
+}

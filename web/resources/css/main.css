@@ -726,6 +726,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   .ui-menu-item.ui-state-focus {
     background: #efefef; }
 
+.ui-helper-hidden-accessible {
+  display: none; }
+
 /* Date Picker */
 #ui-datepicker-div {
   display: none; }

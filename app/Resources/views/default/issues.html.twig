@@ -67,7 +67,7 @@
                 info.find('.item-id').text("#" + data.id);
                 info.find('.name').text(data.name);
                 info.find('.labels').html("<b>Labels:</b> " + data.labels);
-                info.find('.todos').html("<b>To dos:</b> <a href=\"{{ path('todos') }}?selectedItem=" + data.todos + "\">#" + data.todos + "</a>");
+                info.find('.todos').html("<b>To dos:</b> " + data.todosHtml);
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
 
@@ -84,12 +84,27 @@
             selectItem(row);
 
             row.find('.text-item-todos').autocomplete({
-                source: "{{ path('todosGetListOfTodos') }}",
-                minLength: 2,
+                source: function (request, response) {
+                    $.getJSON("{{ path('todosGetListOfTodos') }}", {
+                        term: autocompleteExtractLast(request.term)
+                    }, response);
+                },
+                search: function () {
+                    var term = autocompleteExtractLast(this.value);
+                    if (term.length < 1) {
+                        return false;
+                    }
+                },
+                focus: function () {
+                    return false;
+                },
                 select: function (event, ui) {
-//                    log(ui.item ?
-//                    "Selected: " + ui.item.value + " aka " + ui.item.id :
-//                    "Nothing selected, input was " + this.value);
+                    var terms = autocompleteSplit(this.value);
+                    terms.pop();
+                    terms.push(ui.item.value);
+                    terms.push("");
+                    this.value = terms.join(", ");
+                    return false;
                 }
             });
         }
@@ -210,7 +225,7 @@
                                 </div>
                                 <div class="gray-info">
                                     <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
-                                    <span class="todos to-empty single-row"><b>To dos:</b> <a href="{{ path('todos') }}?selectedItem={{ issue.todos }}">#{{ issue.todos }}</a></span>
+                                    <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todosHtml | raw }}</span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>
@@ -230,7 +245,7 @@
 
                             <div class="left item-todos" style="margin-top: 20px;">
                                 Connected to dos:<br>
-                                <input type="text" class="text-item-todos" value="{{ issue.todos }}" placeholder="Connected to dos, comma seperated">
+                                <input type="text" class="text-item-todos" value="{% for todo in issue.todos %}{{ todo }}{% if not loop.last %}, {% endif %}{% endfor %}" placeholder="Connected to dos, comma seperated">
                             </div>
 
                             <div class="clear-both"></div>
