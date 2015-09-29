@@ -56,6 +56,7 @@
                 id: selected.attr('data-id'),
                 name: selected.find('.text-item-name').val(),
                 priority: selected.find('.select-item-priority').val(),
+                issues: selected.find('.text-item-issues').val(),
                 datePlanned: selected.find('.text-item-dateplanned').val(),
                 dateDue: selected.find('.text-item-datedue').val(),
                 notes: selected.find('.text-item-note').val()
@@ -87,6 +88,8 @@
             row.find('.edit').show();
 
             selectItem(row);
+
+            setAutocomplete(row.find('.text-item-issues'));
         }
 
         function toggleCompletedTodos(button) {
@@ -118,6 +121,33 @@
                 else {
                     row.removeClass('is-completed');
                     row.find('.date-completed').remove();
+                }
+            });
+        }
+
+        function setAutocomplete(obj) {
+            $(obj).autocomplete({
+                source: function (request, response) {
+                    $.getJSON('{{ path('issuesGetListOfIssues') }}', {
+                        term: autocompleteExtractLast(request.term)
+                    }, response);
+                },
+                search: function () {
+                    var term = autocompleteExtractLast(this.value);
+                    if (term.length < 1) {
+                        return false;
+                    }
+                },
+                focus: function () {
+                    return false;
+                },
+                select: function (event, ui) {
+                    var terms = autocompleteSplit(this.value);
+                    terms.pop();
+                    terms.push(ui.item.value);
+                    terms.push("");
+                    this.value = terms.join(", ");
+                    return false;
                 }
             });
         }
@@ -200,6 +230,8 @@
                                     {% if todo.isCompleted is not empty %}
                                         <span class="date-completed to-empty single-row"><b>Completed:</b> {{ todo.dateCompleted }}</span>
                                     {% endif %}
+
+                                    <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
                                     <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
                                     <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
@@ -220,6 +252,13 @@
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                 </select>
+                            </div>
+
+                            <div class="clear-both"></div>
+
+                            <div class="left item-issues" style="margin-top: 20px;">
+                                Connected issues:<br>
+                                <input type="text" class="text-item-issues" value="{% for issue in todo.issues %}{{ issue.id }}{% if not loop.last %}, {% endif %}{% endfor %}" placeholder="Connected issues, comma seperated">
                             </div>
 
                             <div class="clear-both"></div>
@@ -264,6 +303,15 @@
         .text-item-name  {
             width: calc(100% - 10px) !important;
          }
+
+        .item-issues {
+            width: calc(100% - 50px);
+            margin-left: 10px;
+        }
+
+        .text-item-issues  {
+            width: calc(100% - 10px) !important;
+        }
 
         .item-dateplanned, .item-datedue {
             width: calc(50% - 30px) !important;

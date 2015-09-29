@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Todo;
+use AppBundle\Entity\Issue;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Project;
 use AppBundle\Services\Helper;
@@ -58,6 +59,22 @@ class TodosController extends Controller
 				$dateDue = $dateDue->format($dateFormat);
 			}
 
+			// GET CONNECTED ISSUES
+
+			$searchTerm = "%" . $todo->getId() . "%";
+			$em = $this->getDoctrine()->getManager();
+			$query = $em->createQuery("SELECT t.id FROM AppBundle:Issue t WHERE t.todos LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+			$issuesResult = $query->getResult();
+
+			$issues = array();
+
+			foreach ($issuesResult as $issue) {
+				$issues[] = array(
+					'id' => $issue['id'],
+					'url' => $this->generateUrl("singleIssue", array('id' => $issue['id']))
+				);
+			}
+
 			$todos[] = array(
 				'id' => $todo->getId(),
 				'name' => $todo->getTodo(),
@@ -69,7 +86,9 @@ class TodosController extends Controller
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),
-				'date' => $todo->getDateModified()->format($dateTimeFormat)
+				'date' => $todo->getDateModified()->format($dateTimeFormat),
+				'issues' => $issues,
+				'issuesHtml' => $helper->createIssuesHtmlLinks($issues)
 			);
 		}
 
@@ -86,8 +105,11 @@ class TodosController extends Controller
 			'priority' => '',
 			'folder' => '',
 			'project' => '',
-			'date' => ''
+			'date' => '',
+			'issues' => '',
+			'issuesHtml' => ''
 		);
+
 
 		// GET FOLDERS
 		
@@ -281,6 +303,7 @@ class TodosController extends Controller
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$priority = $request->request->get('priority');
+		$issuesGet = $request->request->get('issues');
 		$datePlanned = new \DateTime($request->request->get('datePlanned'));
 		$dateDue = new \DateTime($request->request->get('dateDue'));
 		$notes = $request->request->get('notes');
@@ -300,6 +323,25 @@ class TodosController extends Controller
 		$todo->setDatePlanned($datePlanned);
 		$todo->setDateDue($dateDue);
 		$todo->setNotes($notes);
+
+		$issues = str_replace(' ', '', $issuesGet);
+		$issuesArray = explode(",", $issues);
+
+		foreach ($issuesArray as $issue) {
+			$issueObj = $em->getRepository('AppBundle:Issue')->find($issue);
+
+			if ($issueObj) {
+				$todos = $issueObj->getTodos();
+
+				$response = new JsonResponse(array('todos' => $todos, 'issueObj' => $issueObj));
+
+				return $response;
+
+				if (!strstr($todos, $issue)) {
+					$issueObj->setTodos($todos . ", " . $todo->getId());
+				}
+			}
+		}
 
 		$em->flush();
 

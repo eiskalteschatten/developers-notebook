@@ -417,6 +417,36 @@ class IssuesController extends Controller
 	}
 
 	/**
+	 * @Route("/notebook/issues/getListOfIssues/", name="issuesGetListOfIssues")
+	 * @Method("GET")
+	 */
+	public function getListOfIssuesAction(Request $request)
+	{
+		$term = $request->query->get('term');
+		$searchTerm = "%" . $term . "%";
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$em = $this->getDoctrine()->getManager();
+		$query = $em->createQuery("SELECT t.title, t.id FROM AppBundle:Issue t WHERE (t.title LIKE :searchTerm OR t.id LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+		$issuesResult = $query->getResult();
+
+		$issues = array();
+
+		foreach ($issuesResult as $issue) {
+			$issues[] = array(
+				'label' => "#" . $issue['id'] . " " . $issue['title'],
+				'value' => $issue['id']
+			);
+		}
+
+		$response = new JsonResponse($issues);
+
+		return $response;
+	}
+
+	/**
 	 * @Route("/notebook/issues/{id}/", name="singleIssue")
 	 */
 	public function singleIssueAction(Request $request, $id)
