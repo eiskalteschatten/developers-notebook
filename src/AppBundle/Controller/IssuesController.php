@@ -274,7 +274,9 @@ class IssuesController extends Controller
 		$em->persist($issue);
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder()));
+		$viewUrl = $this->generateUrl("singleIssue", array('id' => $issue->getId()));
+
+		$response = new JsonResponse(array('id' => $issue->getId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder(), 'viewUrl' => $viewUrl));
 
 		return $response;
 	}
@@ -412,5 +414,75 @@ class IssuesController extends Controller
 		$response = new JsonResponse(array('project' => $pages->getProject()));
 
 		return $response;
+	}
+
+	/**
+	 * @Route("/notebook/issues/{id}/", name="singleIssue")
+	 */
+	public function singleIssueAction(Request $request, $id)
+	{
+		$helper = $this->get('app.services.helper');
+
+		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		// GET ISSUES
+
+		$issuesResult = $this->getDoctrine()
+			->getRepository('AppBundle:Issue')
+			->findOneBy(
+				array('id' => $id, 'userId' => $userId)
+			);
+
+		if (!$issuesResult) {
+			return $this->render('default/issues-single.html.twig', array(
+				'fail' => true,
+				'currentPage' => $this->currentPage
+			));
+		}
+
+		$dateCompleted = $issuesResult->getDateCompleted();
+		if ($dateCompleted) {
+			$dateCompleted = $dateCompleted->format($dateTimeFormat);
+		}
+
+		$datePlanned = $issuesResult->getDatePlanned();
+		if ($datePlanned) {
+			$datePlanned = $datePlanned->format($dateFormat);
+		}
+
+		$dateDue = $issuesResult->getDateDue();
+		if ($dateDue) {
+			$dateDue = $dateDue->format($dateFormat);
+		}
+
+		$todos = str_replace(' ', '', $issuesResult->getTodos());
+		$todosArray = explode(",", $todos);
+
+		$issue = array(
+			'id' => $issuesResult->getId(),
+			'name' => $issuesResult->getTitle(),
+			'descriptionHtml' => nl2br($issuesResult->getDescription()),
+			'description' => $issuesResult->getDescription(),
+			'isCompleted' => $issuesResult->getIsCompleted(),
+			'dateCompleted' => $dateCompleted,
+			'datePlanned' => $datePlanned,
+			'dateDue' => $dateDue,
+			'labels' => $issuesResult->getLabels(),
+			'todos' => $todosArray,
+			'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
+			'folder' => $issuesResult->getFolder(),
+			'project' => $issuesResult->getProject(),
+			'date' => $issuesResult->getDateModified()->format($dateTimeFormat)
+		);
+
+		return $this->render('default/issues-single.html.twig', array(
+			'issue' => $issue,
+			'standardArea' => $this->standardArea,
+			'currentPage' => $this->currentPage
+		));
 	}
 }

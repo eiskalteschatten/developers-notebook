@@ -1,12 +1,17 @@
 {% extends 'default/base.html.twig' %}
 
-{% block title %}{{ project.name }} - Projects - Developer's Notebook{% endblock %}
+{% block title %}
+    {% if fail is defined and fail is not empty %}
+        Issues - Developer's Notebook
+    {% else %}
+        {{ project.name }} - Projects - Developer's Notebook
+    {% endif %}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script type="text/javascript">
-        var postUrlCreate = "{{ path('projectCreate') }}";
         var postUrlToggle = "{{ path('projectIsComplete') }}";
         var postUrlDelete = "{{ path('projectDelete') }}";
         var projectsUrl = "{{ path('projects') }}";
@@ -26,6 +31,10 @@
 
         function goToContent(url, id) {
             window.location.href = url + "?selectedItem=" + id;
+        }
+
+        function goToContentNoId(url) {
+            window.location.href = url;
         }
     </script>
 
@@ -83,7 +92,7 @@
                     <div class="full-size-table small-rows">
                         {% for issue in issues %}
                             {% if issue.isCompleted is empty %}
-                                <div class="row" onclick="goToContent('{{ path('issues') }}', '{{ issue.id }}')">
+                                <div class="row" onclick="goToContentNoId('{{ path('singleIssue', {'id': issue.id}) }}')">
                                     <div class="info">
                                         <div class="left">
                                             <div>

@@ -89,7 +89,7 @@
             selectItem(row);
         }
 
-        function toggleCompletedProjects(button) {
+        function toggleCompletedTodos(button) {
             if (!$(button).hasClass('selected')) {
                 $('.is-completed').show();
                 $(button).addClass('selected');
@@ -167,7 +167,7 @@
                         <a href="#!" onclick="createItem()" title="Create a new to do">+</a><a href="#!" onclick="removeItem()" title="Remove selected to do">&ndash;</a>
                     </div>
                     <div class="toolbar-section">
-                        <a href="#!" onclick="toggleCompletedProjects(this)" id="toggleIsCompleted" title="Toggle completed projects">&#10004;</a>
+                        <a href="#!" onclick="toggleCompletedTodos(this)" id="toggleIsCompleted" title="Toggle completed to dos">&#10004;</a>
                     </div>
                 </div>
             </div>

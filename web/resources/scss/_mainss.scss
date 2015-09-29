@@ -92,6 +92,33 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 	padding-right: 15px;
 }
 
+.border-top {
+	border-top: 1px solid $bordercolor;
+	padding-top: 20px;
+}
+
+
+/* Typography */
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.small-font, .small-font a {
+	font-size: 14px;
+}
+
+.medium-font, .medium-font a {
+	font-size: 16px;
+}
+
+.large-font, .large-font a {
+	font-size: 18px;
+}
 
 /* Headers */
 
@@ -255,17 +282,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			display: inline-block;
 		}
 
-		.info {
-			width: 100%;
-		}
-
-		.edit {
-			display: none;
-			width: 100%;
-		}
-
 		.edit-button {
 			float: right;
+			text-align: right;
 
 			a {
 				font-size: 14px;
@@ -287,4 +306,13 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			background: #e6e6e6;
 		}
 	}
+}
+
+.info {
+	width: 100%;
+}
+
+.edit {
+	display: none;
+	width: 100%;
 }

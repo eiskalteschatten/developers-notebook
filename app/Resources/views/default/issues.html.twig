@@ -13,12 +13,8 @@
         var movePageToFolderUrl = "{{ path('issuesMovePageToFolder') }}";
         var removePageFromFoldersUrl = "{{ path('issuesRemovePageFromFolders') }}";
         var movePageToProjectUrl = "{{ path('issuesMovePageToProject') }}";
-
-        $(document).ready(function() {
-            $('.date-picker').datepicker({
-                dateFormat: "yy-mm-dd"
-            });
-        });
+        var todosGetListOfTodosUrl = "{{ path('todosGetListOfTodos') }}";
+        var issuesIsCompleteUrl = "{{ path('issuesIsComplete') }}";
 
         function createCallback(data) {
             var div = $('.row:first').clone();
@@ -29,6 +25,7 @@
             div.find('textarea').val("");
             div.find('.to-empty').text('');
             div.find('.is-completed-check').prop('checked', false);
+            div.find('.view-url').attr('href', data.viewUrl);
             div.removeClass('to-be-cloned');
             div.removeClass('is-completed');
             $('#itemTable').prepend(div);
@@ -83,33 +80,10 @@
 
             selectItem(row);
 
-            row.find('.text-item-todos').autocomplete({
-                source: function (request, response) {
-                    $.getJSON("{{ path('todosGetListOfTodos') }}", {
-                        term: autocompleteExtractLast(request.term)
-                    }, response);
-                },
-                search: function () {
-                    var term = autocompleteExtractLast(this.value);
-                    if (term.length < 1) {
-                        return false;
-                    }
-                },
-                focus: function () {
-                    return false;
-                },
-                select: function (event, ui) {
-                    var terms = autocompleteSplit(this.value);
-                    terms.pop();
-                    terms.push(ui.item.value);
-                    terms.push("");
-                    this.value = terms.join(", ");
-                    return false;
-                }
-            });
+            setAutocomplete(row.find('.text-item-todos'));
         }
 
-        function toggleCompletedProjects(button) {
+        function toggleCompletedIssues(button) {
             if (!$(button).hasClass('selected')) {
                 $('.is-completed').show();
                 $(button).addClass('selected');
@@ -119,29 +93,8 @@
                 $(button).removeClass('selected');
             }
         }
-
-        function toggleIsComplete(id, obj) {
-            var isComplete = $(obj).prop('checked');
-
-            var toSend = {
-                id: id,
-                isComplete: isComplete
-            }
-
-            $.post("{{ path('issuesIsComplete') }}", toSend, function(data) {
-                var row = $(obj).parents('.row');
-
-                if (data.isCompleted) {
-                    row.addClass('is-completed');
-                    row.find('.date-completed').text("Completed: " + data.date);
-                }
-                else {
-                    row.removeClass('is-completed');
-                    row.find('.date-completed').remove();
-                }
-            });
-        }
     </script>
+    <script type="text/javascript" src="{{ asset('resources/js/issues.js') }}"></script>
     <script type="text/javascript" src="{{ asset('resources/js/folders.js') }}"></script>
     <script type="text/javascript" src="{{ asset('resources/js/bookmarks-todos-issues.js') }}"></script>
 {% endblock %}
@@ -187,7 +140,7 @@
                         <a href="#!" onclick="createItem()" title="Create a new to do">+</a><a href="#!" onclick="removeItem()" title="Remove selected to do">&ndash;</a>
                     </div>
                     <div class="toolbar-section">
-                        <a href="#!" onclick="toggleCompletedProjects(this)" id="toggleIsCompleted" title="Toggle completed projects">&#10004;</a>
+                        <a href="#!" onclick="toggleCompletedIssues(this)" id="toggleIsCompleted" title="Toggle completed issues">&#10004;</a>
                     </div>
                 </div>
             </div>
@@ -209,7 +162,7 @@
 
                     <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ issue.id }}" data-folder="{{ issue.folder }}" data-project="{{ issue.project }}" onclick="selectItem(this)">
                         <div class="info">
-                            <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
+                            <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a><br><a href="{{ path('singleIssue', {'id': issue.id}) }}" class="view-url">View</a></span>
                             <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ issue.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
                             <div class="left">
                                 <div>
@@ -220,7 +173,7 @@
                                     {% if issue.isCompleted is not empty %}
                                         <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
                                     {% endif %}
-                                    <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
+                                    <span class="date-planned to-empty single-row"><b>Date planned:</b> {{ issue.datePlanned }}</span>
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
                                 </div>
                                 <div class="gray-info">
@@ -251,12 +204,12 @@
                             <div class="clear-both"></div>
 
                             <div class="left item-dateplanned" style="margin-top: 20px;">
-                                Date Planned:<br>
+                                Date planned:<br>
                                 <input type="text" class="text-item-dateplanned date-picker" value="{{ issue.datePlanned }}" placeholder="Date planned">
                             </div>
 
                             <div class="left item-datedue" style="margin-top: 20px;">
-                                Due Date:<br>
+                                Due date:<br>
                                 <input type="text" class="text-item-datedue date-picker" value="{{ issue.dateDue }}" placeholder="Due date">
                             </div>
 

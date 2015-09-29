@@ -1,0 +1,209 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}
+    {% if fail is defined and fail is not empty %}
+        Issues - Developer's Notebook
+    {% else %}
+        {{ issue.name }} - Issues - Developer's Notebook
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if fail is not defined or fail is empty %}
+        <script type="text/javascript">
+            var standardArea = "{{ standardArea }}";
+            var saveItemUrl = "{{ path('issuesSaveIssue') }}";
+            var removeItemUrl = "{{ path('issuesRemove') }}";
+            var todosGetListOfTodosUrl = "{{ path('todosGetListOfTodos') }}";
+            var issuesIsCompleteUrl = "{{ path('issuesIsComplete') }}";
+
+            function openFullEdit() {
+                $('.info').hide();
+                $('.edit').show();
+
+                setAutocomplete($('.text-item-todos'));
+            }
+
+            function closeFullEdit() {
+                $('.edit').hide();
+                $('.info').show();
+            }
+
+            function saveItem() {
+                var toSend = {
+                    id: '{{ issue.id }}',
+                    name: $('.text-item-name').val(),
+                    labels: $('.text-item-labels').val(),
+                    todos: $('.text-item-todos').val(),
+                    datePlanned: $('.text-item-dateplanned').val(),
+                    dateDue: $('.text-item-datedue').val(),
+                    description: $('.text-item-note').val()
+                }
+
+                $.post(saveItemUrl, toSend, function(data) {
+                    var info = $('.info');
+                    info.find('.name').text(data.name);
+                    info.find('.labels').html(data.labels);
+                    info.find('.todos').html(data.todosHtml);
+                    info.find('.date-planned').html(data.datePlanned);
+                    info.find('.date-due').html(data.dateDue);
+                    info.find('.note').html(data.description);
+
+                    closeFullEdit();
+                });
+            }
+
+            function removeItem() {
+                if (confirm('Are you sure you want to remove this item? This action cannot be undone.')) {
+                    var toSend = {
+                        id: '{{ issue.id }}'
+                    }
+
+                    $.post(removeItemUrl, toSend, function(data) {
+                        window.location.href = "{{ path('issues') }}";
+                    });
+                }
+            }
+        </script>
+        <script type="text/javascript" src="{{ asset('resources/js/issues.js') }}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {% if fail is defined and fail is not empty %}
+        <div class="content">
+            No such issue exists!
+        </div>
+    {% else %}
+        {% set isCompletedClass = '' %}
+        {% set isCompletedCheck = '' %}
+
+        {% if issue.isCompleted is not empty %}
+            {% set isCompletedClass = ' grayed-out' %}
+            {% set isCompletedCheck = 'checked' %}
+        {% endif %}
+
+        <div class="info">
+            <div class="content">
+                <div class="page-title{{ isCompletedClass }}">
+                    <div class="complete-project">
+                        <input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ issue.id }}', this)"{{ isCompletedCheck }}> Issue is completed<br>
+                    </div>
+                    <span class="name">{{ issue.name }}</span>
+                </div>
+            </div>
+            <div class="content-two-columns">
+                <div class="column">
+                    <div class="content append-bottom" style="padding-top: 0;">
+                        <b>Labels:</b><br>
+                        <span class="medium-font labels">{{ issue.labels }}</span>
+                    </div>
+                    <div class="content" style="padding-top: 0;">
+                        <b>Date planned:</b><br>
+                        <span class="medium-font date-planned">{{ issue.datePlanned }}</span>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="content append-bottom" style="padding-top: 0;">
+                        <b>To dos:</b><br>
+                        <span class="medium-font todos">{{ issue.todosHtml | raw }}</span>
+                    </div>
+                    <div class="content" style="padding-top: 0;">
+                        <b>Due date:</b><br>
+                        <span class="date-due medium-font">{{ issue.dateDue }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear-both"></div>
+
+            <div class="content">
+                <div class="border-top append-bottom">
+                    <div class="bold append-bottom">Description:</div>
+                    <div class="medium-font note">{{ issue.descriptionHtml | raw }}</div>
+                </div>
+
+                <div class="medium-font">
+                    <a href="#!" onclick="openFullEdit()">Edit Issue</a>
+                </div>
+            </div>
+        </div>
+        <div class="edit">
+            <div class="content">
+                <div class="page-title{{ isCompletedClass }}">
+                    <div class="complete-project">
+                        <input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ issue.id }}', this)"{{ isCompletedCheck }}> Issue is completed<br>
+                    </div>
+                    <input type="text" class="text-item-name" value="{{ issue.name }}" placeholder="Issue name">
+                </div>
+            </div>
+            <div class="content-two-columns">
+                <div class="column">
+                    <div class="labels content append-bottom" style="padding-top: 0;">
+                        <b>Labels:</b><br>
+                        <input type="text" class="text-item-labels" value="{{ issue.labels }}" placeholder="Labels, comma seperated">
+                    </div>
+                    <div class="date-planned content" style="padding-top: 0;">
+                        <b>Date planned:</b><br>
+                        <input type="text" class="text-item-dateplanned date-picker" value="{{ issue.datePlanned }}" placeholder="Date planned">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="todos content append-bottom" style="padding-top: 0;">
+                        <b>To dos:</b><br>
+                        <input type="text" class="text-item-todos" value="{% for todo in issue.todos %}{{ todo }}{% if not loop.last %}, {% endif %}{% endfor %}" placeholder="Connected to dos, comma seperated">
+                    </div>
+                    <div class="date-due content" style="padding-top: 0;">
+                        <b>Due date:</b><br>
+                        <input type="text" class="text-item-datedue date-picker" value="{{ issue.dateDue }}" placeholder="Due date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear-both"></div>
+
+            <div class="content">
+                <div class="border-top append-bottom">
+                    <div class="bold append-bottom">Description:</div>
+                    <textarea class="text-item-note" placeholder="Description">{{ issue.description }}</textarea>
+                    <button onclick="saveItem()" style="margin-left: 10px;">Save</button><button onclick="closeFullEdit()" style="margin-left: 10px;">Cancel</button>
+                </div>
+
+                <div class="medium-font delete-red">
+                    <a href="#!" onclick="removeItem()">Delete Issue</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .complete-project {
+            float: right;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .text-item-name  {
+            width: 500px !important;
+            font-size: 25px !important;
+        }
+
+        .text-item-dateplanned, .text-item-datedue, .text-item-labels, .text-item-todos  {
+            width: calc(100% - 10px) !important;
+        }
+
+        .text-item-note {
+            width: calc(100% - 60px);
+            height: 300px;
+            margin-left: 10px;
+        }
+    </style>
+{% endblock %}

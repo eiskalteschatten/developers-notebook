@@ -69,6 +69,26 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   color: #a0a0a0;
   padding-right: 15px; }
 
+.border-top {
+  border-top: 1px solid #e6e6e6;
+  padding-top: 20px; }
+
+/* Typography */
+.bold {
+  font-weight: bold; }
+
+.italic {
+  font-style: italic; }
+
+.small-font, .small-font a {
+  font-size: 14px; }
+
+.medium-font, .medium-font a {
+  font-size: 16px; }
+
+.large-font, .large-font a {
+  font-size: 18px; }
+
 /* Headers */
 .page-title {
   font-size: 30px;
@@ -187,13 +207,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     .full-size-table .row .clickable-area {
       width: calc(100% - 100px);
       display: inline-block; }
-    .full-size-table .row .info {
-      width: 100%; }
-    .full-size-table .row .edit {
-      display: none;
-      width: 100%; }
     .full-size-table .row .edit-button {
-      float: right; }
+      float: right;
+      text-align: right; }
       .full-size-table .row .edit-button a {
         font-size: 14px; }
     .full-size-table .row .gray-info, .full-size-table .row .gray-info a {
@@ -205,6 +221,17 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       margin-right: 25px; }
     .full-size-table .row.selected {
       background: #e6e6e6; }
+
+.info {
+  width: 100%; }
+
+.edit {
+  display: none;
+  width: 100%; }
+
+/* General structure styles */
+.append-bottom {
+  margin-bottom: 1.5em; }
 
 /* Styles for boxes */
 .box {
