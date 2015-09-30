@@ -12,6 +12,7 @@ use AppBundle\Entity\Project;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\Bookmark;
 use AppBundle\Entity\Todo;
+use AppBundle\Entity\Issue;
 use AppBundle\Services\Helper;
 
 class ProjectController extends Controller
@@ -305,6 +306,7 @@ class ProjectController extends Controller
 
         $id = $request->request->get('id');
         $isComplete = ($request->request->get('isComplete') === 'true');
+        $allComplete = ($request->request->get('allComplete') === 'true');
 
         $date = new \DateTime("now");
 
@@ -325,6 +327,32 @@ class ProjectController extends Controller
         else {
             $project->setDateCompleted(null);
             $date = $project->getDateModified()->format($dateTimeFormat);
+        }
+
+        if ($allComplete == true) {
+            $issuesResult = $this->getDoctrine()
+                ->getRepository('AppBundle:Issue')
+                ->findBy(
+                    array('project' => $id)
+                );
+
+            if ($issuesResult) {
+                foreach ($issuesResult as $issue) {
+                    $issue->setIsCompleted(true);
+                }
+            }
+
+            $todosResult = $this->getDoctrine()
+                ->getRepository('AppBundle:Todo')
+                ->findBy(
+                    array('project' => $id)
+                );
+
+            if ($todosResult) {
+                foreach ($todosResult as $todo) {
+                    $todo->setIsCompleted(true);
+                }
+            }
         }
 
         $em->flush();

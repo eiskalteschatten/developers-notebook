@@ -39,10 +39,18 @@ function toggleCompletedProjects() {
 
 function toggleIsComplete(id, obj) {
     var isComplete = $(obj).prop('checked');
+    var allComplete = false;
+
+    if (isComplete) {
+        if (confirm('Would you like to mark all to dos and issues belonging to this project as completed? All to dos and issues will remain marked as completed even if you mark this project as not completed again. This action cannot be undone.')) {
+            allComplete = true;
+        }
+    }
 
     var toSend = {
         id: id,
-        isComplete: isComplete
+        isComplete: isComplete,
+        allComplete: allComplete
     }
 
     $.post(postUrlToggle, toSend, function(data) {
