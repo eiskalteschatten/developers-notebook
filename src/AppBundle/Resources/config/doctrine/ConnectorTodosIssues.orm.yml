@@ -1,0 +1,21 @@
+AppBundle\Entity\ConnectorTodosIssues:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        issue:
+            type: integer
+        todo:
+            type: integer
+        dateCreated:
+            type: datetime
+            column: date_created
+    lifecycleCallbacks: {  }

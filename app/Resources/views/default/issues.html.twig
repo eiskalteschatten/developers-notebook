@@ -198,7 +198,7 @@
 
                             <div class="left item-todos" style="margin-top: 20px;">
                                 Connected to dos:<br>
-                                <input type="text" class="text-item-todos" value="{% for todo in issue.todos %}{{ todo }}{% if not loop.last %}, {% endif %}{% endfor %}" placeholder="Connected to dos, comma seperated">
+                                <input type="text" class="text-item-todos" value="{% for todo in issue.todos %}{{ todo.getTodo() }}{% if not loop.last %}, {% endif %}{% endfor %}" placeholder="Connected to dos, comma seperated">
                             </div>
 
                             <div class="clear-both"></div>

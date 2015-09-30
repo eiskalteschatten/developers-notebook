@@ -43,6 +43,4 @@ AppBundle\Entity\Issue:
             type: text
         labels:
             type: text
-        todos:
-            type: text
     lifecycleCallbacks: {  }

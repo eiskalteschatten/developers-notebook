@@ -75,12 +75,6 @@ class Issue
     private $labels;
 
     /**
-     * @var string
-     */
-    private $todos;
-
-
-    /**
      * Get id
      *
      * @return integer 
@@ -364,28 +358,5 @@ class Issue
     public function getLabels()
     {
         return $this->labels;
-    }
-
-    /**
-     * Set todos
-     *
-     * @param string $todos
-     * @return Issue
-     */
-    public function setTodos($todos)
-    {
-        $this->todos = $todos;
-
-        return $this;
-    }
-
-    /**
-     * Get todos
-     *
-     * @return string 
-     */
-    public function getTodos()
-    {
-        return $this->todos;
     }
 }

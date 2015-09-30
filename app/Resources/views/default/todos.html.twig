@@ -66,6 +66,7 @@
                 var info = selected.find('.info');
                 info.find('.item-id').text("#" + data.id);
                 info.find('.name').text(data.name);
+                info.find('.issues').html("<b>To dos:</b> " + data.issuesHtml);
                 info.find('.priority').html("<b>Priority:</b> " + data.priority);
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);

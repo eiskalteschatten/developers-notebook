@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Todo;
-use AppBundle\Entity\Issue;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Project;
+use AppBundle\Entity\ConnectorTodosIssues;
 use AppBundle\Services\Helper;
 
 class TodosController extends Controller
@@ -61,17 +61,19 @@ class TodosController extends Controller
 
 			// GET CONNECTED ISSUES
 
-			$searchTerm = "%" . $todo->getId() . "%";
-			$em = $this->getDoctrine()->getManager();
-			$query = $em->createQuery("SELECT t.id FROM AppBundle:Issue t WHERE t.todos LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
-			$issuesResult = $query->getResult();
+			$issuesResult = $this->getDoctrine()
+				->getRepository('AppBundle:ConnectorTodosIssues')
+				->findBy(
+					array('userId' => $userId, 'todo' => $todo->getId()),
+					array('dateCreated' => 'ASC')
+				);
 
 			$issues = array();
 
 			foreach ($issuesResult as $issue) {
 				$issues[] = array(
-					'id' => $issue['id'],
-					'url' => $this->generateUrl("singleIssue", array('id' => $issue['id']))
+					'id' => $issue->getIssue(),
+					'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
 				);
 			}
 
@@ -298,12 +300,14 @@ class TodosController extends Controller
 	 */
 	public function saveTodoAction(Request $request)
 	{
+		$helper = $this->get('app.services.helper');
+
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$priority = $request->request->get('priority');
-		$issuesGet = $request->request->get('issues');
+		$issuesGet = rtrim($request->request->get('issues'), ', ');
 		$datePlanned = new \DateTime($request->request->get('datePlanned'));
 		$dateDue = new \DateTime($request->request->get('dateDue'));
 		$notes = $request->request->get('notes');
@@ -324,22 +328,35 @@ class TodosController extends Controller
 		$todo->setDateDue($dateDue);
 		$todo->setNotes($notes);
 
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$removeConnectors = $em->getRepository('AppBundle:ConnectorTodosIssues')->findBy(
+			array('todo' => $todo->getId())
+		);
+
+		foreach ($removeConnectors as $removeConnector) {
+			$em->remove($removeConnector);
+		}
+
 		$issues = str_replace(' ', '', $issuesGet);
 		$issuesArray = explode(",", $issues);
+		$issuesHtmlArray = array();
 
 		foreach ($issuesArray as $issue) {
-			$issueObj = $em->getRepository('AppBundle:Issue')->find($issue);
+			if (!empty($issue)) {
+				$connector = new ConnectorTodosIssues();
+				$connector->setUserId($userId);
+				$connector->setIssue($issue);
+				$connector->setTodo($todo->getId());
+				$connector->setDateCreated($date);
 
-			if ($issueObj) {
-				$todos = $issueObj->getTodos();
+				$em->persist($connector);
 
-				$response = new JsonResponse(array('todos' => $todos, 'issueObj' => $issueObj));
-
-				return $response;
-
-				if (!strstr($todos, $issue)) {
-					$issueObj->setTodos($todos . ", " . $todo->getId());
-				}
+				$issuesHtmlArray[] = array(
+					'id' => $issue,
+					'url' => $this->generateUrl("singleIssue", array('id' => $issue))
+				);
 			}
 		}
 
@@ -355,7 +372,7 @@ class TodosController extends Controller
 			$dateDueResponse = $dateDueResponse->format($dateFormat);
 		}
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}

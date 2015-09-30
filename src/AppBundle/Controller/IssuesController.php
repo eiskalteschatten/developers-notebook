@@ -8,10 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Entity\Todo;
 use AppBundle\Entity\Issue;
 use AppBundle\Entity\Folders;
 use AppBundle\Entity\Project;
+use AppBundle\Entity\ConnectorTodosIssues;
 use AppBundle\Services\Helper;
 
 class IssuesController extends Controller
@@ -59,8 +59,20 @@ class IssuesController extends Controller
 				$dateDue = $dateDue->format($dateFormat);
 			}
 
-			$todos = str_replace(' ', '', $issue->getTodos());
-			$todosArray = explode(",", $todos);
+			// GET CONNECTED TO DOS
+
+			$todosResult =  $this->getDoctrine()
+				->getRepository('AppBundle:ConnectorTodosIssues')
+				->findBy(
+					array('userId' => $userId, 'issue' => $issue->getId()),
+					array('dateCreated' => 'ASC')
+				);
+
+			$todos = array();
+
+			foreach ($todosResult as $todo) {
+				$todos[] = $todo->getTodo();
+			}
 
 			$issues[] = array(
 				'id' => $issue->getId(),
@@ -71,8 +83,8 @@ class IssuesController extends Controller
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
 				'labels' => $issue->getLabels(),
-				'todos' => $todosArray,
-				'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
+				'todos' => $todosResult,
+				'todosHtml' => $helper->createTodosHtmlLinks($todos, $this->generateUrl('todos')),
 				'folder' => $issue->getFolder(),
 				'project' => $issue->getProject(),
 				'date' => $issue->getDateModified()->format($dateTimeFormat)
@@ -265,7 +277,6 @@ class IssuesController extends Controller
 		$issue->setDescription("");
 		$issue->setIsCompleted(false);
 		$issue->setLabels("");
-		$issue->setTodos("");
 		$issue->setProject($project);
 		$issue->setFolder($folder);
 
@@ -311,10 +322,35 @@ class IssuesController extends Controller
 		$issue->setDateModified($date);
 		$issue->setTitle($name);
 		$issue->setLabels($labels);
-		$issue->setTodos($todos);
 		$issue->setDatePlanned($datePlanned);
 		$issue->setDateDue($dateDue);
 		$issue->setDescription($description);
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$removeConnectors = $em->getRepository('AppBundle:ConnectorTodosIssues')->findBy(
+			array('issue' => $issue->getId())
+		);
+
+		foreach ($removeConnectors as $removeConnector) {
+			$em->remove($removeConnector);
+		}
+
+		$todos = str_replace(' ', '', $todos);
+		$todosArray = explode(",", $todos);
+
+		foreach ($todosArray as $todo) {
+			if (!empty($todo)) {
+				$connector = new ConnectorTodosIssues();
+				$connector->setUserId($userId);
+				$connector->setIssue($issue->getId());
+				$connector->setTodo($todo);
+				$connector->setDateCreated($date);
+
+				$em->persist($connector);
+			}
+		}
 
 		$em->flush();
 
@@ -327,9 +363,6 @@ class IssuesController extends Controller
 		if ($dateDueResponse) {
 			$dateDueResponse = $dateDueResponse->format($dateFormat);
 		}
-
-		$todos = str_replace(' ', '', $issue->getTodos());
-		$todosArray = explode(",", $todos);
 
 		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
