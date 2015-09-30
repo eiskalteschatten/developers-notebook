@@ -206,7 +206,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       width: 20px; }
     .full-size-table .row .clickable-area {
       width: calc(100% - 100px);
-      display: inline-block; }
+      display: inline-block;
+      text-decoration: none;
+      color: #0f0f0f; }
     .full-size-table .row .edit-button {
       float: right;
       text-align: right; }

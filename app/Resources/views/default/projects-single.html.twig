@@ -15,6 +15,7 @@
         var postUrlToggle = "{{ path('projectIsComplete') }}";
         var postUrlDelete = "{{ path('projectDelete') }}";
         var projectsUrl = "{{ path('projects') }}";
+        var renameProjectUrl = "{{ path('projectRename') }}";
 
         $(document).ready(function() {
             $('.editor-folder').click(function() {
@@ -28,6 +29,39 @@
 
             $('.editor-folder:first').trigger('click');
         });
+
+        function editName() {
+            bsScrollToTop();
+            $('.project-name-info').hide();
+            $('.project-name-edit').show();
+        }
+
+        function saveName(event) {
+            if (event.which == 13) {
+                var name = $('.text-item-name').val();
+
+                if (name != "") {
+                    var toSend = {
+                        id: '{{ project.id }}',
+                        name: name
+                    }
+
+                    $.post(renameProjectUrl, toSend, function(data) {
+                        $('.project-name-info').text(data.name);
+                        document.title = data.name + " - Projects - Developer's Notebook";
+                        closeEditName();
+                    });
+                }
+            }
+            else if (event.which == 27) {
+                closeEditName();
+            }
+        }
+
+        function closeEditName() {
+            $('.project-name-edit').hide();
+            $('.project-name-info').show();
+        }
 
         function goToContent(url, id) {
             window.location.href = url + "?selectedItem=" + id;
@@ -60,7 +94,8 @@
         <div class="content">
             <div class="page-title{{ isCompletedClass }}">
                 <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
-                {{ project.name }}
+                <span class="project-name-info">{{ project.name }}</span>
+                <span class="project-name-edit"><input type="text" class="text-item-name" value="{{ project.name }}" placeholder="Project name" onkeyup="saveName(event)"></span>
             </div>
         </div>
 
@@ -73,6 +108,7 @@
                     <div class="editor-folder" data-section="code-project-section">Code Cache</div>
                     <div class="editor-folder" data-section="notes-project-section">Notes</div>
                     <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
+                    <div style="margin: 10px;" class="small-font"><a href="#!" onclick="editName()">Rename Project</a></div>
                     <div class="delete-red" style="margin: 10px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
                 </div>
             </div>
@@ -192,6 +228,15 @@
             float: right;
             font-size: 14px;
             font-weight: normal;
+        }
+
+        .project-name-edit {
+            display: none;
+        }
+
+        .text-item-name {
+            width: 500px !important;
+            font-size: 25px !important;
         }
     </style>
 {% endblock %}

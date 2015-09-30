@@ -62,7 +62,6 @@ function removeFolder(url) {
                 var previewSibling = selected.prev();
                 selected.remove();
                 previewSibling.trigger('click');
-                //console.log(data);
             });
         }
     }

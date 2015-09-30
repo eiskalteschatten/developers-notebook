@@ -6,7 +6,7 @@ html, body {
 	width: 100%;
 	height: 100%;
 	background: #ffffff;
-	color: #0f0f0f;
+	color: $defaultFontColor;
 	border-top: 1px solid $blue;
 }
 
@@ -280,6 +280,8 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		.clickable-area {
 			width: calc(100% - 100px);
 			display: inline-block;
+			text-decoration: none;
+			color: $defaultFontColor;
 		}
 
 		.edit-button {

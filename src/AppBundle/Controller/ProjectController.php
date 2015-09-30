@@ -356,4 +356,35 @@ class ProjectController extends Controller
 
         return new Response('success');
     }
+
+    /**
+     * @Route("/notebook/project/rename/", name="projectRename")
+     * @Method("POST")
+     */
+    public function renameProjectAction(Request $request)
+    {
+        $helper = $this->get('app.services.helper');
+
+        $id = $request->request->get('id');
+        $name = $request->request->get('name');
+
+        $date = new \DateTime("now");
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppBundle:Project')->find($id);
+
+        if (!$project) {
+            throw $this->createNotFoundException('No project found for id '.$id);
+        }
+
+        $project->setDateModified($date);
+        $project->setName($name);
+
+        $em->flush();
+
+        $response = new JsonResponse(array('id' => $project->getId(), 'name' => $project->getName()));
+
+        return $response;
+    }
+
 }

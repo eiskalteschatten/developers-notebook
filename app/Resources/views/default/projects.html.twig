@@ -10,10 +10,6 @@
         var postUrlToggle = "{{ path('projectIsComplete') }}";
         var postUrlDelete = "{{ path('projectDelete') }}";
         var projectsUrl = "{{ path('projects') }}";
-
-        function goToProject(url) {
-            window.location.href = url;
-        }
     </script>
 
     <script type="text/javascript" src="{{ asset('resources/js/projects.js') }}"></script>
@@ -40,7 +36,7 @@
                 <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
                     <span class="delete-row"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete</a></span>
                     <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ project.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span>
-                    <span class="clickable-area" onclick="goToProject('{{ path('singleProject', {'id': project.id}) }}')">
+                    <a class="clickable-area" href="{{ path('singleProject', {'id': project.id}) }}">
                         <span class="name">{{ project.name }}</span>
 
                         {% if project.isCompleted is not empty %}
@@ -48,7 +44,7 @@
                         {% else %}
                             <span class="date gray-info">{{ project.dateModified }}</span>
                         {% endif %}
-                    </span>
+                    </a>
                 </div>
             {% endfor %}
         </div>
