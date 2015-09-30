@@ -110,9 +110,33 @@
 	font-size: 13px;
 	padding: 20px 40px;
 	border-top: 1px solid $bordercolor;
-	
+
+	a {
+		font-size: 13px;
+	}
+
+	.copyright-link {
+		color: $defaultFontColor;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
 	.version-number {
 		color: #c0c0c0;
 		font-style: italic;
+	}
+
+	.links {
+		a {
+			display: inline-block;
+			margin: 0 10px;
+		}
+
+		a:first-child {
+			margin-left: 0;
+		}
 	}
 }

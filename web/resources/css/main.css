@@ -312,9 +312,21 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   font-size: 13px;
   padding: 20px 40px;
   border-top: 1px solid #e6e6e6; }
+  .footer a {
+    font-size: 13px; }
+  .footer .copyright-link {
+    color: #0f0f0f;
+    text-decoration: none; }
+    .footer .copyright-link:hover {
+      text-decoration: underline; }
   .footer .version-number {
     color: #c0c0c0;
     font-style: italic; }
+  .footer .links a {
+    display: inline-block;
+    margin: 0 10px; }
+  .footer .links a:first-child {
+    margin-left: 0; }
 
 /* Styles for the menubar */
 .menubar {

@@ -16,4 +16,12 @@ class FrontendController extends Controller
         // replace this example code with whatever you need
         return $this->render('frontend/index.html.twig');
     }
+
+    /**
+     * @Route("/about", name="aboutLink")
+     */
+    public function aboutAction(Request $request)
+    {
+        return $this->render('frontend/static/about.html.twig');
+    }
 }

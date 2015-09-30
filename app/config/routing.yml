@@ -2,10 +2,6 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-_frontend-homepage:
-    path:     /
-    defaults: { _controller: AppBundle:FrontendController:indexAction }
-
 _homepage:
     path:     /notebook/
     defaults: { _controller: AppBundle:DefaultController:indexAction }

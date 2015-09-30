@@ -55,7 +55,12 @@
         {#<?php include_once('console.php'); ?>#}
 
         <div class="footer">
-            &copy; 2015 Alex Seifert <span class="version-number">&mdash; v. 0.1</span>
+            &copy; 2015 <a href="http://www.alexseifert.com" target="_blank" class="copyright-link">Alex Seifert</a> <span class="version-number">&mdash; v. 0.1</span>
+            <div class="links">
+                <a href="https://github.com/eiskalteschatten/developers-notebook" target="_blank">GitHub</a>
+                <a href="https://github.com/eiskalteschatten/developers-notebook/issues" target="_blank">Report a bug</a>
+                <a href="{{ path('aboutLink') }}" target="_blank">About Developer's Notebook</a>
+            </div>
         </div>
 
         {% block javascripts %}
