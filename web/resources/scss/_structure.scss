@@ -95,6 +95,24 @@
  	overflow: hidden;
 }
 
+.content-even-three-columns {
+	width: calc(100% - 40px);
+	padding: 20px;
+
+	.column {
+		width: 33%;
+		float: left;
+
+		.column-title {
+			font-weight: bold;
+		}
+
+		.wrapper {
+			padding: 20px 20px 20px 0;
+		}
+	}
+}
+
 .section-label {
 	padding: 15px 10px;
 	font-size: 15px;

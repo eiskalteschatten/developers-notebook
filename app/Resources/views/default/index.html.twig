@@ -1,13 +1,67 @@
 {% extends 'default/base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="application/javascript">
+        function goToItem(url) {
+            window.location.href = url;
+        }
+    </script>
+{% endblock %}
+
 {% block body %}
+
+    <div class="content">
+        <div class="page-title">Welcome, {{ userName }}!</div>
+
+        <div class="weather">Current weather: </div>
+    </div>
+
+    <div class="content-even-three-columns">
+        <div class="column">
+            <div class="column-title">Upcoming To Dos</div>
+            <div class="wrapper">
+                <div class="full-size-table small-rows" id="itemTable">
+                    {% for todo in todos %}
+                        <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ todo.id }}')">
+                            <div class="name">{{ todo.name }}</div>
+                            <div class="gray-info">
+                                <span class="priority single-row"><b>Priority:</b> {{ todo.priority }}</span>
+                                <span class="date-planned single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
+                                <span class="date-due single-row"><b>Due:</b> {{ todo.dateDue }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="column-title">Recently Edited</div>
+            <div class="wrapper">
+
+            </div>
+        </div>
+        <div class="column">
+            <div class="column-title">Recent Projects</div>
+            <div class="wrapper">
+                <div class="full-size-table small-rows" id="itemTable">
+                    {% for project in projects %}
+                        <div class="row" onclick="goToItem('{{ path('singleProject', {'id' : project.id}) }}')">
+                            <div class="name">{{ project.name }}</div>
+                            <div class="gray-info">
+                                <span class="date-modified">{{ project.dateModified }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="clear-both"></div>
+    </div>
 
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
-
-{% block javascripts %}
     {{ parent() }}
 {% endblock %}
