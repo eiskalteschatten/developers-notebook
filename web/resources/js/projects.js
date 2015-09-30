@@ -63,6 +63,7 @@ function toggleIsComplete(id, obj) {
             }
             else {
                 $('.page-title').addClass('grayed-out');
+                $('.is-completed').show();
             }
         }
         else {
@@ -72,6 +73,7 @@ function toggleIsComplete(id, obj) {
             }
             else {
                 $('.page-title').removeClass('grayed-out');
+                $('.is-completed').hide();
             }
         }
     });

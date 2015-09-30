@@ -28,6 +28,10 @@
             });
 
             $('.editor-folder:first').trigger('click');
+
+            {% if project.isCompleted is not empty %}
+                $('.is-completed').show();
+            {% endif %}
         });
 
         function editName() {
@@ -93,7 +97,7 @@
 
         <div class="content">
             <div class="page-title{{ isCompletedClass }}">
-                <div class="complete-project"><input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
+                <div class="complete-project"><input type="checkbox" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
                 <span class="project-name-info">{{ project.name }}</span>
                 <span class="project-name-edit"><input type="text" class="text-item-name" value="{{ project.name }}" placeholder="Project name" onkeyup="saveName(event)"></span>
             </div>
@@ -108,6 +112,7 @@
                     <div class="editor-folder" data-section="code-project-section">Code Cache</div>
                     <div class="editor-folder" data-section="notes-project-section">Notes</div>
                     <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
+                    <div style="margin: 10px;" class="small-font"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed items</div>
                     <div style="margin: 10px;" class="small-font"><a href="#!" onclick="editName()">Rename Project</a></div>
                     <div class="delete-red" style="margin: 10px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
                 </div>
@@ -127,55 +132,67 @@
                 <div class="tab-section issues-project-section">
                     <div class="full-size-table small-rows">
                         {% for issue in issues %}
-                            {% if issue.isCompleted is empty %}
-                                <div class="row" onclick="goToContentNoId('{{ path('singleIssue', {'id': issue.id}) }}')">
-                                    <div class="info">
-                                        <div class="left">
-                                            <div>
-                                                <span class="item-id to-empty">#{{ issue.id }}</span>
-                                                <span class="name to-empty">{{ issue.name }}</span>
-                                            </div>
-                                            <div class="gray-info">
-                                                {% if issue.isCompleted is not empty %}
-                                                    <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
-                                                {% endif %}
-                                                <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
-                                                <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
-                                            </div>
-                                            <div class="gray-info">
-                                                <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
-                                                <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todos | raw}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="clear-both"></div>
-                                    </div>
-                                </div>
+                            {% set isCompletedClass = '' %}
+
+                            {% if issue.isCompleted is not empty %}
+                                {% set isCompletedClass = ' is-completed' %}
                             {% endif %}
+
+                            <div class="row{{ isCompletedClass }}" onclick="goToContentNoId('{{ path('singleIssue', {'id': issue.id}) }}')">
+                                <div class="info">
+                                    <div class="left">
+                                        <div>
+                                            <span class="item-id to-empty">#{{ issue.id }}</span>
+                                            <span class="name to-empty">{{ issue.name }}</span>
+                                        </div>
+                                        <div class="gray-info">
+                                            {% if issue.isCompleted is not empty %}
+                                                <span class="date-completed to-empty single-row"><b>Completed:</b> {{ issue.dateCompleted }}</span>
+                                            {% endif %}
+                                            <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ issue.datePlanned }}</span>
+                                            <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
+                                        </div>
+                                        <div class="gray-info">
+                                            <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labels }}</span>
+                                            <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todos | raw}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="clear-both"></div>
+                                </div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="tab-section todos-project-section">
                     <div class="full-size-table small-rows">
                         {% for todo in todos %}
-                            {% if todo.isCompleted is empty %}
-                                <div class="row" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
-                                    <div class="info">
-                                        <div class="left">
-                                            <div>
-                                                <span class="item-id to-empty">#{{ todo.id }}</span>
-                                                <span class="name to-empty">{{ todo.name }}</span>
-                                            </div>
-                                            <div class="gray-info no-margin">
-                                                <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
-                                                <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
-                                                <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
-                                                <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="clear-both"></div>
-                                    </div>
-                                </div>
+                            {% set isCompletedClass = '' %}
+
+                            {% if todo.isCompleted is not empty %}
+                                {% set isCompletedClass = ' is-completed' %}
                             {% endif %}
+
+                            <div class="row{{ isCompletedClass }}" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
+                                <div class="info">
+                                    <div class="left">
+                                        <div>
+                                            <span class="item-id to-empty">#{{ todo.id }}</span>
+                                            <span class="name to-empty">{{ todo.name }}</span>
+                                        </div>
+                                        <div class="gray-info no-margin">
+                                            {% if todo.isCompleted is not empty %}
+                                                <span class="date-completed to-empty single-row"><b>Completed:</b> {{ todo.dateCompleted }}</span>
+                                            {% endif %}
+
+                                            <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
+                                            <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
+                                            <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
+                                            <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="clear-both"></div>
+                                </div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
