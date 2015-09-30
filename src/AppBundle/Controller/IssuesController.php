@@ -522,8 +522,20 @@ class IssuesController extends Controller
 			$dateDue = $dateDue->format($dateFormat);
 		}
 
-		$todos = str_replace(' ', '', $issuesResult->getTodos());
-		$todosArray = explode(",", $todos);
+		// GET CONNECTED TO DOS
+
+		$todosResult =  $this->getDoctrine()
+			->getRepository('AppBundle:ConnectorTodosIssues')
+			->findBy(
+				array('userId' => $userId, 'issue' => $issuesResult->getId()),
+				array('dateCreated' => 'ASC')
+			);
+
+		$todos = array();
+
+		foreach ($todosResult as $todo) {
+			$todos[] = $todo->getTodo();
+		}
 
 		$issue = array(
 			'id' => $issuesResult->getId(),
@@ -535,8 +547,8 @@ class IssuesController extends Controller
 			'datePlanned' => $datePlanned,
 			'dateDue' => $dateDue,
 			'labels' => $issuesResult->getLabels(),
-			'todos' => $todosArray,
-			'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
+			'todos' => $todos,
+			'todosHtml' => $helper->createTodosHtmlLinks($todos, $this->generateUrl('todos')),
 			'folder' => $issuesResult->getFolder(),
 			'project' => $issuesResult->getProject(),
 			'date' => $issuesResult->getDateModified()->format($dateTimeFormat)

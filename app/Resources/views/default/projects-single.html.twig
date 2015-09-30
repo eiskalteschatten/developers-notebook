@@ -130,6 +130,7 @@
                                                 <span class="name to-empty">{{ todo.name }}</span>
                                             </div>
                                             <div class="gray-info no-margin">
+                                                <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
                                                 <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
                                                 <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
                                                 <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>

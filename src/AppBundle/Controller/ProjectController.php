@@ -158,6 +158,25 @@ class ProjectController extends Controller
                 $dateDue = $dateDue->format($dateFormat);
             }
 
+            $issuesTodosResult = $this->getDoctrine()
+                ->getRepository('AppBundle:ConnectorTodosIssues')
+                ->findBy(
+                    array('userId' => $userId, 'todo' => $todo->getId()),
+                    array('dateCreated' => 'ASC')
+                );
+
+            $issuesTodos = array();
+            $issuesTodosHtml = array();
+
+            foreach ($issuesTodosResult as $issue) {
+                $issuesTodos[] = $issue->getIssue();
+
+                $issuesTodosHtml[] = array(
+                    'id' => $issue->getIssue(),
+                    'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
+                );
+            }
+
             $todos[] = array(
                 'id' => $todo->getId(),
                 'name' => $todo->getTodo(),
@@ -169,7 +188,9 @@ class ProjectController extends Controller
                 'priority' => $todo->getPriority(),
                 'folder' => $todo->getFolder(),
                 'project' => $todo->getProject(),
-                'date' => $todo->getDateModified()->format($dateTimeFormat)
+                'date' => $todo->getDateModified()->format($dateTimeFormat),
+                'issues' => $issuesTodos,
+                'issuesHtml' => $helper->createIssuesHtmlLinks($issuesTodosHtml)
             );
         }
 
@@ -200,8 +221,20 @@ class ProjectController extends Controller
                 $dateDue = $dateDue->format($dateFormat);
             }
 
-            $todos = str_replace(' ', '', $issue->getTodos());
-            $todosArray = explode(",", $todos);
+            // GET CONNECTED TO DOS
+
+            $issuesTodosResult = $this->getDoctrine()
+                ->getRepository('AppBundle:ConnectorTodosIssues')
+                ->findBy(
+                    array('userId' => $userId, 'issue' => $issue->getId()),
+                    array('dateCreated' => 'ASC')
+                );
+
+            $issuesTodos = array();
+
+            foreach ($issuesTodosResult as $todo) {
+                $issuesTodos[] = $todo->getTodo();
+            }
 
             $issues[] = array(
                 'id' => $issue->getId(),
@@ -212,7 +245,7 @@ class ProjectController extends Controller
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
                 'labels' => $issue->getLabels(),
-                'todos' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')),
+                'todos' => $helper->createTodosHtmlLinks($issuesTodos, $this->generateUrl('todos')),
                 'folder' => $issue->getFolder(),
                 'project' => $issue->getProject(),
                 'date' => $issue->getDateModified()->format($dateTimeFormat)
