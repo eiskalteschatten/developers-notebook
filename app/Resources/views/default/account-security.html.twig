@@ -1,0 +1,62 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}Account - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        function submit() {
+            var toSend = {
+                password: $('#password').val()
+            }
+
+            $.post("{{ path('accountVerifyPassword') }}", toSend, function(data) {
+                if (data.msgType) {
+                    showMessage(data.msgType, data.message);
+                }
+                else {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="page-title">Account</div>
+        <div class="section">
+            <div class="sub-section">
+                <div class="option">
+                    <div class="label">Veryify your password before continuing:</div>
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+
+                <button onclick="submit()">Submit</button>
+
+                <div class="clear-both"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        label {
+            margin-left: 5px;
+        }
+
+        .option {
+            margin-bottom: 20px;
+        }
+
+        .option input[type="text"], .option input[type="password"] {
+            width: 50%;
+        }
+    </style>
+{% endblock %}

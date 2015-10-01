@@ -1,3 +1,10 @@
 parameters:
     AppBundle.messages.settingsSavedSuccess: 'Your settings were saved successfully!'
     AppBundle.messages.settingsSavedError: 'An error occurred while saving your settings. Please try again later.'
+    AppBundle.messages.accountSavedSuccess: 'Your account was updated successfully!'
+    AppBundle.messages.accountSavedError: 'An error occurred while saving your account settings. Please try again later.'
+    AppBundle.messages.accountUsernameExistsError: 'This username already exists. Plesase choose a different one.'
+    AppBundle.messages.accountEmailExistsError: 'This email address already exists. Please choose a different one.'
+    AppBundle.messages.accountPasswordsDontMatch: 'The passwords you typed did not match.'
+    AppBundle.messages.accountPasswordNotValid: 'The password you typed is not valid for this account.'
+    AppBundle.messages.allFieldsRequiredError: 'Please fill out all fields.'

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexseifert
- * Date: 31/08/15
- * Time: 21:05
- */
 
 namespace AppBundle\Controller;
 
@@ -12,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use AppBundle\Entity\User;
 use AppBundle\Entity\GeneralSettings;
@@ -19,6 +15,172 @@ use AppBundle\Entity\EditorSettings;
 
 class AccountController extends Controller
 {
+    /**
+     * @Route("/notebook/account/", name="accountPage")
+     */
+    public function settingsAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $session = $this->container->get('session');
+
+        if ($session->getFlashBag()->get('canGoToMyAccount')) {
+            $userResult = $this->getDoctrine()
+                ->getRepository('AppBundle:User')
+                ->findOneBy(
+                    array('id' => $userId)
+                );
+
+            return $this->render('default/account.html.twig', array(
+                'userInfo' => $userResult
+            ));
+        }
+
+        return $this->render('default/account-security.html.twig');
+    }
+
+    /**
+     * @Route("/notebook/account/verifyPassword/", name="accountVerifyPassword")
+     * @Method("POST")
+     */
+    public function verifyAccountPassword(Request $request)
+    {
+        $password = $request->request->get('password');
+
+        if (empty($password)) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.allFieldsRequiredError')));
+            return $response;
+        }
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $em = $this->getDoctrine()->getManager();
+        $userResults = $em->getRepository('AppBundle:User')
+            ->findOneBy(array('id' => $userId));
+
+        if (!$userResults) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountSavedError')));
+            return $response;
+        }
+
+        $encoder = $this->container->get('security.password_encoder');
+        $encryptedPassword = $encoder->encodePassword($userResults, $password);
+
+        if (!$encoder->isPasswordValid($user, $password)) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountPasswordNotValid')));
+            return $response;
+        }
+
+        $session = $this->container->get('session');
+        $session->getFlashBag()->add('canGoToMyAccount', 'true');
+
+        $response = new Response("reload");
+        return $response;
+    }
+
+    /**
+     * @Route("/notebook/account/saveInfo/", name="accountSaveInfo")
+     * @Method("POST")
+     */
+    public function saveAccountInfo(Request $request)
+    {
+        $username = $request->request->get('username');
+        $email = $request->request->get('email');
+
+        if (empty($username) || empty($email)) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.allFieldsRequiredError')));
+            return $response;
+        }
+
+        $date = new \DateTime("now");
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+        $currentUserName = $user->getUsername();
+        $currentEmail = $user->getEmail();
+
+        $em = $this->getDoctrine()->getManager();
+        $userResults = $em->getRepository('AppBundle:User')
+            ->findOneBy(array('id' => $userId));
+
+        if (!$userResults) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountSavedError')));
+            return $response;
+        }
+
+        $usernameResults = $em->getRepository('AppBundle:User')
+            ->findOneBy(array('username' => $username));
+
+        if ($usernameResults && $usernameResults->getUsername() != $currentUserName) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountUsernameExistsError')));
+            return $response;
+        }
+
+        $emailResults = $em->getRepository('AppBundle:User')
+            ->findOneBy(array('email' => $email));
+
+        if ($emailResults && $emailResults->getEmail() != $currentEmail) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountEmailExistsError')));
+            return $response;
+        }
+
+        $userResults->setUsername($username);
+        $userResults->setEmail($email);
+        $userResults->setDateModified($date);
+
+        $em->flush();
+
+        $response = new JsonResponse(array('msgType' => 'success', 'message' => $this->container->getParameter('AppBundle.messages.accountSavedSuccess')));
+        return $response;
+    }
+
+    /**
+     * @Route("/notebook/account/savePassword/", name="accountSavePassword")
+     * @Method("POST")
+     */
+    public function saveAccountPassword(Request $request)
+    {
+        $password = $request->request->get('password');
+        $passwordConfirm = $request->request->get('passwordConfirm');
+
+        if (empty($password) || empty($passwordConfirm)) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.allFieldsRequiredError')));
+            return $response;
+        }
+
+        if ($password == $passwordConfirm) {
+            $date = new \DateTime("now");
+
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $userId = $user->getId();
+
+            $em = $this->getDoctrine()->getManager();
+            $userResults = $em->getRepository('AppBundle:User')
+                ->findOneBy(array('id' => $userId));
+
+            if (!$userResults) {
+                $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountSavedError')));
+                return $response;
+            }
+
+            $encoder = $this->container->get('security.password_encoder');
+            $encryptedPassword = $encoder->encodePassword($userResults, $password);
+
+            $userResults->setPassword($encryptedPassword);
+            $userResults->setDateModified($date);
+
+            $em->flush();
+
+            $response = new JsonResponse(array('msgType' => 'success', 'message' => $this->container->getParameter('AppBundle.messages.accountSavedSuccess')));
+            return $response;
+        }
+
+        $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.accountPasswordsDontMatch')));
+        return $response;
+    }
+
     /**
      * @Route("/register/", name="account_register")
      */
@@ -40,13 +202,11 @@ class AccountController extends Controller
         $password = $request->request->get('password');
         $passwordConfirm = $request->request->get('passwordConfirm');
 
-        if ($username == "" || $email == "" || $password == "" || $passwordConfirm == "") {
-            $error = "Please fill out all fields.";
-
+        if (empty($username) || empty($email) || empty($password) || empty($passwordConfirm)) {
             return $this->render(
                 'security/register.html.twig',
                 array(
-                    'error' => $error
+                    'error' => $this->container->getParameter('AppBundle.messages.allFieldsRequiredError')
                 )
             );
         }
@@ -55,12 +215,10 @@ class AccountController extends Controller
         $entity = $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findOneBy(array('username' => $username));
 
         if ($entity != null) {
-            $error = "This username already exists. Please choose a new one.";
-
             return $this->render(
                 'security/register.html.twig',
                 array(
-                    'error' => $error
+                    'error' => $this->container->getParameter('AppBundle.messages.accountUsernameExistsError')
                 )
             );
         }
@@ -69,12 +227,10 @@ class AccountController extends Controller
         $entity = $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findOneBy(array('email' => $email));
 
         if ($entity != null) {
-            $error = "This email address already exists. Please choose a new one.";
-
             return $this->render(
                 'security/register.html.twig',
                 array(
-                    'error' => $error
+                    'error' => $this->container->getParameter('AppBundle.messages.accountEmailExistsError')
                 )
             );
         }
@@ -136,12 +292,10 @@ class AccountController extends Controller
             return $this->redirectToRoute('default_security_target');
         }
 
-        $error = "The passwords you typed did not match.";
-
         return $this->render(
             'security/register.html.twig',
             array(
-                'error' => $error
+                'error' => $this->container->getParameter('AppBundle.messages.accountPasswordsDontMatch')
             )
         );
     }

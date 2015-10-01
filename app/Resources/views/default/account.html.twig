@@ -1,0 +1,87 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}Account - Developer's Notebook{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        function saveInfo() {
+            var toSend = {
+                username: $('#username').val(),
+                email: $('#email').val()
+            }
+
+            $.post("{{ path('accountSaveInfo') }}", toSend, function(data) {
+                showMessage(data.msgType, data.message);
+            });
+        }
+
+        function savePassword() {
+            var toSend = {
+                password: $('#password').val(),
+                passwordConfirm: $('#passwordConfirm').val()
+            }
+
+            $.post("{{ path('accountSavePassword') }}", toSend, function(data) {
+                showMessage(data.msgType, data.message);
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="page-title">Account</div>
+        <div class="section">
+            <div class="sub-section content-two-columns">
+                <div class="column">
+                    <div class="option">
+                        <div class="label">Username:</div>
+                        <input type="text" id="username" placeholder="Username" value="{{ userInfo.username }}">
+                    </div>
+                    <div class="option">
+                        <div class="label">Email:</div>
+                        <input type="text" id="email" placeholder="Email" value="{{ userInfo.email }}">
+                    </div>
+
+                    <button onclick="saveInfo()">Save</button>
+                </div>
+                <div class="column">
+                    <div class="option">
+                        <div class="label">Password:</div>
+                        <input type="password" id="password" placeholder="Password">
+                    </div>
+                    <div class="option">
+                        <div class="label">Confirm password:</div>
+                        <input type="password" id="passwordConfirm" placeholder="Confirm password">
+                    </div>
+
+                    <button onclick="savePassword()">Save New Password</button>
+                </div>
+
+                <div class="clear-both"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        label {
+            margin-left: 5px;
+        }
+
+        .option {
+            margin-bottom: 20px;
+        }
+
+        .option input[type="text"], .option input[type="password"] {
+            width: 50%;
+        }
+    </style>
+{% endblock %}

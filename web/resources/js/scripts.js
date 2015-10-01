@@ -106,7 +106,11 @@ function closePopup() {
 
 // Error and success messages
 
+var messageTimeout;
+
 function showMessage(type, message) {
+	clearTimeout(messageTimeout);
+
 	var msgCenter = $('.message-center');
 
 	var div = $("<div>");
@@ -116,7 +120,7 @@ function showMessage(type, message) {
 	msgCenter.html(div);
 	msgCenter.fadeIn(500);
 
-	setTimeout(hideMessage, 3000);
+	messageTimeout = setTimeout(hideMessage, 3000);
 }
 
 function hideMessage() {
