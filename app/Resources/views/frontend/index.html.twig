@@ -2,7 +2,14 @@
 
 {% block body %}
 
-    {{ include('security/subtemplates/login-form.html.twig') }}
+    <div class="content-two-columns">
+        <div class="column align-center">
+            <img src="{{ asset('resources/img/logo.svg') }}" style="width: 500px; margin-top: 100px;">
+        </div>
+        <div class="column">
+            {{ include('security/subtemplates/login-form.html.twig') }}
+        </div>
+    </div>
 
 {% endblock %}
 

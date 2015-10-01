@@ -22,14 +22,14 @@
     <body>
         {% block menubar %}
             <div class="menubar">
-                <div class="logo"><a href="{{ path('frontendHomepage') }}">Developer's Notebook</a></div>
+                <div class="logo"><a href="{{ path('frontendHomepage') }}"><img src="{{ asset('resources/img/logo.svg') }}">Developer's Notebook</a></div>
             </div>
         {% endblock %}
         <div class="popup-close-layer"></div>
 
         {% block body %}{% endblock %}
 
-        <div class="footer fixed-bottom">
+        <div class="footer">
             &copy; 2015 <a href="http://www.alexseifert.com" target="_blank" class="copyright-link">Alex Seifert</a>
             <div class="links">
                 <a href="https://github.com/eiskalteschatten/developers-notebook" target="_blank">GitHub</a>

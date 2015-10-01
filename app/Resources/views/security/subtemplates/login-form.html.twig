@@ -1,17 +1,19 @@
 {% block form %}
-    <div class="box login-box">
-        <div class="title">Login</div>
-        {%  if error %}
-            <div class="message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {%  endif %}
-        <form action="{{ path('login_check') }}" method="post" id="loginForm">
-            {#<input type="hidden" name="_target_path" value="/notebook" />#}
-            <input type="text" name="_username" placeholder="Username" required="required" value="{{ last_username }}"><br>
-            <input type="password" name="_password" placeholder="Password" required="required">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <input type="submit" style="position: absolute; left: -9999px"/>
-        </form>
-        <a href="{{ path('account_register') }}" class="white-button has-neighbor-button">Register</a><a href="#!" onclick="document.forms['loginForm'].submit()" class="blue-button">Login</a><br>
-        {#<a href="forgotpassword.php" class="forgot-password">Forgot your password?</a>#}
+    <div class="login-box-container">
+        <div class="box login-box">
+            <div class="title">Login</div>
+            {%  if error %}
+                <div class="message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {%  endif %}
+            <form action="{{ path('login_check') }}" method="post" id="loginForm">
+                {#<input type="hidden" name="_target_path" value="/notebook" />#}
+                <input type="text" name="_username" placeholder="Username" required="required" value="{{ last_username }}"><br>
+                <input type="password" name="_password" placeholder="Password" required="required">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <input type="submit" style="position: absolute; left: -9999px"/>
+            </form>
+            <a href="{{ path('account_register') }}" class="white-button has-neighbor-button">Register</a><a href="#!" onclick="document.forms['loginForm'].submit()" class="blue-button">Login</a><br>
+            {#<a href="forgotpassword.php" class="forgot-password">Forgot your password?</a>#}
+        </div>
     </div>
 {% endblock %}

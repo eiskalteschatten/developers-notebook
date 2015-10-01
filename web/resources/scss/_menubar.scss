@@ -14,7 +14,12 @@
 .menubar .logo {
 	margin-top: 10px;
 	margin-left: 10px;
-	margin-right: 50px;
+
+	img {
+		width: 40px;
+		margin-right: 15px;
+		vertical-align: text-top;
+	}
 
 	a {
 		color: $defaultFontColor;

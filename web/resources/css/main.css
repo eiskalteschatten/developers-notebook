@@ -347,11 +347,6 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     margin: 0 10px; }
   .footer .links a:first-child {
     margin-left: 0; }
-  .footer.fixed-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: calc(100% - 80px); }
 
 /* Styles for the menubar */
 .menubar {
@@ -365,8 +360,11 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 
 .menubar .logo {
   margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 50px; }
+  margin-left: 10px; }
+  .menubar .logo img {
+    width: 40px;
+    margin-right: 15px;
+    vertical-align: text-top; }
   .menubar .logo a {
     color: #0f0f0f;
     text-decoration: none; }
@@ -766,23 +764,16 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .popup-close-layer.background {
   background: rgba(255, 255, 255, 0.5); }
 
+.login-box-container {
+  margin: 100px 0; }
+
 .login-box {
   width: 400px;
   min-height: 210px;
-  position: absolute;
-  left: 50%;
-  top: 300px;
-  margin-left: -255px;
-  margin-top: -130px;
+  margin: 0 auto;
   text-align: center; }
-
-.login-box input {
-  width: 300px; }
-
-.login-box .forgot-password {
-  font-size: 12px;
-  margin-top: 15px;
-  display: block; }
+  .login-box input {
+    width: 300px; }
 
 /* General */
 .ui-widget-content {
