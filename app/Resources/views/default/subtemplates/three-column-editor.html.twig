@@ -20,6 +20,15 @@
 			            </div>
 					{% endfor %}
                 </div>
+                
+                <div class="section-label">Folders</div>
+                <div class="editor-folders folders" data-url-create="{{ path('editorCreateFolder') }}">
+                	{% for folder in folders %}
+			            <div class="editor-folder folder" data-id="{{ folder.id }}">
+			            	{{ folder.name }}
+			            </div>
+					{% endfor %}
+                </div>
 
                 {% if standardArea == "journal" %}
                     <div class="section-label">Years</div>
@@ -31,15 +40,6 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                
-                <div class="section-label">Folders</div>
-                <div class="editor-folders folders" data-url-create="{{ path('editorCreateFolder') }}">
-                	{% for folder in folders %}
-			            <div class="editor-folder folder" data-id="{{ folder.id }}">
-			            	{{ folder.name }}
-			            </div>
-					{% endfor %}
-                </div>
             </div>
         </div>
         <div class="second-column">
