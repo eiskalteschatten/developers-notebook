@@ -65,6 +65,8 @@ class EditorController extends Controller
         $syntax = $request->request->get('syntax');
         $content = $request->request->get('content');
 
+        $date = new \DateTime("now");
+
         $em = $this->getDoctrine()->getManager();
         $pages = $em->getRepository('AppBundle:Pages')->find($id);
 
@@ -74,6 +76,7 @@ class EditorController extends Controller
 
         $pages->setSyntax($syntax);
         $pages->setContent($content);
+        $pages->setDateModified($date);
         $em->flush();
 
         $response = new JsonResponse(array('previewContent' => $helper->createPagePreview($content)));

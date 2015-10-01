@@ -38,7 +38,7 @@
         </div>
         <div class="column">
             <div class="column-title">Recently Edited</div>
-            <div class="wrapper">
+            <div class="wrapper">{{ dump(recentlyAdded) }}
                 <div class="full-size-table small-rows">
 					{% for recent in recentlyAdded %}
                         <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ recent.id }}')">

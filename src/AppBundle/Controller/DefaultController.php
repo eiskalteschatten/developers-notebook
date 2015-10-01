@@ -15,8 +15,11 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $helper = $this->get('app.services.helper');
+
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
         $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
+        $numberOfItems = $this->container->getParameter('AppBundle.notebookHomeNumberOfItems');
 
         $sevenDaysAgo = new \DateTime('-7 day');//$now->sub(new \DateInterval("P7D"));
         $sevenDaysFromNow = new \DateTime('+7 day');//$now->add(new \DateInterval("P7D"));
@@ -33,7 +36,7 @@ class DefaultController extends Controller
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(5);
+            ->setMaxResults($numberOfItems);
         $todosResult = $query->getResult();
 
         $todos = array();
@@ -59,29 +62,123 @@ class DefaultController extends Controller
         }
 
 
-        // GET RECENTLY ADDED
-
-        $query = $em->createQuery("SELECT b FROM AppBundle:Bookmark b WHERE b.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND b.userId = :userId ORDER BY b.dateModified")
-            ->setParameter('userId', $userId)
-            ->setParameter('sevenDaysAgo', $sevenDaysAgo)
-            ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(5);
-        $recentResult = $query->getResult();
+        // GET RECENTLY ADDED ITEMS
 
         $recentlyAdded = array();
 
-        foreach ($recentResult as $recent) {
-            $dateModified = $recent->getDateModified();
+
+        // GET RECENTLY ADDED BOOKMARKS
+
+        $query = $em->createQuery("SELECT t.id, t.name, t.url, t.dateModified FROM AppBundle:Bookmark t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId ORDER BY t.dateModified")
+            ->setParameter('userId', $userId)
+            ->setParameter('sevenDaysAgo', $sevenDaysAgo)
+            ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
+            ->setMaxResults($numberOfItems);
+        $bookmarksResult = $query->getResult();
+
+        foreach ($bookmarksResult as $recent) {
+            $dateModified = $recent["dateModified"];
             if ($dateModified) {
-                $dateModified = $dateModified->format($dateFormat);
+                $dateModified = $dateModified->format($dateTimeFormat);
             }
 
             $recentlyAdded[] = array(
-                'id' => $recent->getId(),
-                'name' => $recent->getName(),
+                'id' => $recent["id"],
+                'name' => $recent["name"],
+                'url' => $recent["url"],
+                'type' => 'bookmark',
                 'dateModified' => $dateModified
             );
         }
+
+
+        // GET RECENTLY ADDED TODOS
+
+        $query = $em->createQuery("SELECT t.id, t.todo, t.datePlanned, t.dateDue, t.dateModified, t.priority FROM AppBundle:Todo t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+            ->setParameter('userId', $userId)
+            ->setParameter('sevenDaysAgo', $sevenDaysAgo)
+            ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
+            ->setMaxResults($numberOfItems);
+        $bookmarksResult = $query->getResult();
+
+        foreach ($bookmarksResult as $recent) {
+            $dateModified = $recent["dateModified"];
+            if ($dateModified) {
+                $dateModified = $dateModified->format($dateTimeFormat);
+            }
+
+            $recentlyAdded[] = array(
+                'id' => $recent['id'],
+                'name' => $recent['todo'],
+                'datePlanned' => $datePlanned,
+                'dateDue' => $dateDue,
+                'priority' => $recent['priority'],
+                'type' => 'todo',
+                'dateModified' => $dateModified
+            );
+        }
+
+
+        // GET RECENTLY ADDED ISSUES
+
+        $query = $em->createQuery("SELECT t.id, t.title, t.datePlanned, t.dateDue, t.dateModified FROM AppBundle:Issue t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+            ->setParameter('userId', $userId)
+            ->setParameter('sevenDaysAgo', $sevenDaysAgo)
+            ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
+            ->setMaxResults($numberOfItems);
+        $bookmarksResult = $query->getResult();
+
+        foreach ($bookmarksResult as $recent) {
+            $dateModified = $recent["dateModified"];
+            if ($dateModified) {
+                $dateModified = $dateModified->format($dateTimeFormat);
+            }
+
+            $recentlyAdded[] = array(
+                'id' => $recent['id'],
+                'name' => $recent['title'],
+                'datePlanned' => $datePlanned,
+                'dateDue' => $dateDue,
+                'type' => 'issue',
+                'dateModified' => $dateModified
+            );
+        }
+
+
+        // GET RECENTLY ADDED PAGES (CODE CACHE, JOURNAL, NOTES)
+
+        $query = $em->createQuery("SELECT t.id, t.content, t.area, t.dateModified FROM AppBundle:Pages t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId ORDER BY t.dateModified")
+            ->setParameter('userId', $userId)
+            ->setParameter('sevenDaysAgo', $sevenDaysAgo)
+            ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
+            ->setMaxResults($numberOfItems * 3);
+        $bookmarksResult = $query->getResult();
+
+        foreach ($bookmarksResult as $recent) {
+            $dateModified = $recent["dateModified"];
+            if ($dateModified) {
+                $dateModified = $dateModified->format($dateTimeFormat);
+            }
+
+            $recentlyAdded[] = array(
+                'id' => $recent['id'],
+                'name' => $helper->createPagePreview($recent['content']),
+                'area' => $recent['area'],
+                'type' => 'page',
+                'dateModified' => $dateModified
+            );
+        }
+
+
+        // SORT RECENTLY ADDED BY DATE MODIFIED AND CROP IT TO THE DEFAULT NUMBER OF ITEMS
+
+        usort($recentlyAdded, function($a1, $a2) {
+            $v1 = strtotime($a1['dateModified']);
+            $v2 = strtotime($a2['dateModified']);
+            return $v2 - $v1;
+        });
+
+        $recentlyAdded = array_slice($recentlyAdded, 0, $numberOfItems);
 
 
         // GET PROJECTS
@@ -90,7 +187,7 @@ class DefaultController extends Controller
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(5);
+            ->setMaxResults($numberOfItems);
         $projectsResult = $query->getResult();
 
         $projects = array();
