@@ -50,9 +50,13 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .clear-both {
   clear: both; }
 
-.delete-row, .delete-red, .delete-row a, .delete-red a {
+.delete-row, .delete-row a {
   color: #ba3434;
   font-size: 12px; }
+
+.delete-red, .delete-red a {
+  color: #ba3434;
+  font-size: 14px; }
 
 .no-margin {
   margin: 0 !important; }

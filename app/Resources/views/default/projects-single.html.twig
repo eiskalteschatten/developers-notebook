@@ -101,6 +101,12 @@
                 <span class="project-name-info">{{ project.name }}</span>
                 <span class="project-name-edit"><input type="text" class="text-item-name" value="{{ project.name }}" placeholder="Project name" onkeyup="saveName(event)"></span>
             </div>
+            <div class="right">
+                <span class="small-font" style="margin-right: 20px;"><a href="#!" onclick="editName()">Rename Project</a></span>
+                <span class="delete-red"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></span>
+            </div>
+            <span class="small-font" style="margin-right: 20px;"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed items</span>
+            <div class="clear-both"></div>
         </div>
 
         <div class="content-two-thirds-columns">
@@ -112,9 +118,6 @@
                     <div class="editor-folder" data-section="code-project-section">Code Cache</div>
                     <div class="editor-folder" data-section="notes-project-section">Notes</div>
                     <div class="editor-folder" data-section="bookmarks-project-section">Bookmarks</div>
-                    <div style="margin: 10px;" class="small-font"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed items</div>
-                    <div style="margin: 10px;" class="small-font"><a href="#!" onclick="editName()">Rename Project</a></div>
-                    <div class="delete-red" style="margin: 10px;"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></div>
                 </div>
             </div>
             <div class="large-column">

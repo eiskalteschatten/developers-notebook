@@ -64,9 +64,14 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     clear: both;
 }
 
-.delete-row, .delete-red, .delete-row a, .delete-red a {
+.delete-row, .delete-row a {
 	color: $red;
 	font-size: 12px;
+}
+
+.delete-red, .delete-red a {
+	color: $red;
+	font-size: 14px;
 }
 
 .no-margin {
