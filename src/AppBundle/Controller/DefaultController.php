@@ -33,7 +33,7 @@ class DefaultController extends Controller
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(10);
+            ->setMaxResults(5);
         $todosResult = $query->getResult();
 
         $todos = array();
@@ -61,27 +61,27 @@ class DefaultController extends Controller
 
         // GET RECENTLY ADDED
 
-        $query = $em->createQuery("SELECT b FROM AppBundle:Bookmark b WHERE b.dateCreated BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND b.userId = :userId ORDER BY b.dateCreated")
+        $query = $em->createQuery("SELECT b FROM AppBundle:Bookmark b WHERE b.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND b.userId = :userId ORDER BY b.dateModified")
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(10);
+            ->setMaxResults(5);
         $recentResult = $query->getResult();
 
         $recentlyAdded = array();
 
-//        foreach ($recentResult as $recent) {
-//            $dateModified = $recent['dateModified'];
-//            if ($dateModified) {
-//                $dateModified = $dateModified->format($dateFormat);
-//            }
-//
-//            $recentlyAdded[] = array(
-//                'id' => $recent['id'],
-//                'name' => $recent['name'],
-//                'dateModified' => $dateModified
-//            );
-//        }
+        foreach ($recentResult as $recent) {
+            $dateModified = $recent->getDateModified();
+            if ($dateModified) {
+                $dateModified = $dateModified->format($dateFormat);
+            }
+
+            $recentlyAdded[] = array(
+                'id' => $recent->getId(),
+                'name' => $recent->getName(),
+                'dateModified' => $dateModified
+            );
+        }
 
 
         // GET PROJECTS
@@ -90,7 +90,7 @@ class DefaultController extends Controller
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
-            ->setMaxResults(10);
+            ->setMaxResults(5);
         $projectsResult = $query->getResult();
 
         $projects = array();

@@ -22,7 +22,7 @@
         <div class="column">
             <div class="column-title">Upcoming To Dos</div>
             <div class="wrapper">
-                <div class="full-size-table small-rows" id="itemTable">
+                <div class="full-size-table small-rows">
                     {% for todo in todos %}
                         <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ todo.id }}')">
                             <div class="name">{{ todo.name }}</div>
@@ -39,13 +39,22 @@
         <div class="column">
             <div class="column-title">Recently Edited</div>
             <div class="wrapper">
-
+                <div class="full-size-table small-rows">
+					{% for recent in recentlyAdded %}
+                        <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ recent.id }}')">
+                            <div class="name">{{ recent.name }}</div>
+                            <div class="gray-info">
+	                            test
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         <div class="column">
             <div class="column-title">Recent Projects</div>
             <div class="wrapper">
-                <div class="full-size-table small-rows" id="itemTable">
+                <div class="full-size-table small-rows">
                     {% for project in projects %}
                         <div class="row" onclick="goToItem('{{ path('singleProject', {'id' : project.id}) }}')">
                             <div class="name">{{ project.name }}</div>
