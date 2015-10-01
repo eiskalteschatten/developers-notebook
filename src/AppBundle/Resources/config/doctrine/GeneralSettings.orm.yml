@@ -19,4 +19,7 @@ AppBundle\Entity\GeneralSettings:
             type: string
             length: '1'
             column: weather_unit
+        showWeather:
+            type: boolean
+            column: weather_show
     lifecycleCallbacks: {  }

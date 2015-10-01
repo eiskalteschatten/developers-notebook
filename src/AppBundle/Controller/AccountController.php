@@ -104,10 +104,12 @@ class AccountController extends Controller
             $standardSyntaxNotebook = $this->container->getParameter('AppBundle.defaultSyntaxModeNotebook');
             $standardSyntaxJournal = $this->container->getParameter('AppBundle.defaultSyntaxModeJournal');
 
+            $defaultShowWeather = ($this->container->getParameter('AppBundle.defaultShowWeather') === 'true');
             $defaultWeatherLocation = $this->container->getParameter('AppBundle.defaultWeatherLocation');
             $defaultWeatherUnit = $this->container->getParameter('AppBundle.defaultWeatherUnit');
             $gs = new GeneralSettings();
             $gs->setUserId($userId);
+            $gs->setShowWeather($defaultShowWeather);
             $gs->setWeatherLocation($defaultWeatherLocation);
             $gs->setWeatherUnit($defaultWeatherUnit);
             $em->persist($gs);

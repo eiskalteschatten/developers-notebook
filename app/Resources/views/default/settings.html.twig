@@ -19,6 +19,10 @@
         $(document).ready(function() {
             $('#weatherLocation').val(weatherLocation);
             $('#weatherUnit').val(weatherUnit);
+            
+            {% if attribute(generalSettings, 'showWeather') is not empty %}
+                $('#showWeather').prop('checked', true);
+            {% endif %}
 
             $('#theme').val(defaultTheme);
             $('#defaultModeCode').val(standardSyntaxCode);
@@ -48,6 +52,7 @@
 
         function saveGeneralSettings() {
             var toSend = {
+                showWeather: $('#showWeather').prop('checked'),
                 weatherLocation: $('#weatherLocation').val(),
                 weatherUnit: $('#weatherUnit').val(),
             }
@@ -89,6 +94,9 @@
 
                 </div>
                 <div class="column">
+                    <div class="option">
+	                    <input type="checkbox" id="showWeather"><label for="showWeather">Show weather on the homepage</label>
+                    </div>                                    
                     <div class="option">
                         <div class="label">Weather location:</div>
                         <input type="text" id="weatherLocation" placeholder="Weather location">

@@ -49,6 +49,7 @@ class SettingsController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
 
+        $showWeather = ($request->request->get('showWeather') === 'true');
         $weatherLocation = $request->request->get('weatherLocation');
         $weatherUnit = $request->request->get('weatherUnit');
 
@@ -61,6 +62,7 @@ class SettingsController extends Controller
             return $response;
         }
 
+        $es->setShowWeather($showWeather);
         $es->setWeatherLocation($weatherLocation);
         $es->setWeatherUnit($weatherUnit);
 

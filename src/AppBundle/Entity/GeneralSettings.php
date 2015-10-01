@@ -28,6 +28,11 @@ class GeneralSettings
      * @var string
      */
     private $weatherUnit;
+    
+    /**
+     * @var boolean
+     */
+    private $showWeather;
 
 
     /**
@@ -108,4 +113,28 @@ class GeneralSettings
     {
         return $this->weatherUnit;
     }
+    
+    /**
+     * Set showWeather
+     *
+     * @param boolean $showWeather
+     * @return EditorSettings
+     */
+    public function setShowWeather($showWeather)
+    {
+        $this->showWeather = $showWeather;
+
+        return $this;
+    }
+
+    /**
+     * Get showWeather
+     *
+     * @return boolean 
+     */
+    public function getShowWeather()
+    {
+        return $this->showWeather;
+    }
+
 }
