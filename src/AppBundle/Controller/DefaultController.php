@@ -31,6 +31,15 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        // GET GENERAL SETTINGS FOR WEATHER
+
+        $generalSettingsResult = $this->getDoctrine()
+        ->getRepository('AppBundle:GeneralSettings')
+        ->findOneBy(
+            array('userId' => $userId)
+        );
+
+
         // GET TO DOS
 
         $query = $em->createQuery("SELECT t.id, t.todo, t.datePlanned, t.dateDue, t.priority FROM AppBundle:Todo t WHERE (t.dateDue BETWEEN :sevenDaysAgo AND :sevenDaysFromNow OR t.datePlanned BETWEEN :sevenDaysAgo AND :sevenDaysFromNow) AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateDue, t.datePlanned")
@@ -208,6 +217,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('default/index.html.twig', array(
+            'generalSettings' => $generalSettingsResult,
             'todos' => $todos,
             'recentlyAdded' => $recentlyAdded,
             'projects' => $projects,

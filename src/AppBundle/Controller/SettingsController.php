@@ -20,17 +20,54 @@ class SettingsController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
 
-        $settingsResult = $this->getDoctrine()
+        $generalSettingsResult = $this->getDoctrine()
+            ->getRepository('AppBundle:GeneralSettings')
+            ->findOneBy(
+                array('userId' => $userId)
+            );
+
+        $editorSettingsResult = $this->getDoctrine()
             ->getRepository('AppBundle:EditorSettings')
             ->findOneBy(
                 array('userId' => $userId)
             );
 
         return $this->render('default/settings.html.twig', array(
-            'editorSettings' => $settingsResult,
+            'generalSettings' => $generalSettingsResult,
+            'editorSettings' => $editorSettingsResult,
             'syntaxOptions' => $this->container->getParameter('AppBundle.syntaxOptions'),
             'editorThemes' => $this->container->getParameter('AppBundle.editorThemes')
         ));
+    }
+
+    /**
+     * @Route("/notebook/general-settings/save-all/", name="generalSaveAllSettings")
+     * @Method("POST")
+     */
+    public function saveAllGeneralSettingsAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $weatherLocation = $request->request->get('weatherLocation');
+        $weatherUnit = $request->request->get('weatherUnit');
+
+        $em = $this->getDoctrine()->getManager();
+        $es = $em->getRepository('AppBundle:GeneralSettings')
+            ->findOneBy(array('userId' => $userId));
+
+        if (!$es) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedError')));
+            return $response;
+        }
+
+        $es->setWeatherLocation($weatherLocation);
+        $es->setWeatherUnit($weatherUnit);
+
+        $em->flush();
+
+        $response = new JsonResponse(array('msgType' => 'success', 'message' => $this->container->getParameter('AppBundle.messages.settingsSavedSuccess')));
+        return $response;
     }
 
     /**

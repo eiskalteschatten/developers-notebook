@@ -6,17 +6,25 @@
     {{ parent() }}
 
     <script type="text/javascript">
+        var weatherLocation = "{{ attribute(generalSettings, 'weatherLocation') }}";
+        var weatherUnit = "{{ attribute(generalSettings, 'weatherUnit') }}";
+
         var defaultTheme = "{{ attribute(editorSettings, 'defaultTheme') }}";
         var standardSyntaxCode = "{{ attribute(editorSettings, 'defaultSyntaxModeCode') }}";
         var standardSyntaxJournal = "{{ attribute(editorSettings, 'defaultSyntaxModeJournal') }}";
         var standardSyntaxNotebook = "{{ attribute(editorSettings, 'defaultSyntaxModeNotebook') }}";
-        var saveSettingsUrl = "{{ path('editorSaveAllSettings') }}";
+        var saveGeneralSettingsUrl = "{{ path('generalSaveAllSettings') }}";
+        var saveEditorSettingsUrl = "{{ path('editorSaveAllSettings') }}";
 
         $(document).ready(function() {
+            $('#weatherLocation').val(weatherLocation);
+            $('#weatherUnit').val(weatherUnit);
+
             $('#theme').val(defaultTheme);
             $('#defaultModeCode').val(standardSyntaxCode);
             $('#defaultModeJournal').val(standardSyntaxJournal);
             $('#defaultModeNotebook').val(standardSyntaxNotebook);
+
 
             {% if attribute(editorSettings, 'highlightActiveLine') is not empty %}
                 $('#highlightActiveLine').prop('checked', true);
@@ -34,9 +42,20 @@
                 $('#regExp').prop('checked', true);
             {% endif %}
             {% if attribute(editorSettings, 'skipCurrentLineSearch') is not empty %}
-                $('#skipCurrent').prop('checked', true);
+            $('#skipCurrent').prop('checked', true);
             {% endif %}
         });
+
+        function saveGeneralSettings() {
+            var toSend = {
+                weatherLocation: $('#weatherLocation').val(),
+                weatherUnit: $('#weatherUnit').val(),
+            }
+
+            $.post(saveGeneralSettingsUrl, toSend, function(data) {
+                showMessage(data.msgType, data.message);
+            });
+        }
 
         function saveEditorSettings() {
             var toSend = {
@@ -52,7 +71,7 @@
                 skipCurrent: $('#skipCurrent').prop('checked')
             }
 
-            $.post(saveSettingsUrl, toSend, function(data) {
+            $.post(saveEditorSettingsUrl, toSend, function(data) {
                 showMessage(data.msgType, data.message);
             });
         }
@@ -64,6 +83,33 @@
     <div class="content">
         <div class="page-title"><img src="{{ asset('resources/img/gear.svg') }}" style="width: 22px;"> Settings</div>
         <div class="section">
+            <div class="section-title">General Settings</div>
+            <div class="sub-section content-two-columns">
+                <div class="column">
+
+                </div>
+                <div class="column">
+                    <div class="option">
+                        <div class="label">Weather location:</div>
+                        <input type="text" id="weatherLocation" placeholder="Weather location">
+                    </div>
+                    <div class="option">
+                        <div class="label">Weather unit:</div>
+                        <select id="weatherUnit">
+                            <option selected value="c">C</option>
+                            <option value="f">F</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="clear-both"></div>
+
+                <div class="align-center">
+                    <button onclick="saveGeneralSettings()">Save General Settings</button>
+                </div>
+            </div>
+        </div>
+        <div class="section border-top">
             <div class="section-title">Editor Settings</div>
             <div class="sub-section content-two-columns">
                 <div class="column">
@@ -124,6 +170,10 @@
 
         .option {
             margin-bottom: 20px;
+        }
+
+        .option input[type="text"] {
+            width: 50%;
         }
     </style>
 {% endblock %}

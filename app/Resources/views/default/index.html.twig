@@ -4,10 +4,51 @@
     {{ parent() }}
 
     <script type="application/javascript">
+        $(document).ready(function() {
+            {% set weatherLocation = attribute(generalSettings, 'weatherLocation') %}
+            {% set weatherUnit = attribute(generalSettings, 'weatherUnit') %}
+            {% set altWeatherUnit = "F" %}
+
+            {% if weatherUnit == "f" %}
+                {% set altWeatherUnit = "C" %}
+            {% endif %}
+
+            $.simpleWeather({
+                woeid: '2357536', //2357536
+                location: '{{ weatherLocation }}',
+                unit: '{{ weatherUnit }}',
+                success: function(weather) {
+                    $('.weather-image').attr('src', weather.image);
+                    $('.weather-city').text(weather.city + ', ' + weather.region);
+                    $('.weather-temp').html(weather.temp + '&deg; ' + weather.units.temp);
+                    $('.weather-alt-temp').html('(' + weather.alt.temp + '&deg; {{ altWeatherUnit }})');
+                    $('.weather-currently').text(weather.currently);
+
+                    var html = "";
+
+                    for(var i=0;i<weather.forecast.length;i++) {
+                        html += '<div class="weather-forecast-day left">';
+                        html += '<div class="bold">' + weather.forecast[i].day+'</div>';
+                        html += '<div><img class="weather-forecast-image" src="' + weather.forecast[i].image + '"></div>';
+                        html += weather.forecast[i].high + '&deg; ' + weather.units.temp;
+                        html += '<div class="tiny-font">' + weather.forecast[i].low + '&deg; ' + weather.units.temp + '</div>';
+                        html += '</div>';
+                    }
+
+                    $(".weather-forecast").html(html);
+                },
+                error: function(error) {
+                    $(".weather").html(error);
+                }
+            });
+        });
+
+
         function goToItem(url) {
             window.location.href = url;
         }
     </script>
+    <script type="text/javascript" src="{{ asset('resources/js/jquery.simpleWeather.min.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -15,60 +56,91 @@
     <div class="content">
         <div class="page-title">Welcome, {{ userName }}!</div>
 
-        <div class="weather">Current weather: </div>
+        <div class="section append-bottom">
+            <div class="weather left">
+                Current weather for <span class="weather-city bold"></span>:
+                <div class="weather-info">
+                    <div class="left">
+                        <img class="weather-image">
+                    </div>
+                    <div class="left">
+                        <span class="weather-temp large-font"></span>&nbsp;<span class="weather-alt-temp small-font"></span>
+                        <div class="weather-currently medium-font"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="weather-forecast left"></div>
+            <div class="clear-both"></div>
+        </div>
     </div>
 
-    <div class="content-even-three-columns">
-        <div class="column">
-            <div class="column-title">Upcoming To Dos</div>
-            <div class="wrapper">
-                <div class="full-size-table small-rows">
-                    {% for todo in todos %}
-                        {{ _self.todos(todo.id, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}
-                    {% endfor %}
+    <div class="section border-top">
+        <div class="content-even-three-columns">
+            <div class="column">
+                <div class="column-title">Upcoming To Dos</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows">
+                        {% for todo in todos %}
+                            {{ _self.todos(todo.id, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="column">
-            <div class="column-title">Recent Projects</div>
-            <div class="wrapper">
-                <div class="full-size-table small-rows">
-                    {% for project in projects %}
-                        <div class="row" onclick="goToItem('{{ path('singleProject', {'id' : project.id}) }}')">
-                            <div class="name">{{ project.name }}</div>
-                            <div class="gray-info">
-                                <span class="date-modified">{{ project.dateModified }}</span>
+            <div class="column">
+                <div class="column-title">Recent Projects</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows">
+                        {% for project in projects %}
+                            <div class="row" onclick="goToItem('{{ path('singleProject', {'id' : project.id}) }}')">
+                                <div class="name">{{ project.name }}</div>
+                                <div class="gray-info">
+                                    <span class="date-modified">{{ project.dateModified }}</span>
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="column">
-            <div class="column-title">Recently Edited</div>
-            <div class="wrapper">
-                <div class="full-size-table small-rows">
-					{% for recent in recentlyAdded %}
-                        {% if recent.type == "bookmark" %}
-                            {{ _self.bookmarks(recent.id, recent.name, recent.url, recent.croppedUrl, "true") }}
-                        {% elseif recent.type == "todo" %}
-                            {{ _self.todos(recent.id, recent.name, recent.priority, recent.datePlanned, recent.dateDue, "true") }}
-                        {% elseif recent.type == "issue" %}
-                            {{ _self.issues(recent.id, recent.name, recent.datePlanned, recent.dateDue, "true") }}
-                        {% elseif recent.type == "page" %}
-                            {{ _self.pages(recent.id, recent.name, recent.area, recent.dateModified, "true") }}
-                        {% endif %}
-                    {% endfor %}
+            <div class="column">
+                <div class="column-title">Recently Edited</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows">
+                        {% for recent in recentlyAdded %}
+                            {% if recent.type == "bookmark" %}
+                                {{ _self.bookmarks(recent.id, recent.name, recent.url, recent.croppedUrl, "true") }}
+                            {% elseif recent.type == "todo" %}
+                                {{ _self.todos(recent.id, recent.name, recent.priority, recent.datePlanned, recent.dateDue, "true") }}
+                            {% elseif recent.type == "issue" %}
+                                {{ _self.issues(recent.id, recent.name, recent.datePlanned, recent.dateDue, "true") }}
+                            {% elseif recent.type == "page" %}
+                                {{ _self.pages(recent.id, recent.name, recent.area, recent.dateModified, "true") }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
+            <div class="clear-both"></div>
         </div>
-        <div class="clear-both"></div>
     </div>
 
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+
+    <style>
+        .weather {
+            margin-right: 150px;
+        }
+
+        .weather-image, .weather-forecast-image {
+            height: 45px;
+        }
+
+        .weather-forecast-day {
+            margin-right: 30px;
+        }
+    </style>
 {% endblock %}
 
 

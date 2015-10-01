@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use AppBundle\Entity\User;
+use AppBundle\Entity\GeneralSettings;
 use AppBundle\Entity\EditorSettings;
 
 class AccountController extends Controller
@@ -102,7 +103,15 @@ class AccountController extends Controller
             $standardSyntaxCode = $this->container->getParameter('AppBundle.defaultSyntaxModeCode');
             $standardSyntaxNotebook = $this->container->getParameter('AppBundle.defaultSyntaxModeNotebook');
             $standardSyntaxJournal = $this->container->getParameter('AppBundle.defaultSyntaxModeJournal');
-            
+
+            $defaultWeatherLocation = $this->container->getParameter('AppBundle.defaultWeatherLocation');
+            $defaultWeatherUnit = $this->container->getParameter('AppBundle.defaultWeatherUnit');
+            $gs = new GeneralSettings();
+            $gs->setUserId($userId);
+            $gs->setWeatherLocation($defaultWeatherLocation);
+            $gs->setWeatherUnit($defaultWeatherUnit);
+            $em->persist($gs);
+
             $es = new EditorSettings();
             $es->setUserId($userId);
 	        $es->setDefaultTheme($defaultTheme);

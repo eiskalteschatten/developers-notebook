@@ -1,0 +1,22 @@
+AppBundle\Entity\GeneralSettings:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        weatherLocation:
+            type: string
+            length: 255
+            column: weather_location
+        weatherUnit:
+            type: string
+            length: '1'
+            column: weather_unit
+    lifecycleCallbacks: {  }
