@@ -24,29 +24,7 @@
             <div class="wrapper">
                 <div class="full-size-table small-rows">
                     {% for todo in todos %}
-                        <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ todo.id }}')">
-                            <div class="name">{{ todo.name }}</div>
-                            <div class="gray-info">
-                                <span class="priority single-row"><b>Priority:</b> {{ todo.priority }}</span>
-                                <span class="date-planned single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
-                                <span class="date-due single-row"><b>Due:</b> {{ todo.dateDue }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="column-title">Recently Edited</div>
-            <div class="wrapper">{{ dump(recentlyAdded) }}
-                <div class="full-size-table small-rows">
-					{% for recent in recentlyAdded %}
-                        <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ recent.id }}')">
-                            <div class="name">{{ recent.name }}</div>
-                            <div class="gray-info">
-	                            test
-                            </div>
-                        </div>
+                        {{ _self.todos(todo.id, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}
                     {% endfor %}
                 </div>
             </div>
@@ -66,6 +44,24 @@
                 </div>
             </div>
         </div>
+        <div class="column">
+            <div class="column-title">Recently Edited</div>
+            <div class="wrapper">
+                <div class="full-size-table small-rows">
+					{% for recent in recentlyAdded %}
+                        {% if recent.type == "bookmark" %}
+                            {{ _self.bookmarks(recent.id, recent.name, recent.url, recent.croppedUrl, "true") }}
+                        {% elseif recent.type == "todo" %}
+                            {{ _self.todos(recent.id, recent.name, recent.priority, recent.datePlanned, recent.dateDue, "true") }}
+                        {% elseif recent.type == "issue" %}
+                            {{ _self.issues(recent.id, recent.name, recent.datePlanned, recent.dateDue, "true") }}
+                        {% elseif recent.type == "page" %}
+                            {{ _self.pages(recent.id, recent.name, recent.area, recent.dateModified, "true") }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         <div class="clear-both"></div>
     </div>
 
@@ -74,3 +70,70 @@
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
+
+
+{% macro todos(id, name, priority, datePlanned, dateDue, showType) %}
+    <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ id }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">To do</span>
+            {% endif %}
+            <span class="priority single-row"><b>Priority:</b> {{ priority }}</span>
+            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
+            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro bookmarks(id, name, url, croppedUrl, showType) %}
+    <div class="row" onclick="goToItem('{{ path('bookmarks') }}?selectedItem={{ id }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">Bookmark</span>
+            {% endif %}
+            <span class="url gray-info to-empty"><a href="{{ url }}" target="_blank">{{ croppedUrl }}</a></span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro issues(id, name, datePlanned, dateDue, showType) %}
+    <div class="row" onclick="goToItem('{{ path('singleIssue', {"id": id}) }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">Issue</span>
+            {% endif %}
+            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
+            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro pages(id, name, area, dateModified, showType) %}
+    {% if area == "code" %}
+        {% set rowType = "Code Cache" %}
+        {% set url = path('codeCache') %}
+    {% elseif area == "journal" %}
+        {% set rowType = "Journal" %}
+        {% set url = path('journal') %}
+    {% else %}
+        {% set rowType = "Notes" %}
+        {% set url = path('notes') %}
+    {% endif %}
+
+    <div class="row" onclick="goToItem('{{ url }}?selectedItem={{ id }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+
+                <span class="type single-row bold italic">{{ rowType }}</span>
+            {% endif %}
+            <span class="date-modified single-row"><b>Date Modified:</b> {{ dateModified }}</span>
+        </div>
+    </div>
+{% endmacro %}

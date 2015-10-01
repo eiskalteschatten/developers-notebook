@@ -20,6 +20,7 @@ class DefaultController extends Controller
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
         $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
         $numberOfItems = $this->container->getParameter('AppBundle.notebookHomeNumberOfItems');
+        $numberOfEditedItems = $this->container->getParameter('AppBundle.notebookHomeNumberOfItemsEdited');
 
         $sevenDaysAgo = new \DateTime('-7 day');//$now->sub(new \DateInterval("P7D"));
         $sevenDaysFromNow = new \DateTime('+7 day');//$now->add(new \DateInterval("P7D"));
@@ -86,6 +87,7 @@ class DefaultController extends Controller
                 'id' => $recent["id"],
                 'name' => $recent["name"],
                 'url' => $recent["url"],
+                'croppedUrl' => $helper->cropBookmarkUrl($recent["url"]),
                 'type' => 'bookmark',
                 'dateModified' => $dateModified
             );
@@ -170,7 +172,7 @@ class DefaultController extends Controller
         }
 
 
-        // SORT RECENTLY ADDED BY DATE MODIFIED AND CROP IT TO THE DEFAULT NUMBER OF ITEMS
+        // SORT RECENTLY ADDED BY DATE MODIFIED AND CROP IT TO THE DEFAULT NUMBER OF EDITED ITEMS
 
         usort($recentlyAdded, function($a1, $a2) {
             $v1 = strtotime($a1['dateModified']);
@@ -178,7 +180,7 @@ class DefaultController extends Controller
             return $v2 - $v1;
         });
 
-        $recentlyAdded = array_slice($recentlyAdded, 0, $numberOfItems);
+        $recentlyAdded = array_slice($recentlyAdded, 0, $numberOfEditedItems);
 
 
         // GET PROJECTS
