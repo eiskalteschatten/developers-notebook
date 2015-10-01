@@ -9,12 +9,21 @@ use Symfony\Component\HttpFoundation\Request;
 class FrontendController extends Controller
 {
     /**
-     * @Route("/", name="frontend-homepage")
+     * @Route("/", name="frontendHomepage")
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('frontend/index.html.twig');
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('frontend/index.html.twig',
+            array(
+                'last_username' => $lastUsername,
+                'error' => $error
+            ));
     }
 
     /**

@@ -15,6 +15,11 @@
 	margin-top: 10px;
 	margin-left: 10px;
 	margin-right: 50px;
+
+	a {
+		color: $defaultFontColor;
+		text-decoration: none;
+	}
 }
 
 .menubar .command-search {

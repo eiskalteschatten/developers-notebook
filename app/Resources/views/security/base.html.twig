@@ -22,27 +22,21 @@
     <body>
         {% block menubar %}
             <div class="menubar">
-                <div class="logo"><a href="index.php">Developer's Notebook</a></div>
+                <div class="logo"><a href="{{ path('frontendHomepage') }}">Developer's Notebook</a></div>
             </div>
         {% endblock %}
         <div class="popup-close-layer"></div>
 
-        {% block body %}
-            <div class="box login-box">
-                <div class="title">Login</div>
-                {%  if error %}
-                    <div class="message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {%  endif %}
-                <form action="{{ path('login_check') }}" method="post" id="loginForm">
-                    <input type="hidden" name="_target_path" value="/notebook" />
-                    <input type="text" name="_username" placeholder="Username" value="{{ last_username }}"><br>
-                    <input type="password" name="_password" placeholder="Password"><br>
-                    <input type="submit" style="position: absolute; left: -9999px"/>
-                </form>
-                <a href="../register/" class="white-button" style="margin-right: 15px;">Register</a><a href="#!" onclick="document.forms['loginForm'].submit()" class="blue-button">Login</a><br>
-                <a href="forgotpassword.php" class="forgot-password">Forgot your password?</a>
+        {% block body %}{% endblock %}
+
+        <div class="footer fixed-bottom">
+            &copy; 2015 <a href="http://www.alexseifert.com" target="_blank" class="copyright-link">Alex Seifert</a>
+            <div class="links">
+                <a href="https://github.com/eiskalteschatten/developers-notebook" target="_blank">GitHub</a>
+                <a href="https://github.com/eiskalteschatten/developers-notebook/issues" target="_blank">Report a bug</a>
+                <a href="{{ path('aboutLink') }}">About Developer's Notebook</a>
             </div>
-        {% endblock %}
+        </div>
 
         {% block javascripts %}
             <script type="text/javascript" src="{{ asset('resources/js/scripts.js') }}"></script>

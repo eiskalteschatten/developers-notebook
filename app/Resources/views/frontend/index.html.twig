@@ -1,7 +1,9 @@
 {% extends 'frontend/base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('login_path') }}">Login</a>
+
+    {{ include('security/subtemplates/login-form.html.twig') }}
+
 {% endblock %}
 
 {% block stylesheets %}

@@ -20,10 +20,21 @@
         <script type="text/javascript" src="{{ asset('resources/js/jquery-ui-1.11.4.min.js') }}"></script>
     </head>
     <body>
-    {% block body %}{% endblock %}
+        {% block menubar %}
+            <div class="menubar">
+                <div class="logo"><a href="{{ path('frontendHomepage') }}">Developer's Notebook</a></div>
+            </div>
+        {% endblock %}
 
-    <div class="footer">
-            &copy; 2015 Alex Seifert
+        {% block body %}{% endblock %}
+
+        <div class="footer fixed-bottom">
+            &copy; 2015 <a href="http://www.alexseifert.com" target="_blank" class="copyright-link">Alex Seifert</a>
+            <div class="links">
+                <a href="https://github.com/eiskalteschatten/developers-notebook" target="_blank">GitHub</a>
+                <a href="https://github.com/eiskalteschatten/developers-notebook/issues" target="_blank">Report a bug</a>
+                <a href="{{ path('aboutLink') }}">About Developer's Notebook</a>
+            </div>
         </div>
 
         {% block javascripts %}

@@ -38,6 +38,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 .align-center {
   text-align: center; }
 
+.align-justify {
+  text-align: justify; }
+
 .left {
   float: left !important; }
 
@@ -344,6 +347,11 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     margin: 0 10px; }
   .footer .links a:first-child {
     margin-left: 0; }
+  .footer.fixed-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 80px); }
 
 /* Styles for the menubar */
 .menubar {
@@ -359,6 +367,9 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 50px; }
+  .menubar .logo a {
+    color: #0f0f0f;
+    text-decoration: none; }
 
 .menubar .command-search {
   margin: 6px 20px 0 20px; }
