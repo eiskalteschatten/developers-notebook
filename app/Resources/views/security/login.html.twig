@@ -13,7 +13,7 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <input type="submit" style="position: absolute; left: -9999px"/>
         </form>
-        <a href="{{ path('account_register') }}" class="white-button" style="margin-right: 15px;">Register</a><a href="#!" onclick="document.forms['loginForm'].submit()" class="blue-button">Login</a><br>
+        <a href="{{ path('account_register') }}" class="white-button has-neighbor-button">Register</a><a href="#!" onclick="document.forms['loginForm'].submit()" class="blue-button">Login</a><br>
         {#<a href="forgotpassword.php" class="forgot-password">Forgot your password?</a>#}
     </div>
 {% endblock %}

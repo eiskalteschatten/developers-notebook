@@ -120,6 +120,8 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   border-style: solid;
   cursor: pointer;
   text-decoration: none; }
+  .blue-button.has-neighbor-button, .white-button.has-neighbor-button {
+    margin-right: 15px; }
 
 .blue-button:active, .white-button:active {
   box-shadow: inset 0 1px 1px 0 rgba(0, 0, 0, 0.3); }
