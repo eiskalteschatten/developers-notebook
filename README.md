@@ -49,7 +49,7 @@ Now you have setup the database and can proceed with the environment-specific st
 
 ### Development Environment
 
-Since PHP 5.4 or later comes with a built-in server, it is recommended to use this during the development stage.
+Since PHP 5.4 or later comes with a built-in server, it is recommended, but certainly not required, to use this during the development stage.
 
 Simply navigate to the root directory of Developer's Notebook and run the following command:
 
@@ -70,7 +70,7 @@ http://symfony.com/doc/current/cookbook/web_server/built_in.html
 
 ### Production Environment
 
-Setting up a production environment is slightly different than a development environment. Apache, Nginx or other production-ready web servers should be used rather than PHP's built-in server.
+Setting up a production environment is slightly different than a development environment and varies widely depending on your web server, configuration and needs. Apache, Nginx or other production-ready web servers should be used rather than PHP's built-in server.
 
 To see how to setup your production server, see Symfony2's documentation:
 
