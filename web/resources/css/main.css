@@ -225,10 +225,6 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       background-color: #fafafa; }
       .full-size-table .row:hover .delete-row {
         display: inline; }
-    .full-size-table .row.is-completed {
-      color: #a0a0a0;
-      background-color: #fafafa;
-      display: none; }
     .full-size-table .row .delete-row {
       float: right;
       display: none;
@@ -265,6 +261,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       color: #0f0f0f; }
       .full-size-table .row.edit-mode a, .full-size-table .row.edit-mode .gray-info, .full-size-table .row.edit-mode .item-id {
         color: #0f0f0f; }
+    .full-size-table .row.is-completed {
+      color: #a0a0a0;
+      background-color: #fafafa;
+      display: none; }
 
 .info {
   width: 100%; }
