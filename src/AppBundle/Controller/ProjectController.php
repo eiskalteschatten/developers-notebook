@@ -54,6 +54,16 @@ class ProjectController extends Controller
                 'dateCompleted' => $dateCompleted
             );
         }
+        
+		// ADD A BLANK HIDDEN ROW FOR CLONING WHEN CREATING A NEW PROJECT
+
+		$projects[] = array(
+            'id' => '-1',
+			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
+            'dateModified' => '',
+            'isCompleted' => '',
+            'dateCompleted' => ''
+		);
 
         return $this->render('default/projects.html.twig', array(
             'projects' => $projects,
@@ -289,8 +299,10 @@ class ProjectController extends Controller
 
         $em->persist($project);
         $em->flush();
+        
+        $url = $this->generateUrl('singleProject', array('id' => $project->getId()));
 
-        $response = new JsonResponse(array('id' => $project->getId(), 'name' => $project->getName(), 'date' => $project->getDateModified()->format($dateTimeFormat)));
+        $response = new JsonResponse(array('id' => $project->getId(), 'name' => $project->getName(), 'date' => $project->getDateModified()->format($dateTimeFormat), 'url' => $url));
 
         return $response;
     }

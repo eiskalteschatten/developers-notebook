@@ -8,19 +8,28 @@ function addNewProject(event, obj) {
             }
 
             $.post(postUrlCreate, toSend, function(data) {
-                var html = '<span class="delete-row"><a href="#!" onclick="deleteProject(\'' + data.id + '\')">Delete</a></span>';
-                html += '<span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete(\'' + data.id + '\', this)" class="is-completed-check"></span>';
-                html += '<span class="clickable-area" onclick="goToProject(\'/notebook/projects/'+data.id+'\');">';
-                html += '<span class="name">' + data.name + '</span>';
-                html += '<span class="date gray-info">' + data.date + '</span>';
-                html += '</span>';
-
-                var div = $("<div>");
-                div.addClass('row');
-                div.attr('data-id', data.id);
-                div.html(html);
-
-                $('.full-size-table').prepend(div);
+	        	var div = $('.row:first').clone();
+	            div.attr('data-id', data.id);
+	            div.find('.to-empty').text('');
+	            div.find('.name').text(data.name);
+	            div.find('.date').text(data.date);
+	            div.removeClass('to-be-cloned');
+	            div.removeClass('is-completed');
+	            
+	            div.find('.delete-link').attr('onclick', '');
+	            div.find('.delete-link').click(function () {
+		            deleteProject(data.id);
+	            });
+	            
+	            div.find('.is-completed-check').prop('checked', false);
+	            div.find('.is-completed-check').attr('onclick', '');
+	            div.find('.is-completed-check').click(function () {
+					toggleIsComplete(data.id, $(this));
+	            });
+	            
+	            div.find('.clickable-area').attr('href', data.url);
+	            
+	            $('#itemTable').prepend(div);
 
                 $(obj).val('');
             });

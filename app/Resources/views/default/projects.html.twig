@@ -23,7 +23,7 @@
         <div class="show-completed-projects"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed projects</div>
         <input type="text" id="newproject" placeholder="Add new project" style="width: 700px; margin-bottom: 40px;" onkeyup="addNewProject(event, this)">
 
-        <div class="full-size-table">
+        <div class="full-size-table" id="itemTable">
             {% for project in projects %}
                 {% set isCompletedClass = '' %}
                 {% set isCompletedCheck = '' %}
@@ -32,17 +32,23 @@
                     {% set isCompletedClass = ' is-completed' %}
                     {% set isCompletedCheck = 'checked' %}
                 {% endif %}
+                
+                {% set toBeCloned = '' %}
 
-                <div class="row{{ isCompletedClass }}" data-id="{{ project.id }}">
-                    <span class="delete-row"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete</a></span>
+                {% if project.name == "dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==" %}
+                    {% set toBeCloned = ' to-be-cloned' %}
+                {% endif %}
+
+                <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ project.id }}">
+                    <span class="delete-row"><a href="#!" onclick="deleteProject('{{ project.id }}')" class="delete-link">Delete</a></span>
                     <span class="is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ project.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></span>
                     <a class="clickable-area" href="{{ path('singleProject', {'id': project.id}) }}">
-                        <span class="name">{{ project.name }}</span>
+                        <span class="name to-empty">{{ project.name }}</span>
 
                         {% if project.isCompleted is not empty %}
-                            <span class="date gray-info">Completed: {{ project.dateCompleted }}</span>
+                            <span class="date gray-info to-empty">Completed: {{ project.dateCompleted }}</span>
                         {% else %}
-                            <span class="date gray-info">{{ project.dateModified }}</span>
+                            <span class="date gray-info to-empty">{{ project.dateModified }}</span>
                         {% endif %}
                     </a>
                 </div>
