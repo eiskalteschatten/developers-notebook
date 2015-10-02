@@ -61,7 +61,12 @@
 	}
 	
 	&.selected {
-		background: #f6f6f6;	
+		background: #3b80dc;
+		color: #ffffff;
+
+		a, .gray-info, .date {
+			color: #ffffff;
+		}
 	}
 	
 	.date {

@@ -712,7 +712,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   .editor-page:hover {
     background: #fbfbfb; }
   .editor-page.selected {
-    background: #f6f6f6; }
+    background: #3b80dc;
+    color: #ffffff; }
+    .editor-page.selected a, .editor-page.selected .gray-info, .editor-page.selected .date {
+      color: #ffffff; }
   .editor-page .date {
     font-size: 10px;
     color: #a0a0a0;
