@@ -306,8 +306,8 @@ class IssuesController extends Controller
 		$name = $request->request->get('name');
 		$labels = $request->request->get('labels');
 		$todos = rtrim($request->request->get('todos'), ', ');
-		$datePlanned = new \DateTime($request->request->get('datePlanned'));
-		$dateDue = new \DateTime($request->request->get('dateDue'));
+		$datePlanned = $request->request->get('datePlanned');
+		$dateDue = $request->request->get('dateDue');
 		$description = $request->request->get('description');
 
 		$date = new \DateTime("now");
@@ -317,6 +317,20 @@ class IssuesController extends Controller
 
 		if (!$issue) {
 			throw $this->createNotFoundException('No to do found for id '.$id);
+		}
+		
+		if (!empty($datePlanned)) {
+			$datePlanned = new \DateTime($datePlanned);
+		}
+		else {
+			$datePlanned = null;
+		}
+		
+		if (!empty($dateDue)) {
+			$dateDue = new \DateTime($dateDue);
+		}
+		else {
+			$dateDue = null;
 		}
 
 		$issue->setDateModified($date);
@@ -358,10 +372,16 @@ class IssuesController extends Controller
 		if ($datePlannedResponse) {
 			$datePlannedResponse = $datePlannedResponse->format($dateFormat);
 		}
+		else {
+			$datePlannedResponse = "";
+		}
 
 		$dateDueResponse = $issue->getDateDue();
 		if ($dateDueResponse) {
 			$dateDueResponse = $dateDueResponse->format($dateFormat);
+		}
+		else {
+			$dateDueResponse = "";
 		}
 
 		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
