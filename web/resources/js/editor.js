@@ -63,21 +63,25 @@ function removePage() {
 	var selected = $('.editor-page.selected');
 
 	if (selected.length) {
-		if (confirm('Are you sure you want to remove this page? This action cannot be undone.')) {
-			var toSend = {
-				id: selected.attr('data-id')
-			}
-
-			$.post(editorUrl + "remove/", toSend, function (data) {
-				var previewSibling = selected.prev();
-				selected.remove();
-				previewSibling.trigger('click');
-			});
-		}
+		confirmPopup('Are you sure you want to remove this page? <b>This action cannot be undone.</b>', removePageConfirmed);
 	}
 	else {
-		alert('You must select a page to delete.');
+		showMessage('error', 'You must select a page to delete.');
 	}
+}
+
+function removePageConfirmed() {
+	var selected = $('.editor-page.selected');
+
+	var toSend = {
+		id: selected.attr('data-id')
+	}
+
+	$.post(editorUrl + "remove/", toSend, function (data) {
+		var previewSibling = selected.prev();
+		selected.remove();
+		previewSibling.trigger('click');
+	});
 }
 
 function selectPage(obj) {

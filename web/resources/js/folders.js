@@ -53,19 +53,23 @@ function removeFolder(url) {
     var selected = $('.editor-folder.selected');
 
     if (selected.hasClass('folder')) {
-        if (confirm('Are you sure you want to remove this folder? Its contents will not be deleted. This action cannot be undone.')) {
-            var toSend = {
-                id: selected.attr('data-id')
-            }
-
-            $.post(url, toSend, function(data) {
-                var previewSibling = selected.prev();
-                selected.remove();
-                previewSibling.trigger('click');
-            });
-        }
+        confirmPopupWithParam('Are you sure you want to remove this folder? Its contents will not be deleted. <b>This action cannot be undone.</b>', removeFolderConfirmed, url);
     }
     else {
-        alert("You must selected a folder to remove it.");
+        showMessage('error', 'You must selected a folder to remove it.');
     }
+}
+
+function removeFolderConfirmed(url) {
+    var selected = $('.editor-folder.selected');
+
+    var toSend = {
+        id: selected.attr('data-id')
+    }
+
+    $.post(url, toSend, function(data) {
+        var previewSibling = selected.prev();
+        selected.remove();
+        previewSibling.trigger('click');
+    });
 }

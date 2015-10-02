@@ -42,7 +42,7 @@ function toggleIsComplete(id, obj) {
     var allComplete = false;
 
     if (isComplete) {
-        if (confirm('Would you like to mark all to dos and issues belonging to this project as completed? All to dos and issues will remain marked as completed even if you mark this project as not completed again. This action cannot be undone.')) {
+        if (confirm("Would you like to mark all to dos and issues belonging to this project as completed?\n\nAll to dos and issues will remain marked as completed even if you mark this project as not completed again.\n\nThis action cannot be undone.")) {
             allComplete = true;
         }
     }
@@ -80,13 +80,15 @@ function toggleIsComplete(id, obj) {
 }
 
 function deleteProject(id) {
-    if (confirm('Are you sure you want to remove this project? All data associated with the project will not be deleted. This action cannot be undone.')) {
-        var toSend = {
-            id: id
-        }
+    confirmPopupWithParam('Are you sure you want to remove this project? All data associated with the project will not be deleted. <b>This action cannot be undone.</b>', removeConfirmed, id);
+}
 
-        $.post(postUrlDelete, toSend, function (data) {
-            window.location.href = projectsUrl;
-        });
+function removeConfirmed(id) {
+    var toSend = {
+        id: id
     }
+
+    $.post(postUrlDelete, toSend, function (data) {
+        window.location.href = projectsUrl;
+    });
 }

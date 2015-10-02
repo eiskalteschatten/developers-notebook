@@ -47,6 +47,14 @@
             </div>
         {% endblock %}
         <div class="popup-close-layer"></div>
+        <div class="popup popup-confirm" id="popupConfirm">
+            <div class="popup-content">
+                <div class="confirm-message"></div>
+                <div class="buttons">
+                    <button class="blue-button has-neighbor-button" id="confirmButton">Yes</button><button onclick="closePopup()" class="white-button">No</button>
+                </div>
+            </div>
+        </div>
 
         <div class="message-center"></div>
 

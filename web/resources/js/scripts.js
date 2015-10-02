@@ -104,6 +104,26 @@ function closePopup() {
 	});
 }
 
+function confirmPopup(msg, callback) {
+	$('#popupConfirm').find('.confirm-message').html(msg);
+	$('#popupConfirm').find('#confirmButton').click(function() {
+		callback();
+		closePopup();
+	});
+
+	openPopup('popupConfirm');
+}
+
+function confirmPopupWithParam(msg, callback, param1) {
+	$('#popupConfirm').find('.confirm-message').html(msg);
+	$('#popupConfirm').find('#confirmButton').click(function() {
+		callback(param1);
+		closePopup();
+	});
+
+	openPopup('popupConfirm');
+}
+
 // Error and success messages
 
 var messageTimeout;

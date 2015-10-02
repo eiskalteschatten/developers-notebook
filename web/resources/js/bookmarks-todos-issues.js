@@ -57,21 +57,25 @@ function removeItem() {
     var selected = $('.row.selected');
 
     if (selected.length) {
-        if (confirm('Are you sure you want to remove this item? This action cannot be undone.')) {
-            var toSend = {
-                id: selected.attr('data-id')
-            }
-
-            $.post(removeItemUrl, toSend, function(data) {
-                var previewSibling = selected.prev();
-                selected.remove();
-                previewSibling.trigger('click');
-            });
-        }
+        confirmPopup('Are you sure you want to remove this item? <b>This action cannot be undone.</b>', removeItemConfirmed);
     }
     else {
-        alert('You must select an item to delete.');
+        showMessage('error', 'You must select an item to delete.');
     }
+}
+
+function removeItemConfirmed() {
+    var selected = $('.row.selected');
+
+    var toSend = {
+        id: selected.attr('data-id')
+    }
+
+    $.post(removeItemUrl, toSend, function(data) {
+        var previewSibling = selected.prev();
+        selected.remove();
+        previewSibling.trigger('click');
+    });
 }
 
 function selectItem(obj) {
