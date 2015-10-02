@@ -260,6 +260,11 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       color: #ffffff; }
       .full-size-table .row.selected a, .full-size-table .row.selected .gray-info, .full-size-table .row.selected .item-id {
         color: #ffffff; }
+    .full-size-table .row.edit-mode {
+      background: #e6e6e6;
+      color: #0f0f0f; }
+      .full-size-table .row.edit-mode a, .full-size-table .row.edit-mode .gray-info, .full-size-table .row.edit-mode .item-id {
+        color: #0f0f0f; }
 
 .info {
   width: 100%; }

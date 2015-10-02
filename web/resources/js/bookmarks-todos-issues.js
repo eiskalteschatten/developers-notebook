@@ -83,6 +83,7 @@ function closeEdit(obj) {
     var row = $(obj).parents('.row');
     row.find('.info').show();
     row.find('.edit').hide();
+    row.removeClass('edit-mode');
 }
 
 function selectFolder(obj) {
