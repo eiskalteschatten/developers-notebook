@@ -299,12 +299,6 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			}
 		}
 
-		&.is-completed {
-			color: #a0a0a0;
-			background-color: #fafafa;
-			display: none;
-		}
-
 		.delete-row {
 			float: right;
 			display: none;
@@ -361,6 +355,12 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			a, .gray-info, .item-id {
 				color: $defaultFontColor;
 			}
+		}
+		
+		&.is-completed {
+			color: #a0a0a0;
+			background-color: #fafafa;
+			display: none;
 		}
 	}
 }
