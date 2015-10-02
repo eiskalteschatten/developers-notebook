@@ -322,7 +322,12 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		}
 
 		&.selected {
-			background: #e6e6e6;
+			background: #3b80dc;
+			color: #ffffff;
+
+			a, .gray-info, .item-id {
+				color: #ffffff;
+			}
 		}
 	}
 }

@@ -234,7 +234,10 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       display: inline-block;
       margin-right: 25px; }
     .full-size-table .row.selected {
-      background: #e6e6e6; }
+      background: #3b80dc;
+      color: #ffffff; }
+      .full-size-table .row.selected a, .full-size-table .row.selected .gray-info, .full-size-table .row.selected .item-id {
+        color: #ffffff; }
 
 .info {
   width: 100%; }
