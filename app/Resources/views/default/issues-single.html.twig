@@ -94,6 +94,8 @@
                     </div>
                     <span class="name">{{ issue.name }}</span>
                 </div>
+
+                <button onclick="openFullEdit()" class="green-button right">Edit Issue</button>
             </div>
             <div class="content-two-columns">
                 <div class="column">
@@ -124,10 +126,6 @@
                 <div class="border-top append-bottom">
                     <div class="bold append-bottom">Description:</div>
                     <div class="medium-font note">{{ issue.descriptionHtml | raw }}</div>
-                </div>
-
-                <div class="medium-font">
-                    <a href="#!" onclick="openFullEdit()">Edit Issue</a>
                 </div>
             </div>
         </div>

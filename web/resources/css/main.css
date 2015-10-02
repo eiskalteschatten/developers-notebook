@@ -119,7 +119,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     padding: 20px 50px; }
 
 /* Buttons */
-.blue-button, .white-button {
+.blue-button, .white-button, .green-button {
   padding: 7px 20px;
   font-size: 14px;
   border-radius: 3px;
@@ -127,7 +127,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   border-style: solid;
   cursor: pointer;
   text-decoration: none; }
-  .blue-button.has-neighbor-button, .white-button.has-neighbor-button {
+  .blue-button.has-neighbor-button, .white-button.has-neighbor-button, .green-button.has-neighbor-button {
     margin-right: 15px; }
 
 .blue-button:active, .white-button:active {
@@ -176,6 +176,28 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   background-image: -o-linear-gradient(top, #ffffff, #e7e7e7);
   background-image: -webkit-linear-gradient(top, #ffffff, #e7e7e7);
   background-image: -ms-linear-gradient(top, #ffffff, #e7e7e7); }
+
+.green-button {
+  background: #3aba34;
+  background-image: linear-gradient(top, #94d991, #3aba34);
+  background-image: -moz-linear-gradient(top, #94d991, #3aba34);
+  background-image: -o-linear-gradient(top, #94d991, #3aba34);
+  background-image: -webkit-linear-gradient(top, #94d991, #3aba34);
+  background-image: -ms-linear-gradient(top, #94d991, #3aba34);
+  color: #ffffff;
+  border-top-color: #34a42f;
+  border-left-color: #22841e;
+  border-right-color: #22841e;
+  border-bottom-color: #186914;
+  box-shadow: inset 0 1px 1px 0 #81ec7c; }
+
+.green-button:hover {
+  background: #2c9028;
+  background-image: linear-gradient(top, #7bb479, #2c9028);
+  background-image: -moz-linear-gradient(top, #7bb479, #2c9028);
+  background-image: -o-linear-gradient(top, #7bb479, #2c9028);
+  background-image: -webkit-linear-gradient(top, #7bb479, #2c9028);
+  background-image: -ms-linear-gradient(top, #7bb479, #2c9028); }
 
 /* Error and success messages */
 .message-center {

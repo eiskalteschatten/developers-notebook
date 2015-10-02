@@ -99,10 +99,13 @@
             <div class="page-title{{ isCompletedClass }}">
                 <div class="complete-project"><input type="checkbox" onclick="toggleIsComplete('{{ project.id }}', this)"{{ isCompletedCheck }}> Project is completed</div>
                 <span class="project-name-info">{{ project.name }}</span>
-                <span class="project-name-edit"><input type="text" class="text-item-name" value="{{ project.name }}" placeholder="Project name" onkeyup="saveName(event)"></span>
+                <span class="project-name-edit">
+                    <input type="text" class="text-item-name" value="{{ project.name }}" placeholder="Project name" onkeyup="saveName(event)">
+                    <button onclick="closeEditName()" class="white-button">Cancel</button>
+                </span>
             </div>
             <div class="right">
-                <span class="small-font" style="margin-right: 20px;"><a href="#!" onclick="editName()">Rename Project</a></span>
+                <span class="small-font" style="margin-right: 20px;"><button onclick="editName()" class="green-button">Rename Project</button></span>
                 <span class="delete-red"><a href="#!" onclick="deleteProject('{{ project.id }}')">Delete Project</a></span>
             </div>
             <span class="small-font" style="margin-right: 20px;"><input type="checkbox" id="showCompleted" onclick="toggleCompletedProjects()"> Show completed items</span>

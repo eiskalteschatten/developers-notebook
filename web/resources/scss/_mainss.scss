@@ -164,7 +164,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 
 /* Buttons */
 
-.blue-button, .white-button {
+.blue-button, .white-button, .green-button {
 	padding: 7px 20px;
 	font-size: 14px;
 	border-radius: 3px;
@@ -229,6 +229,30 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     background-image: -o-linear-gradient(top, #ffffff, #e7e7e7);
     background-image: -webkit-linear-gradient(top, #ffffff, #e7e7e7);
     background-image: -ms-linear-gradient(top, #ffffff, #e7e7e7);
+}
+
+.green-button {
+	background: $green;
+	background-image: linear-gradient(top, #94d991, $green);
+	background-image: -moz-linear-gradient(top, #94d991, $green);
+	background-image: -o-linear-gradient(top, #94d991, $green);
+	background-image: -webkit-linear-gradient(top, #94d991, $green);
+	background-image: -ms-linear-gradient(top, #94d991, $green);
+	color: #ffffff;
+	border-top-color: #34a42f;
+	border-left-color: #22841e;
+	border-right-color: #22841e;
+	border-bottom-color: #186914;
+	box-shadow: inset 0 1px 1px 0 #81ec7c;
+}
+
+.green-button:hover {
+	background: #2c9028;
+	background-image: linear-gradient(top, #7bb479, #2c9028);
+	background-image: -moz-linear-gradient(top, #7bb479, #2c9028);
+	background-image: -o-linear-gradient(top, #7bb479, #2c9028);
+	background-image: -webkit-linear-gradient(top, #7bb479, #2c9028);
+	background-image: -ms-linear-gradient(top, #7bb479, #2c9028);
 }
 
 /* Error and success messages */
