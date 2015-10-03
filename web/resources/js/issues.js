@@ -18,7 +18,12 @@ function toggleIsComplete(id, obj) {
         if (data.isCompleted) {
             if (row.hasClass('row')) {
                 row.addClass('is-completed');
+                row.removeClass('selected');
                 row.find('.date').text("Completed: " + data.date);
+                
+                if (!$('#toggleIsCompleted').hasClass('selected')) {
+	                row.hide();	                
+                }
             }
             else {
                 $('.page-title').addClass('grayed-out');
@@ -28,6 +33,7 @@ function toggleIsComplete(id, obj) {
             if (row.hasClass('row')) {
                 row.removeClass('is-completed');
                 row.find('.date').text(data.date);
+                row.show();
             }
             else {
                 $('.page-title').removeClass('grayed-out');

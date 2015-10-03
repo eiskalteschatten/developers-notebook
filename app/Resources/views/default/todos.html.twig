@@ -119,11 +119,17 @@
 
                 if (data.isCompleted) {
                     row.addClass('is-completed');
+                    row.removeClass('selected');
                     row.find('.date-completed').text("Completed: " + data.date);
+					
+					if (!$('#toggleIsCompleted').hasClass('selected')) {
+		                row.hide();	                
+	                }
                 }
                 else {
                     row.removeClass('is-completed');
                     row.find('.date-completed').remove();
+	                row.show();
                 }
             });
         }
