@@ -18,6 +18,7 @@
 
         function createCallback(data) {
             var div = $('.row:first').clone();
+            div.show();
             div.attr('data-id', data.id);
             div.attr('data-folder', data.folder);
             div.attr('data-project', data.project)
