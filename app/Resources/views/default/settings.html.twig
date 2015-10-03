@@ -51,6 +51,8 @@
         });
 
         function saveGeneralSettings() {
+        	openGeneralAjaxLoaderWithTimer();
+        	
             var toSend = {
                 showWeather: $('#showWeather').prop('checked'),
                 weatherLocation: $('#weatherLocation').val(),
@@ -59,10 +61,13 @@
 
             $.post(saveGeneralSettingsUrl, toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
             });
         }
 
         function saveEditorSettings() {
+        	openGeneralAjaxLoaderWithTimer();
+        	
             var toSend = {
                 defaultTheme: $('#theme').val(),
                 defaultSyntaxCode: $('#defaultModeCode').val(),
@@ -78,6 +83,7 @@
 
             $.post(saveEditorSettingsUrl, toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
             });
         }
     </script>

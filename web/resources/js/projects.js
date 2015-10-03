@@ -1,5 +1,7 @@
 function addNewProject(event, obj) {
     if (event.which == 13) {
+	    openGeneralAjaxLoaderWithTimer();
+	    
         var name = $(obj).val();
 
         if (name != "") {
@@ -32,6 +34,8 @@ function addNewProject(event, obj) {
 	            $('#itemTable').prepend(div);
 
                 $(obj).val('');
+                
+                closeGeneralAjaxLoader();
             });
         }
     }
@@ -47,6 +51,8 @@ function toggleCompletedProjects() {
 }
 
 function toggleIsComplete(id, obj) {
+	openGeneralAjaxLoaderWithTimer();
+	
     var isComplete = $(obj).prop('checked');
     var allComplete = false;
 
@@ -85,6 +91,8 @@ function toggleIsComplete(id, obj) {
                 $('.is-completed').hide();
             }
         }
+        
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -93,11 +101,14 @@ function deleteProject(id) {
 }
 
 function removeConfirmed(id) {
+	openGeneralAjaxLoaderWithTimer();
+	
     var toSend = {
         id: id
     }
 
     $.post(postUrlDelete, toSend, function (data) {
+        closeGeneralAjaxLoader();
         window.location.href = projectsUrl;
     });
 }

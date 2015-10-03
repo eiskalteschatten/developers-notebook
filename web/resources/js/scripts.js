@@ -1,3 +1,6 @@
+var generalAjaxSpinner;
+var generalAjaxSpinnerTimeout;
+
 // General scripts
 
 function expandSearch(field) {
@@ -71,6 +74,53 @@ function getUrlParameter(sParam) {
 		}
 	}
 };
+
+// Functions for ajax loader
+
+function openGeneralAjaxLoader() {
+	var ajaxLoaderGeneralOpts = {
+        lines: 13, // The number of lines to draw
+        length: 4, // The length of each line
+        width: 1, // The line thickness
+        radius: 4, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: true, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: '50%', // Top position relative to parent
+        left: '13px' // Left position relative to parent
+    };
+    
+    $('.general-ajax-loader-container').show();
+    $('.general-ajax-loader-container').stop().animate({'top':'0px'}, 400, function() {
+        var target = document.getElementById('general-ajax-loader');
+		generalAjaxSpinner = new Spinner(ajaxLoaderGeneralOpts).spin(target);
+    });
+}
+
+function closeGeneralAjaxLoader() {
+	clearTimeout(generalAjaxSpinnerTimeout);
+	
+	setTimeout(function() {
+		if (typeof generalAjaxSpinner != 'undefined') {
+		    generalAjaxSpinner.stop();
+		    
+		    $('.general-ajax-loader-container').stop().animate({'top':'-50px'}, 400, function() {
+				$(this).hide();
+		    });
+	    }
+    }, 500);
+}
+
+function openGeneralAjaxLoaderWithTimer() {
+	generalAjaxSpinnerTimeout = setTimeout(openGeneralAjaxLoader, 500);
+}
 
 // Functions for popups
 

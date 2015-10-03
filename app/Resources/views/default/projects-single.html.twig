@@ -42,6 +42,8 @@
 
         function saveName(event) {
             if (event.which == 13) {
+            	openGeneralAjaxLoaderWithTimer();
+            	
                 var name = $('.text-item-name').val();
 
                 if (name != "") {
@@ -54,6 +56,8 @@
                         $('.project-name-info').text(data.name);
                         document.title = data.name + " - Projects - Developer's Notebook";
                         closeEditName();
+                        
+                        closeGeneralAjaxLoader();
                     });
                 }
             }

@@ -1,4 +1,6 @@
 function createPage() {
+	openGeneralAjaxLoaderWithTimer();
+	
 	var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
 	var projectId = $('.projects').find('.editor-folder.selected').attr('data-id');
     var syntax = $('.editor-page.selected').attr('data-syntax');
@@ -40,10 +42,13 @@ function createPage() {
     	div.trigger('click');
     	
     	setDraggableAndDroppable();
+        closeGeneralAjaxLoader();
     });
 }
 
 function savePage() {
+	openGeneralAjaxLoaderWithTimer();
+	
     var selected = $('.editor-page.selected');
     
     var toSend = {
@@ -56,6 +61,8 @@ function savePage() {
         updatePagePreview(data.previewContent);
 		var content = editor.getValue();
 		$('.editor-page.selected').find('.content').text(content);
+
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -71,6 +78,8 @@ function removePage() {
 }
 
 function removePageConfirmed() {
+	openGeneralAjaxLoaderWithTimer();
+	
 	var selected = $('.editor-page.selected');
 
 	var toSend = {
@@ -81,6 +90,8 @@ function removePageConfirmed() {
 		var previewSibling = selected.prev();
 		selected.remove();
 		previewSibling.trigger('click');
+		
+        closeGeneralAjaxLoader();
 	});
 }
 
@@ -164,6 +175,8 @@ function setDraggableAndDroppable() {
 	$('.editor-folder.folder').droppable({
 		hoverClass: "folder-hover",
 		drop: function( event, ui ) {
+			openGeneralAjaxLoaderWithTimer();
+			
 			var folder = $(this);
 			var page = $(ui.draggable);
 
@@ -175,6 +188,8 @@ function setDraggableAndDroppable() {
 			$.post(editorUrl+"movePageToFolder/", toSend, function(data) {
 				page.attr('data-folder', data.folder);
 				$('.editor-folder.selected').trigger('click');
+				
+		        closeGeneralAjaxLoader();
 			});
 		}
 	});
@@ -182,6 +197,8 @@ function setDraggableAndDroppable() {
 	$('.editor-folder.all-projects-folders').droppable({
 		hoverClass: "folder-hover",
 		drop: function( event, ui ) {
+			openGeneralAjaxLoaderWithTimer();
+			
 			var folder = $(this);
 			var page = $(ui.draggable);
 
@@ -193,6 +210,8 @@ function setDraggableAndDroppable() {
 			$.post(editorUrl+"removePageFromFolders/", toSend, function(data) {
 				page.attr('data-folder', data.folder);
 				$('.editor-folder.selected').trigger('click');
+				
+		        closeGeneralAjaxLoader();
 			});
 		}
 	});
@@ -200,6 +219,8 @@ function setDraggableAndDroppable() {
 	$('.editor-folder.project').droppable({
 		hoverClass: "folder-hover",
 		drop: function( event, ui ) {
+			openGeneralAjaxLoaderWithTimer();
+			
 			var project = $(this);
 			var page = $(ui.draggable);
 
@@ -211,12 +232,16 @@ function setDraggableAndDroppable() {
 			$.post(editorUrl+"movePageToProject/", toSend, function(data) {
 				page.attr('data-project', data.project);
 				$('.editor-folder.selected').trigger('click');
+				
+		        closeGeneralAjaxLoader();
 			});
 		}
 	});
 }
 
 function saveAllSettings() {
+	openGeneralAjaxLoaderWithTimer();
+	
 	var toSend = {
 		defaultTheme: $('#theme').val(),
 		defaultSyntax: $('#defaultMode').val(),
@@ -231,6 +256,7 @@ function saveAllSettings() {
 
 	$.post(saveSettingsUrl, toSend, function(data) {
 		closePopup();
+        closeGeneralAjaxLoader();
 	});
 }
 

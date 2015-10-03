@@ -19,6 +19,8 @@ function checkCreateFolderKeyDown(event, obj) {
 }
 
 function sendCreateFolder(obj) {
+	openGeneralAjaxLoaderWithTimer();
+	
     var div = $('.editor-folder.temp-new');
     var name = $(obj).val();
     var url = $('.editor-folders.folders').attr('data-url-create');
@@ -42,6 +44,7 @@ function sendCreateFolder(obj) {
             div.removeClass('temp-new');
 
             setDraggableAndDroppable();
+            closeGeneralAjaxLoader();
         });
     }
     else {
@@ -61,6 +64,8 @@ function removeFolder(url) {
 }
 
 function removeFolderConfirmed(url) {
+	openGeneralAjaxLoaderWithTimer();
+	
     var selected = $('.editor-folder.selected');
 
     var toSend = {
@@ -71,5 +76,7 @@ function removeFolderConfirmed(url) {
         var previewSibling = selected.prev();
         selected.remove();
         previewSibling.trigger('click');
+        
+        closeGeneralAjaxLoader();
     });
 }

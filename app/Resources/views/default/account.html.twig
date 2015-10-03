@@ -7,6 +7,8 @@
 
     <script type="text/javascript">
         function saveInfo() {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var toSend = {
                 username: $('#username').val(),
                 email: $('#email').val()
@@ -14,10 +16,13 @@
 
             $.post("{{ path('accountSaveInfo') }}", toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
             });
         }
 
         function savePassword() {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var toSend = {
                 password: $('#password').val(),
                 passwordConfirm: $('#passwordConfirm').val()
@@ -25,6 +30,7 @@
 
             $.post("{{ path('accountSavePassword') }}", toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
             });
         }
     </script>

@@ -32,6 +32,8 @@
             }
 
             function saveItem() {
+	            openGeneralAjaxLoaderWithTimer();
+	            
                 var toSend = {
                     id: '{{ issue.id }}',
                     name: $('.text-item-name').val(),
@@ -52,6 +54,7 @@
                     info.find('.note').html(data.description);
 
                     closeFullEdit();
+                    closeGeneralAjaxLoader();
                 });
             }
 
@@ -60,11 +63,14 @@
             }
 
             function removeConfirmed() {
+	            openGeneralAjaxLoaderWithTimer();
+	            
                 var toSend = {
                     id: '{{ issue.id }}'
                 }
 
                 $.post(removeItemUrl, toSend, function(data) {
+	                closeGeneralAjaxLoader();
                     window.location.href = "{{ path('issues') }}";
                 });
             }

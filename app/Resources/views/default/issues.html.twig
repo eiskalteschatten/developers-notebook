@@ -49,6 +49,9 @@
 
         function saveItem() {
             var selected = $('.row.selected');
+	        
+		    var target = selected.find('.ajax-loader');
+			var spinner = new Spinner(ajaxLoaderSmallOpts).spin(target.get(0));
 
             var toSend = {
                 id: selected.attr('data-id'),
@@ -68,6 +71,8 @@
                 info.find('.todos').html("<b>To dos:</b> " + data.todosHtml);
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
+
+ 		        spinner.stop();
 
                 closeEdit(selected.find('.edit'));
             });
@@ -219,7 +224,8 @@
                             <div class="clear-both"></div>
                             <div class="input-label" style="margin-top: 20px;">Description:</div>
                             <textarea class="text-item-note" placeholder="Description">{{ issue.description }}</textarea>
-                            <button onclick="saveItem()"  class="blue-button has-neighbor-button" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" class="white-button">Cancel</button>
+                            <button onclick="saveItem()"  class="blue-button has-neighbor-button" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" class="white-button has-neighbor-button">Cancel</button>
+                            <div class="ajax-loader-container"><span class="ajax-loader"></span></div>
                         </div>
                     </div>
                 {% endfor %}

@@ -373,3 +373,24 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 	display: none;
 	width: 100%;
 }
+
+/* Ajax Loaders */
+
+.general-ajax-loader-container {
+	display: none;
+	position: fixed;
+	top: -50px;
+	left: 50%;
+	margin-left: -50px;
+	width: 70px;
+	height: 30px;	
+	background: $fadedYellow;
+	box-shadow: 0 2px 5px $shadowcolor;
+	font-size: 13px;
+	padding-left: 30px;
+}
+
+.ajax-loader-container {
+	position: relative;
+	display: inline-block;
+}

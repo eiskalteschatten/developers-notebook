@@ -6,12 +6,22 @@
     {{ parent() }}
 
     <script type="text/javascript">
+    	function submitOrNot(event) {
+    	    if (event.which == 13) {
+	    	    submit();
+    	    }
+    	}
+    
         function submit() {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var toSend = {
                 password: $('#password').val()
             }
 
             $.post("{{ path('accountVerifyPassword') }}", toSend, function(data) {
+	            closeGeneralAjaxLoader();
+	            
                 if (data.msgType) {
                     showMessage(data.msgType, data.message);
                 }
@@ -31,7 +41,7 @@
             <div class="sub-section">
                 <div class="option">
                     <div class="label">Veryify your password before continuing:</div>
-                    <input type="password" id="password" placeholder="Password">
+                    <input type="password" id="password" placeholder="Password" onkeyup="submitOrNot(event)">
                 </div>
 
                 <button onclick="submit()" class="blue-button">Submit</button>

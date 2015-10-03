@@ -32,6 +32,8 @@ $(document).ready(function() {
 });
 
 function createItem() {
+	openGeneralAjaxLoaderWithTimer();
+	
     var folderId = $('.folders').find('.editor-folder.selected').attr('data-id');
     var projectId = $('.projects').find('.editor-folder.selected').attr('data-id');
 
@@ -50,6 +52,7 @@ function createItem() {
 
     $.post(createItemUrl, toSend, function(data) {
         createCallback(data);
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -65,6 +68,8 @@ function removeItem() {
 }
 
 function removeItemConfirmed() {
+	openGeneralAjaxLoaderWithTimer();
+	
     var selected = $('.row.selected');
 
     var toSend = {
@@ -75,6 +80,7 @@ function removeItemConfirmed() {
         var previewSibling = selected.prev();
         selected.remove();
         previewSibling.trigger('click');
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -161,6 +167,8 @@ function setDraggableAndDroppable() {
     $('.editor-folder.folder').droppable({
         hoverClass: "folder-hover",
         drop: function( event, ui ) {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var folder = $(this);
             var page = $(ui.draggable);
 
@@ -172,6 +180,8 @@ function setDraggableAndDroppable() {
             $.post(movePageToFolderUrl, toSend, function(data) {
                 page.attr('data-folder', data.folder);
                 $('.editor-folder.selected').trigger('click');
+                
+                closeGeneralAjaxLoader();
             });
         }
     });
@@ -179,6 +189,8 @@ function setDraggableAndDroppable() {
     $('.editor-folder.all-projects-folders').droppable({
         hoverClass: "folder-hover",
         drop: function( event, ui ) {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var folder = $(this);
             var page = $(ui.draggable);
 
@@ -190,6 +202,8 @@ function setDraggableAndDroppable() {
             $.post(removePageFromFoldersUrl, toSend, function(data) {
                 page.attr('data-folder', data.folder);
                 $('.editor-folder.selected').trigger('click');
+                
+                closeGeneralAjaxLoader();
             });
         }
     });
@@ -197,6 +211,8 @@ function setDraggableAndDroppable() {
     $('.editor-folder.project').droppable({
         hoverClass: "folder-hover",
         drop: function( event, ui ) {
+	        openGeneralAjaxLoaderWithTimer();
+	        
             var project = $(this);
             var page = $(ui.draggable);
 
@@ -208,6 +224,8 @@ function setDraggableAndDroppable() {
             $.post(movePageToProjectUrl, toSend, function(data) {
                 page.attr('data-project', data.project);
                 $('.editor-folder.selected').trigger('click');
+                
+                closeGeneralAjaxLoader();
             });
         }
     });

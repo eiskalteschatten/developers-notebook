@@ -5,6 +5,8 @@ $(document).ready(function() {
 });
 
 function toggleIsComplete(id, obj) {
+	openGeneralAjaxLoaderWithTimer();
+	
     var isComplete = $(obj).prop('checked');
 
     var toSend = {
@@ -39,6 +41,8 @@ function toggleIsComplete(id, obj) {
                 $('.page-title').removeClass('grayed-out');
             }
         }
+        
+        closeGeneralAjaxLoader();
     });
 }
 

@@ -39,6 +39,9 @@
 
         function saveItem() {
             var selected = $('.row.selected');
+            
+		    var target = selected.find('.ajax-loader');
+			var spinner = new Spinner(ajaxLoaderSmallOpts).spin(target.get(0));
 
             var toSend = {
                 id: selected.attr('data-id'),
@@ -53,6 +56,8 @@
                 info.find('.name').text(data.name);
                 info.find('.url').find('a').attr('href', data.url);
                 info.find('.url').find('a').text(data.croppedUrl);
+                
+ 		        spinner.stop();
 
                 closeEdit(selected.find('.edit'));
             });
@@ -140,7 +145,8 @@
 
                             <div class="input-label" style="margin-top: 20px;">Notes:</div>
                             <textarea class="text-item-note" placeholder="Bookmark Notes">{{ bookmark.notes }}</textarea>
-                            <button onclick="saveItem()" class="blue-button has-neighbor-button" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" class="white-button">Cancel</button>
+                            <button onclick="saveItem()" class="blue-button has-neighbor-button" style="margin-left: 10px;">Save</button><button onclick="closeEdit(this)" class="white-button has-neighbor-button">Cancel</button>
+                            <div class="ajax-loader-container"><span class="ajax-loader"></span></div>
                         </div>
                     </div>
                 {% endfor %}
