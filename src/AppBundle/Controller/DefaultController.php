@@ -110,9 +110,19 @@ class DefaultController extends Controller
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
             ->setMaxResults($numberOfItems);
-        $bookmarksResult = $query->getResult();
+        $todosResult = $query->getResult();
 
-        foreach ($bookmarksResult as $recent) {
+        foreach ($todosResult as $recent) {
+	        $datePlanned = $recent['datePlanned'];
+            if ($datePlanned) {
+                $datePlanned = $datePlanned->format($dateFormat);
+            }
+            
+            $dateDue = $recent['dateDue'];
+            if ($dateDue) {
+                $dateDue = $dateDue->format($dateFormat);
+            }
+	        
             $dateModified = $recent["dateModified"];
             if ($dateModified) {
                 $dateModified = $dateModified->format($dateTimeFormat);
@@ -137,9 +147,19 @@ class DefaultController extends Controller
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
             ->setMaxResults($numberOfItems);
-        $bookmarksResult = $query->getResult();
+        $issuesResult = $query->getResult();
 
-        foreach ($bookmarksResult as $recent) {
+        foreach ($issuesResult as $recent) {
+	        $datePlanned = $recent['datePlanned'];
+            if ($datePlanned) {
+                $datePlanned = $datePlanned->format($dateFormat);
+            }
+            
+            $dateDue = $recent['dateDue'];
+            if ($dateDue) {
+                $dateDue = $dateDue->format($dateFormat);
+            }
+	        
             $dateModified = $recent["dateModified"];
             if ($dateModified) {
                 $dateModified = $dateModified->format($dateTimeFormat);
