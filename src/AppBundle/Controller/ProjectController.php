@@ -15,7 +15,7 @@ class ProjectController extends Controller
     private $currentPage = "projects";
 
     /**
-     * @Route("/notebook/projects", name="projects")
+     * @Route("/notebook/projects/", name="projects")
      */
     public function indexAction(Request $request)
     {

@@ -9,7 +9,7 @@ _homepage:
 _editor-controller:
     path:     /notebook/editor/
     defaults: { _controller: AppBundle:EditorController }
-
+    
 logout:
     path:   /logout/
 

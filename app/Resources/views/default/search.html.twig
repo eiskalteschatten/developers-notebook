@@ -113,7 +113,7 @@
     		            div.find('.date-due-content').text(value.dateDue);    		            
 		                
 			            div.click(function() {
-			                window.location.href = "{{ path('issues') }}?selectedItemId=" + value.itemId;
+			                window.location.href = "{{ path('issues') }}" + value.itemId;
 			            });
 			            
 			            $('#issuesResults').append(div);
@@ -123,8 +123,8 @@
 			            div.removeClass('to-be-cloned');
 			            div.attr('id', '');
 			            div.find('.name').text(value.name);
+    		            div.find('.url').find('a').attr('href', value.url);
     		            div.find('.url').find('a').text(value.croppedUrl);
-    		            div.find('.url').find('a').attr('href', data.url);
 		                
 			            div.click(function() {
 			                window.location.href = "{{ path('bookmarks') }}?selectedItem=" + value.id;
@@ -136,11 +136,33 @@
                 
                 searchThirdRow();
             });
-
-            function searchThirdRow() {
-	            
-            }
 		}
+		
+        function searchThirdRow() {
+			projectsSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('projectsSpinner'));
+			
+			var toSend = {
+                q: "{{ query }}"
+            }
+
+            $.post("{{ path('searchProjects') }}", toSend, function(data) {
+                projectsSpinner.stop();
+	            
+                $.each(data, function(key, value) {
+	                var div = $('#projectsClone').clone();
+		            div.removeClass('to-be-cloned');
+		            div.attr('id', '');
+		            div.find('.name').text(value.name);
+		            div.find('.date-modified').text(value.date);    		            
+	                
+		            div.click(function() {
+		                window.location.href = "{{ path('projects') }}" + value.id;
+		            });
+		            
+		            $('#projectsResults').append(div);
+				});
+            });
+        }
     </script>
 {% endblock %}
 
@@ -254,6 +276,13 @@
         <div class="name"></div>
         <div class="gray-info">
             <span class="url"><a href="" target="_blank"></a></span>
+        </div>
+    </div>
+    
+    <div class="row to-be-cloned" id="projectsClone">
+        <div class="name"></div>
+        <div class="gray-info">
+            <span class="date-modified"></span>
         </div>
     </div>
 

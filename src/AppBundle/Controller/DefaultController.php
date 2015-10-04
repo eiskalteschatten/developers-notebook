@@ -229,7 +229,7 @@ class DefaultController extends Controller
         foreach ($projectsResult as $project) {
             $dateModified = $project['dateModified'];
             if ($dateModified) {
-                $dateModified = $dateModified->format($dateFormat);
+                $dateModified = $dateModified->format($dateTimeFormat);
             }
 
             $projects[] = array(

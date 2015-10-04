@@ -172,4 +172,45 @@ class SearchController extends Controller
 
 		return $response;
 	}
+	
+	/**
+	 * @Route("/notebook/search/projects/", name="searchProjects")
+	 * @Method("POST")
+	 */
+	public function searchProjectsAction(Request $request)
+	{
+		$q = $request->request->get('q');
+		$searchTerm = "%" . $q . "%";
+		
+		$helper = $this->get('app.services.helper');
+		
+        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+        $numberOfItems = $this->container->getParameter('AppBundle.searchNumberOfResults');
+
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		$em = $this->getDoctrine()->getManager();
+		
+		$results = array();
+		
+		$query = $em->createQuery("SELECT t.id, t.name, t.dateModified FROM AppBundle:Project t WHERE t.name LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")
+			->setParameter('searchTerm', $searchTerm)
+			->setParameter('userId', $userId)
+			->setMaxResults($numberOfItems);
+		$searchResult = $query->getResult();
+
+		foreach ($searchResult as $result) {
+			$results[] = array(
+				'id' => $result['id'],
+				'name' => $result['name'],
+				'date' => $result['dateModified']->format($dateTimeFormat)	
+			);
+		}
+
+
+		$response = new JsonResponse($results);
+
+		return $response;
+	}
 }
