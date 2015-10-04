@@ -37,7 +37,7 @@ class FoldersProjects
 		$items->setProject($this->getFolderProjectId());
 		$this->em->flush();
 
-		$response = new JsonResponse(array('folder' => $items->getFolder()));
+		$response = new JsonResponse(array('project' => $items->getProject()));
 		return $response;
 	}
 	
