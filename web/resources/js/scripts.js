@@ -3,19 +3,6 @@ var generalAjaxSpinnerTimeout;
 
 // General scripts
 
-function expandSearch(field) {
-	$(field).stop().animate({width: '500px'}, 100, function() {
-		$('body').click(function() {
-			shrinkSearch(field);
-		});
-	});
-}
-
-function shrinkSearch(field) {
-	$(field).stop().animate({width: '300px'}, 100);
-	$('body').unbind('click');
-}
-
 function showConsole() {
 	$('.console-tab').stop().animate({bottom: '200px'}, 300, function() {
 		$(this).attr('onclick', '');
@@ -74,6 +61,29 @@ function getUrlParameter(sParam) {
 		}
 	}
 };
+
+// Functions for the search
+
+function expandSearch(field) {
+	$(field).stop().animate({width: '500px'}, 100, function() {
+		$('body').click(function() {
+			shrinkSearch(field);
+		});
+	});
+}
+
+function shrinkSearch(field) {
+	$(field).stop().animate({width: '300px'}, 100);
+	$('body').unbind('click');
+}
+
+function submitSearch(event) {
+	if (event.which == 13) {
+		var url = $('.command-search').attr('data-search-url');
+		
+		window.location.href = url + '?q=' + $('.command-search-field').val();
+	}
+}
 
 // Functions for ajax loader
 

@@ -23,9 +23,6 @@
         {% block menubar %}
             <div class="menubar">
                 <div class="logo"><a href="{{ path('frontendHomepage') }}"><img src="{{ asset('resources/img/logo.svg') }}"></a></div>
-                {#<div class="command-search">#}
-                    {#<input type="text" class="command-search-field" onclick="expandSearch(this)" placeholder="Type a command or search query">#}
-                {#</div>#}
                 <div class="menu">
                     <a href="{{ path('_homepage') }}" id="homeLink"><div class="home-icon"></div></a>
                     <a href="{{ path('projects') }}" id="projectsLink">Projects</a>
@@ -36,13 +33,16 @@
                     <a href="{{ path('notes') }}" id="notesLink">Notes</a>
                     <a href="{{ path('bookmarks') }}" id="bookmarksLink">Bookmarks</a>
                 </div>
-                <div class="account">
+				<div class="account">
                     <a href="#!" class="dropdown-arrow" onclick="openAccountDropdown(this)">&#9660;</a>
                     <div class="dropdown">
                         <a href="{{ path('settingsPage') }}">Settings</a>
                         <a href="{{ path('accountPage') }}">Account</a>
                         <a href="{{ path('logout') }}" class="divider">Logout</a>
                     </div>
+                </div>
+				<div class="command-search right" data-search-url="{{ path('searchUrl') }}">
+                    <input type="text" class="command-search-field" onclick="expandSearch(this)" onkeyup="submitSearch(event)" placeholder="Type a search query">
                 </div>
             </div>
         {% endblock %}
@@ -95,6 +95,25 @@
 	                zIndex: 2e9, // The z-index (defaults to 2000000000)
 	                top: '-6px', // Top position relative to parent
 	                left: '0' // Left position relative to parent
+	            };
+	            
+	            var ajaxLoaderLargeOpts = {
+	                lines: 13, // The number of lines to draw
+	                length: 10, // The length of each line
+	                width: 2, // The line thickness
+	                radius: 10, // The radius of the inner circle
+	                corners: 1, // Corner roundness (0..1)
+	                rotate: 0, // The rotation offset
+	                direction: 1, // 1: clockwise, -1: counterclockwise
+	                color: '#000', // #rgb or #rrggbb or array of colors
+	                speed: 1, // Rounds per second
+	                trail: 60, // Afterglow percentage
+	                shadow: false, // Whether to render a shadow
+	                hwaccel: true, // Whether to use hardware acceleration
+	                className: 'spinner', // The CSS class to assign to the spinner
+	                zIndex: 2e9, // The z-index (defaults to 2000000000)
+	                top: '50%', // Top position relative to parent
+	                left: '50%' // Left position relative to parent
 	            };
             
                 $(document).ready(function() {

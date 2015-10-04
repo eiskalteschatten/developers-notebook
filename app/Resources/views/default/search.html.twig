@@ -1,0 +1,227 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}
+    {% if query is defined %}
+        Search for "{{ query }}" - Developer's Notebook
+    {% else %}
+        No search results found - Developer's Notebook
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="application/javascript">
+    	var journalSpinner;
+    	var codeCacheSpinner;
+    	var notesSpinner;
+    	var todosSpinner;
+    	var issuesSpinner;
+    	var bookmarksSpinner;
+    	var projectsSpinner;    	
+    
+        $(document).ready(function() {
+			searchPages();
+        });
+
+		function searchPages() {
+			journalSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('journalSpinner'));
+			codeCacheSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('codeCacheSpinner'));
+			notesSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('notesSpinner'));
+			
+			var toSend = {
+                q: "{{ query }}"
+            }
+
+            $.post("{{ path('searchPages') }}", toSend, function(data) {
+                journalSpinner.stop();
+                codeCacheSpinner.stop();
+                notesSpinner.stop();
+	            
+                $.each(data, function(key, value) {
+	                var div = $('#pageClone').clone();
+		            div.find('.name').text(value.previewContent);
+		            div.find('.date-modified-content').text(value.date);
+		            div.removeClass('to-be-cloned');
+		            div.attr('id', '');
+			
+	                if (value.area == "journal") {
+			            div.click(function() {
+			                window.location.href = "{{ path('journal') }}?selectedItem=" + value.id;
+			            });
+			            
+			            $('#journalResults').append(div);
+		            }
+		            else if (value.area == "code") {
+			            div.click(function() {
+			                window.location.href = "{{ path('codeCache') }}?selectedItem=" + value.id;
+			            });
+			            
+			            $('#codeCacheResults').append(div);
+		            }
+					else if (value.area == "notes") {
+			            div.click(function() {
+			                window.location.href = "{{ path('notes') }}?selectedItem=" + value.id;
+			            });
+			            
+			            $('#notesResults').append(div);
+		            }
+				});
+                
+                searchSecondRow();
+            });
+		}
+		
+		function searchSecondRow() {
+			
+		}
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="page-title">Search results for "{{ query }}"</div>
+    </div>
+    
+    <div class="section">
+        <div class="content-even-three-columns">
+            <div class="column">
+                <div class="column-title">Journal</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="journalResults"></div>
+                    <span class="ajax-loader" id="journalSpinner"></span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="column-title">Code Cache</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="codeCacheResults"></div>
+                    <span class="ajax-loader" id="codeCacheSpinner"></span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="column-title">Notes</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="notesResults"></div>
+                    <span class="ajax-loader" id="notesSpinner"></span>
+                </div>
+            </div>
+            <div class="clear-both"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="content-even-three-columns">
+            <div class="column">
+                <div class="column-title">To dos</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="todosResults"></div>
+                    <span class="ajax-loader" id="todosSpinner"></span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="column-title">Issues</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="issuesResults"></div>
+                    <span class="ajax-loader" id="issuesSpinner"></span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="column-title">Bookmarks</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="bookmarksResults"></div>
+                    <span class="ajax-loader" id="bookmarksSpinner"></span>
+                </div>
+            </div>
+            <div class="clear-both"></div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="content-even-three-columns">
+            <div class="column">
+                <div class="column-title">Projects</div>
+                <div class="wrapper">
+                    <div class="full-size-table small-rows" id="projectsResults"></div>
+                    <span class="ajax-loader" id="projectsSpinner"></span>
+                </div>
+            </div>
+            <div class="clear-both"></div>
+        </div>
+    </div>
+    
+
+
+
+	<div class="row to-be-cloned" id="pageClone">
+        <div class="name"></div>
+        <div class="gray-info">
+            <span class="date-modified single-row"><b>Date Modified:</b> <span class="date-modified-content"></span></span>
+        </div>
+    </div>
+
+	<div class="row to-be-cloned" id="todoClone">
+	    <div class="name"></div>
+	    <div class="gray-info">
+	        <span class="priority single-row"><b>Priority:</b> <span class="priority-content"></span></span>
+	        <span class="date-planned single-row"><b>Date Planned:</b> <span class="date-planned-content"></span></span>
+	        <span class="date-due single-row"><b>Due:</b> <span class="date-due-content"></span></span>
+	    </div>
+	</div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <style>
+    	.wrapper {
+	    	min-height: 80px;
+	    	position: relative;
+    	}
+    </style>
+{% endblock %}
+
+{% macro bookmarks(id, name, url, croppedUrl, showType) %}
+    <div class="row" onclick="goToItem('{{ path('bookmarks') }}?selectedItem={{ id }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">Bookmark</span>
+            {% endif %}
+            <span class="url gray-info to-empty"><a href="{{ url }}" target="_blank">{{ croppedUrl }}</a></span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro issues(id, name, datePlanned, dateDue, showType) %}
+    <div class="row" onclick="goToItem('{{ path('singleIssue', {"id": id}) }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">Issue</span>
+            {% endif %}
+            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
+            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro pages(id, name, area, dateModified, showType) %}
+    {% if area == "code" %}
+        {% set rowType = "Code Cache" %}
+        {% set url = path('codeCache') %}
+    {% elseif area == "journal" %}
+        {% set rowType = "Journal" %}
+        {% set url = path('journal') %}
+    {% else %}
+        {% set rowType = "Notes" %}
+        {% set url = path('notes') %}
+    {% endif %}
+
+    
+{% endmacro %}
