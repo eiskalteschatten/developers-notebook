@@ -18,6 +18,7 @@ class IssuesController extends Controller
 {
     private $standardArea = "issues";
 	private $currentPage = "issues";
+	private $repository = "AppBundle:Issue";
 
     /**
      * @Route("/notebook/issues/", name="issues")
@@ -155,105 +156,6 @@ class IssuesController extends Controller
 			'currentPage' => $this->currentPage
         ));
     }
-
-	/**
-	 * @Route("/notebook/issues/movePageToFolder/", name="issuesMovePageToFolder")
-	 * @Method("POST")
-	 */
-	public function movePageToFolderAction(Request $request)
-	{
-		$folderId = $request->request->get('folderId');
-		$pageId = $request->request->get('pageId');
-
-		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
-
-		$pages->setFolder($folderId);
-		$em->flush();
-
-		$response = new JsonResponse(array('folder' => $pages->getFolder()));
-
-		return $response;
-	}
-
-	/**
-	 * @Route("/notebook/issues/removePageFromFolders/", name="issuesRemovePageFromFolders")
-	 * @Method("POST")
-	 */
-	public function removePageFromFoldersAction(Request $request)
-	{
-		$folderId = -1;
-		$pageId = $request->request->get('pageId');
-
-		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
-
-		$pages->setFolder($folderId);
-		$em->flush();
-
-		$response = new JsonResponse(array('folder' => $pages->getFolder()));
-
-		return $response;
-	}
-
-	/**
-	 * @Route("/notebook/issues/createFolder/", name="issuesCreateFolder")
-	 * @Method("POST")
-	 */
-	public function createFolderAction(Request $request)
-	{
-		$standardArea = $request->request->get('standardArea');
-		$name = $request->request->get('name');
-
-		$date = new \DateTime("now");
-
-		$user = $this->get('security.token_storage')->getToken()->getUser();
-		$userId = $user->getId();
-
-		$folders = new Folders();
-		$folders->setUserId($userId);
-		$folders->setDateCreated($date);
-		$folders->setDateModified($date);
-		$folders->setName($name);
-		$folders->setArea($standardArea);
-
-		$em = $this->getDoctrine()->getManager();
-
-		$em->persist($folders);
-		$em->flush();
-
-		$response = new JsonResponse(array('id' => $folders->getId(), 'name' => $folders->getName()));
-
-		return $response;
-	}
-
-	/**
-	 * @Route("/notebook/issues/removeFolder/", name="issuesRemoveFolder")
-	 * @Method("POST")
-	 */
-	public function removeFolderAction(Request $request)
-	{
-		$id = $request->request->get('id');
-
-		$em = $this->getDoctrine()->getManager();
-		$folders = $em->getRepository('AppBundle:Folders')->find($id);
-
-		$em->remove($folders);
-
-		$pagesResult = $this->getDoctrine()
-			->getRepository('AppBundle:Issue')
-			->findBy(
-				array('folder' => $id)
-			);
-
-		foreach($pagesResult as $page) {
-			$page->setFolder(-1);
-		}
-
-		$em->flush();
-
-		return new Response('success');
-	}
 
 	/**
 	 * @Route("/notebook/issues/createIssue/", name="issuesCreateIssue")
@@ -450,21 +352,49 @@ class IssuesController extends Controller
 	}
 
 	/**
+	 * @Route("/notebook/issues/movePageToFolder/", name="issuesMovePageToFolder")
+	 * @Method("POST")
+	 */
+	public function moveItemToFolderAction(Request $request)
+	{
+		$folderId = $request->request->get('folderId');
+		$pageId = $request->request->get('pageId');
+
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $folderId, $pageId);
+		$response = $foldersProjects->moveItemToFolder();
+
+		return $response;
+	}
+
+	/**
+	 * @Route("/notebook/issues/removePageFromFolders/", name="issuesRemovePageFromFolders")
+	 * @Method("POST")
+	 */
+	public function removeItemFromFoldersAction(Request $request)
+	{
+		$folderId = -1;
+		$pageId = $request->request->get('pageId');
+
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $folderId, $pageId);
+		$response = $foldersProjects->moveItemToFolder();
+
+		return $response;
+	}
+	
+	/**
 	 * @Route("/notebook/issues/movePageToProject/", name="issuesMovePageToProject")
 	 * @Method("POST")
 	 */
-	public function movePageToProjectAction(Request $request)
+	public function moveItemToProjectAction(Request $request)
 	{
 		$projectId = $request->request->get('projectId');
 		$pageId = $request->request->get('pageId');
 
-		$em = $this->getDoctrine()->getManager();
-		$pages = $em->getRepository('AppBundle:Issue')->find($pageId);
-
-		$pages->setProject($projectId);
-		$em->flush();
-
-		$response = new JsonResponse(array('project' => $pages->getProject()));
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $projectId, $pageId);
+		$response = $foldersProjects->moveItemToProject();
 
 		return $response;
 	}
@@ -498,7 +428,7 @@ class IssuesController extends Controller
 
 		return $response;
 	}
-
+	
 	/**
 	 * @Route("/notebook/issues/{id}/", name="singleIssue")
 	 */

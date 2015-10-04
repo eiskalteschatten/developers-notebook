@@ -176,7 +176,7 @@
         <div class="narrow-column gray">
             <div class="toolbar">
                 <div class="toolbar-content">
-                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder('{{ path('todosRemoveFolder') }}')" title="Remove selected folder">&ndash;</a>
+                    <a href="#!" onclick="createFolder()" title="Create a new folder">+</a><a href="#!" onclick="removeFolder('{{ path('folderRemoveFolder') }}')" title="Remove selected folder">&ndash;</a>
                 </div>
             </div>
             <div class="editor-folders">
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="section-label">Folders</div>
-                <div class="editor-folders folders" data-url-create="{{ path('todosCreateFolder') }}">
+                <div class="editor-folders folders" data-url-create="{{ path('folderCreateFolder') }}">
                     {% for folder in folders %}
                         <div class="editor-folder folder" data-id="{{ folder.id }}">
                             {{ folder.name }}

@@ -15,6 +15,8 @@ use AppBundle\Services\Helper;
 
 class EditorController extends Controller
 {
+	private $repository = "AppBundle:Pages";
+	
     /**
      * @Route("/notebook/editor/create/", name="editorCreate")
      * @Method("POST")
@@ -103,124 +105,53 @@ class EditorController extends Controller
         $em->flush();
 
         return new Response('success');
-    }
+    } 
 
-    /**
+	/**
      * @Route("/notebook/editor/movePageToFolder/", name="editorMovePageToFolder")
-     * @Method("POST")
-     */
-    public function movePageToFolderAction(Request $request)
-    {
-        $folderId = $request->request->get('folderId');
-        $pageId = $request->request->get('pageId');
+	 * @Method("POST")
+	 */
+	public function moveItemToFolderAction(Request $request)
+	{
+		$folderId = $request->request->get('folderId');
+		$pageId = $request->request->get('pageId');
 
-        $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $folderId, $pageId);
+		$response = $foldersProjects->moveItemToFolder();
 
-        $pages->setFolder($folderId);
-        $em->flush();
+		return $response;
+	}
 
-        $response = new JsonResponse(array('folder' => $pages->getFolder()));
-
-        return $response;
-    }
-
-    /**
+	/**
      * @Route("/notebook/editor/removePageFromFolders/", name="editorRemovePageFromFolders")
-     * @Method("POST")
-     */
-    public function removePageFromFoldersAction(Request $request)
-    {
-        $folderId = -1;
-        $pageId = $request->request->get('pageId');
+	 * @Method("POST")
+	 */
+	public function removeItemFromFoldersAction(Request $request)
+	{
+		$folderId = -1;
+		$pageId = $request->request->get('pageId');
 
-        $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $folderId, $pageId);
+		$response = $foldersProjects->moveItemToFolder();
 
-        $pages->setFolder($folderId);
-        $em->flush();
-
-        $response = new JsonResponse(array('folder' => $pages->getFolder()));
-
-        return $response;
-    }
-
-    /**
-     * @Route("/notebook/editor/createFolder/", name="editorCreateFolder")
-     * @Method("POST")
-     */
-    public function createFolderAction(Request $request)
-    {
-        $standardArea = $request->request->get('standardArea');
-        $name = $request->request->get('name');
-
-        $date = new \DateTime("now");
-
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $userId = $user->getId();
-
-        $folders = new Folders();
-        $folders->setUserId($userId);
-        $folders->setDateCreated($date);
-        $folders->setDateModified($date);
-        $folders->setName($name);
-        $folders->setArea($standardArea);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($folders);
-        $em->flush();
-
-        $response = new JsonResponse(array('id' => $folders->getId(), 'name' => $folders->getName()));
-
-        return $response;
-    }
-
-    /**
-     * @Route("/notebook/editor/removeFolder/", name="editorRemoveFolder")
-     * @Method("POST")
-     */
-    public function removeFolderAction(Request $request)
-    {
-        $id = $request->request->get('id');
-
-        $em = $this->getDoctrine()->getManager();
-        $folders = $em->getRepository('AppBundle:Folders')->find($id);
-
-        $em->remove($folders);
-
-        $pagesResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Pages')
-            ->findBy(
-                array('folder' => $id)
-            );
-
-        foreach($pagesResult as $page) {
-            $page->setFolder(-1);
-        }
-
-        $em->flush();
-
-        return new Response('success');
-    }
-
-    /**
+		return $response;
+	}
+	
+	/**
      * @Route("/notebook/editor/movePageToProject/", name="editorMovePageToProject")
-     * @Method("POST")
-     */
-    public function movePageToProjectAction(Request $request)
-    {
-        $projectId = $request->request->get('projectId');
-        $pageId = $request->request->get('pageId');
+	 * @Method("POST")
+	 */
+	public function moveItemToProjectAction(Request $request)
+	{
+		$projectId = $request->request->get('projectId');
+		$pageId = $request->request->get('pageId');
 
-        $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository('AppBundle:Pages')->find($pageId);
+		$foldersProjects = $this->get('app.services.foldersProjects');
+		$foldersProjects->init($this->repository, $projectId, $pageId);
+		$response = $foldersProjects->moveItemToProject();
 
-        $pages->setProject($projectId);
-        $em->flush();
-
-        $response = new JsonResponse(array('project' => $pages->getProject()));
-
-        return $response;
-    }
+		return $response;
+	}
 }

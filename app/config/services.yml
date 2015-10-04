@@ -6,6 +6,10 @@ parameters:
 services:
     app.services.helper:
         class: AppBundle\Services\Helper
+    app.services.foldersProjects:
+        class: AppBundle\Services\FoldersProjects
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName
