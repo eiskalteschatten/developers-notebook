@@ -149,6 +149,12 @@ class AccountController extends Controller
             $response = new JsonResponse(array('msgType' => 'error', 'message' => $this->container->getParameter('AppBundle.messages.allFieldsRequiredError')));
             return $response;
         }
+        
+        $passwordIsOk = $this->passwordIsOk($password);
+        if ($passwordIsOk !== true) {
+            $response = new JsonResponse(array('msgType' => 'error', 'message' => $passwordIsOk));
+            return $response;
+        }
 
         if ($password == $passwordConfirm) {
             $date = new \DateTime("now");
@@ -234,6 +240,16 @@ class AccountController extends Controller
                 )
             );
         }
+        
+        $passwordIsOk = $this->passwordIsOk($password);
+        if ($passwordIsOk !== true) {
+			return $this->render(
+                'security/register.html.twig',
+                array(
+                    'error' => $passwordIsOk
+                )
+            );
+        }
 
         if ($password == $passwordConfirm) {
             $user = new User();
@@ -298,5 +314,21 @@ class AccountController extends Controller
                 'error' => $this->container->getParameter('AppBundle.messages.accountPasswordsDontMatch')
             )
         );
+    }
+    
+    private function passwordIsOk($plainPassword) {
+	    if (strlen($plainPassword) < 8) {
+	        return $this->container->getParameter('AppBundle.messages.passwordTooShort');
+	    }
+	
+	    if (!preg_match("#[0-9]+#", $plainPassword)) {
+	        return $this->container->getParameter('AppBundle.messages.passwordOneNumber');
+	    }
+	
+	    if (!preg_match("#[a-zA-Z]+#", $plainPassword)) {
+	        return $this->container->getParameter('AppBundle.messages.passwordOneLetter');
+	    }     
+	
+	    return true;
     }
 }
