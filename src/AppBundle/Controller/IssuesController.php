@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Issue;
-use AppBundle\Entity\Folders;
-use AppBundle\Entity\Project;
 use AppBundle\Entity\ConnectorTodosIssues;
 use AppBundle\Services\Helper;
 
@@ -110,43 +108,13 @@ class IssuesController extends Controller
 			'date' => '',
 		);
 
-		// GET FOLDERS
+		// GET FOLDERS AND PROJECTS
 		
-		$foldersResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Folders')
-        ->findBy(
-			array('userId' => $userId, 'area' => $this->standardArea),
-			array('name' => 'ASC')
-		);
+		$foldersProjects = $this->get('app.services.getFoldersProjects');
+		$foldersProjects->init($userId, $this->standardArea);
 		
-		$folders = array();
-		
-		foreach ($foldersResult as $folder) {
-			$folders[] = array(
-				'id' => $folder->getId(),
-				'name' => $folder->getName()
-			);
-		}
-
-		// GET PROJECTS
-
-		$projectsResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Project')
-        ->findBy(
-			array('userId' => $userId),
-			array('name' => 'ASC')
-		);
-		
-		$projects = array();
-		
-		foreach ($projectsResult as $project) {
-			if (!$project->getIsCompleted()) {
-				$projects[] = array(
-					'id' => $project->getId(),
-					'name' => $project->getName()
-				);
-			}
-		}
+		$folders = $foldersProjects->getFolders();
+		$projects = $foldersProjects->getProjects();
 
         return $this->render('default/issues.html.twig', array(
 			'issues' => $issues,

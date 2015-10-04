@@ -9,10 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
-use AppBundle\Entity\Pages;
-use AppBundle\Entity\Bookmark;
-use AppBundle\Entity\Todo;
-use AppBundle\Entity\Issue;
 use AppBundle\Services\Helper;
 
 class ProjectController extends Controller

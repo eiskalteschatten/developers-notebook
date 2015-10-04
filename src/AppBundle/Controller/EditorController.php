@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Pages;
-use AppBundle\Entity\Folders;
-use AppBundle\Entity\Projects;
 use AppBundle\Services\Helper;
 
 class EditorController extends Controller

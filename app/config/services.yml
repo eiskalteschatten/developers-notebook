@@ -10,6 +10,10 @@ services:
         class: AppBundle\Services\FoldersProjects
         arguments: 
             entityManager: "@doctrine.orm.entity_manager"
+    app.services.getFoldersProjects:
+        class: AppBundle\Services\GetFoldersProjects
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName

@@ -11,10 +11,11 @@ class FoldersProjects
 	protected $repository;
 	protected $folderProjectId;
 	protected $itemId;
-	
+
 	public function __construct(EntityManager $entityManager) {
 	    $this->em = $entityManager;
 	}
+	
 	
 	public function init($repository, $folderProjectId, $itemId) {
 		$this->setRepository($repository);

@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Bookmark;
-use AppBundle\Entity\Folders;
-use AppBundle\Entity\Project;
 use AppBundle\Services\Helper;
 
 class BookmarkController extends Controller
@@ -68,43 +66,14 @@ class BookmarkController extends Controller
 			'date' => ''
 		);
 		
-		// GET FOLDERS
 		
-		$foldersResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Folders')
-        ->findBy(
-			array('userId' => $userId, 'area' => $this->standardArea),
-			array('name' => 'ASC')
-		);
+		// GET FOLDERS AND PROJECTS
 		
-		$folders = array();
+		$foldersProjects = $this->get('app.services.getFoldersProjects');
+		$foldersProjects->init($userId, $this->standardArea);
 		
-		foreach ($foldersResult as $folder) {
-			$folders[] = array(
-				'id' => $folder->getId(),
-				'name' => $folder->getName()
-			);
-		}
-
-		// GET PROJECTS
-
-		$projectsResult = $this->getDoctrine()
-        ->getRepository('AppBundle:Project')
-        ->findBy(
-			array('userId' => $userId),
-			array('name' => 'ASC')
-		);
-		
-		$projects = array();
-		
-		foreach ($projectsResult as $project) {
-			if (!$project->getIsCompleted()) {
-				$projects[] = array(
-					'id' => $project->getId(),
-					'name' => $project->getName()
-				);
-			}
-		}
+		$folders = $foldersProjects->getFolders();
+		$projects = $foldersProjects->getProjects();
 
         return $this->render('default/bookmarks.html.twig', array(
 			'bookmarks' => $bookmarks,
