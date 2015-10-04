@@ -42,7 +42,7 @@ class DefaultController extends Controller
 
         // GET TO DOS
 
-        $query = $em->createQuery("SELECT t.id, t.todo, t.datePlanned, t.dateDue, t.priority FROM AppBundle:Todo t WHERE (t.dateDue BETWEEN :sevenDaysAgo AND :sevenDaysFromNow OR t.datePlanned BETWEEN :sevenDaysAgo AND :sevenDaysFromNow) AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateDue, t.datePlanned")
+        $query = $em->createQuery("SELECT t.id, t.userSpecificId, t.todo, t.datePlanned, t.dateDue, t.priority FROM AppBundle:Todo t WHERE (t.dateDue BETWEEN :sevenDaysAgo AND :sevenDaysFromNow OR t.datePlanned BETWEEN :sevenDaysAgo AND :sevenDaysFromNow) AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateDue, t.datePlanned")
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
@@ -64,6 +64,7 @@ class DefaultController extends Controller
 
             $todos[] = array(
                 'id' => $todo['id'],
+                'itemId' => $todo['userSpecificId'],
                 'name' => $todo['todo'],
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
@@ -105,7 +106,7 @@ class DefaultController extends Controller
 
         // GET RECENTLY ADDED TODOS
 
-        $query = $em->createQuery("SELECT t.id, t.todo, t.datePlanned, t.dateDue, t.dateModified, t.priority FROM AppBundle:Todo t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+        $query = $em->createQuery("SELECT t.id, t.userSpecificId, t.todo, t.datePlanned, t.dateDue, t.dateModified, t.priority FROM AppBundle:Todo t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
@@ -130,6 +131,7 @@ class DefaultController extends Controller
 
             $recentlyAdded[] = array(
                 'id' => $recent['id'],
+                'itemId' => $recent['userSpecificId'],
                 'name' => $recent['todo'],
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
@@ -142,7 +144,7 @@ class DefaultController extends Controller
 
         // GET RECENTLY ADDED ISSUES
 
-        $query = $em->createQuery("SELECT t.id, t.title, t.datePlanned, t.dateDue, t.dateModified FROM AppBundle:Issue t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+        $query = $em->createQuery("SELECT t.id, t.userSpecificId, t.title, t.datePlanned, t.dateDue, t.dateModified FROM AppBundle:Issue t WHERE t.dateModified BETWEEN :sevenDaysAgo AND :sevenDaysFromNow AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
             ->setParameter('userId', $userId)
             ->setParameter('sevenDaysAgo', $sevenDaysAgo)
             ->setParameter('sevenDaysFromNow', $sevenDaysFromNow)
@@ -167,6 +169,7 @@ class DefaultController extends Controller
 
             $recentlyAdded[] = array(
                 'id' => $recent['id'],
+                'itemId' => $recent['userSpecificId'],
                 'name' => $recent['title'],
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,

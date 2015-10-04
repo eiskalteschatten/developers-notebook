@@ -86,7 +86,7 @@
                 <div class="wrapper">
                     <div class="full-size-table small-rows">
                         {% for todo in todos %}
-                            {{ _self.todos(todo.id, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}
+                            {{ _self.todos(todo.id, todo.itemId, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}
                         {% endfor %}
                     </div>
                 </div>
@@ -114,9 +114,9 @@
                             {% if recent.type == "bookmark" %}
                                 {{ _self.bookmarks(recent.id, recent.name, recent.url, recent.croppedUrl, "true") }}
                             {% elseif recent.type == "todo" %}
-                                {{ _self.todos(recent.id, recent.name, recent.priority, recent.datePlanned, recent.dateDue, "true") }}
+                                {{ _self.todos(recent.id, recent.itemId, recent.name, recent.priority, recent.datePlanned, recent.dateDue, "true") }}
                             {% elseif recent.type == "issue" %}
-                                {{ _self.issues(recent.id, recent.name, recent.datePlanned, recent.dateDue, "true") }}
+                                {{ _self.issues(recent.id, recent.itemId, recent.name, recent.datePlanned, recent.dateDue, "true") }}
                             {% elseif recent.type == "page" %}
                                 {{ _self.pages(recent.id, recent.name, recent.area, recent.dateModified, "true") }}
                             {% endif %}
@@ -153,9 +153,12 @@
 {% endblock %}
 
 
-{% macro todos(id, name, priority, datePlanned, dateDue, showType) %}
+{% macro todos(id, itemId, name, priority, datePlanned, dateDue, showType) %}
     <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ id }}')">
-        <div class="name">{{ name }}</div>
+		<div>
+			<span class="item-id">#{{ itemId }}</span>
+			<span class="name">{{ name }}</span>
+		</div>
         <div class="gray-info">
             {% if showType == "true" %}
                 <span class="type single-row bold italic">To do</span>
@@ -181,9 +184,12 @@
 {% endmacro %}
 
 
-{% macro issues(id, name, datePlanned, dateDue, showType) %}
+{% macro issues(id, itemId, name, datePlanned, dateDue, showType) %}
     <div class="row" onclick="goToItem('{{ path('singleIssue', {"id": id}) }}')">
-        <div class="name">{{ name }}</div>
+		<div>
+			<span class="item-id">#{{ itemId }}</span>
+			<span class="name">{{ name }}</span>
+		</div>
         <div class="gray-info">
             {% if showType == "true" %}
                 <span class="type single-row bold italic">Issue</span>
