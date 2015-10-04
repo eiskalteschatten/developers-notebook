@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Issue;
 use AppBundle\Entity\ConnectorTodosIssues;
-use AppBundle\Services\Helper;
 
 class IssuesController extends Controller
 {
@@ -63,7 +62,7 @@ class IssuesController extends Controller
 			$todosResult =  $this->getDoctrine()
 				->getRepository('AppBundle:ConnectorTodosIssues')
 				->findBy(
-					array('userId' => $userId, 'issue' => $issue->getId()),
+					array('userId' => $userId, 'issue' => $issue->getUserSpecificId()),
 					array('dateCreated' => 'ASC')
 				);
 
@@ -75,6 +74,7 @@ class IssuesController extends Controller
 
 			$issues[] = array(
 				'id' => $issue->getId(),
+				'itemId' => $issue->getUserSpecificId(),
 				'name' => $issue->getTitle(),
 				'description' => $issue->getDescription(),
 				'isCompleted' => $issue->getIsCompleted(),
@@ -94,6 +94,7 @@ class IssuesController extends Controller
 
 		$issues[] = array(
 			'id' => '-1',
+			'itemId' => '',
 			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
 			'description' => '',
 			'isCompleted' => '',
@@ -138,9 +139,24 @@ class IssuesController extends Controller
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
-
+		
+		$issuesResult = $this->getDoctrine()
+        ->getRepository('AppBundle:Issue')
+        ->findBy(
+			array('userId' => $userId),
+			array('userSpecificId' => 'DESC')
+		);
+		
+		if ($issuesResult) {
+			$nextSpecificId = $issuesResult[0]->getUserSpecificId() + 1;
+		}
+		else {
+			$nextSpecificId = 1;
+		}
+		
 		$issue = new Issue();
 		$issue->setUserId($userId);
+		$issue->setUserSpecificId($nextSpecificId);
 		$issue->setDateCreated($date);
 		$issue->setDateModified($date);
 		$issue->setTitle("");
@@ -157,7 +173,7 @@ class IssuesController extends Controller
 
 		$viewUrl = $this->generateUrl("singleIssue", array('id' => $issue->getId()));
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder(), 'viewUrl' => $viewUrl));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'project' => $issue->getProject(), 'folder' => $issue->getFolder(), 'viewUrl' => $viewUrl));
 
 		return $response;
 	}
@@ -228,7 +244,7 @@ class IssuesController extends Controller
 			if (!empty($todo)) {
 				$connector = new ConnectorTodosIssues();
 				$connector->setUserId($userId);
-				$connector->setIssue($issue->getId());
+				$connector->setIssue($issue->getUserSpecificId());
 				$connector->setTodo($todo);
 				$connector->setDateCreated($date);
 
@@ -254,7 +270,7 @@ class IssuesController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
 		return $response;
 	}
@@ -380,15 +396,15 @@ class IssuesController extends Controller
 		$userId = $user->getId();
 
 		$em = $this->getDoctrine()->getManager();
-		$query = $em->createQuery("SELECT t.title, t.id FROM AppBundle:Issue t WHERE (t.title LIKE :searchTerm OR t.id LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+		$query = $em->createQuery("SELECT t.title, t.id, t.userSpecificId FROM AppBundle:Issue t WHERE (t.title LIKE :searchTerm OR t.userSpecificId LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
 		$issuesResult = $query->getResult();
 
 		$issues = array();
 
 		foreach ($issuesResult as $issue) {
 			$issues[] = array(
-				'label' => "#" . $issue['id'] . " " . $issue['title'],
-				'value' => $issue['id']
+				'label' => "#" . $issue['userSpecificId'] . " " . $issue['title'],
+				'value' => $issue['userSpecificId']
 			);
 		}
 
@@ -415,7 +431,7 @@ class IssuesController extends Controller
 		$issuesResult = $this->getDoctrine()
 			->getRepository('AppBundle:Issue')
 			->findOneBy(
-				array('id' => $id, 'userId' => $userId)
+				array('userSpecificId' => $id, 'userId' => $userId)
 			);
 
 		if (!$issuesResult) {
@@ -457,6 +473,7 @@ class IssuesController extends Controller
 
 		$issue = array(
 			'id' => $issuesResult->getId(),
+			'itemId' => $issuesResult->getUserSpecificId(),
 			'name' => $issuesResult->getTitle(),
 			'descriptionHtml' => nl2br($issuesResult->getDescription()),
 			'description' => $issuesResult->getDescription(),

@@ -4,7 +4,7 @@
     {% if fail is defined and fail is not empty %}
         Issues - Developer's Notebook
     {% else %}
-        {{ issue.name }} - Issues - Developer's Notebook
+        #{{ issue.itemId }} {{ issue.name }} - Issues - Developer's Notebook
     {% endif %}
 {% endblock %}
 
@@ -100,6 +100,7 @@
                     <div class="complete-project">
                         <input type="checkbox" id="showCompleted" onclick="toggleIsComplete('{{ issue.id }}', this)"{{ isCompletedCheck }}> Issue is completed<br>
                     </div>
+                    <span class="item-id">#{{ issue.itemId }}</span>
                     <span class="name">{{ issue.name }}</span>
                 </div>
 

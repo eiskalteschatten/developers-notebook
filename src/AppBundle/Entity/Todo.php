@@ -20,6 +20,11 @@ class Todo
     private $userId;
 
     /**
+     * @var integer
+     */
+    private $userSpecificId;
+
+    /**
      * @var \DateTime
      */
     private $dateCreated;
@@ -106,6 +111,29 @@ class Todo
     public function getUserId()
     {
         return $this->userId;
+    }
+    
+    /**
+     * Set userSpecificId
+     *
+     * @param integer $userSpecificId
+     * @return Todo
+     */
+    public function setUserSpecificId($userSpecificId)
+    {
+        $this->userSpecificId = $userSpecificId;
+
+        return $this;
+    }
+
+    /**
+     * Get userSpecificId
+     *
+     * @return integer 
+     */
+    public function getUserSpecificId()
+    {
+        return $this->userSpecificId;
     }
 
     /**

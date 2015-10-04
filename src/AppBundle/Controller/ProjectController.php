@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Project;
-use AppBundle\Services\Helper;
 
 class ProjectController extends Controller
 {
@@ -186,6 +185,7 @@ class ProjectController extends Controller
 
             $todos[] = array(
                 'id' => $todo->getId(),
+				'itemId' => $todo->getUserSpecificId(),
                 'name' => $todo->getTodo(),
                 'notes' => $todo->getNotes(),
                 'isCompleted' => $todo->getIsCompleted(),
@@ -245,6 +245,7 @@ class ProjectController extends Controller
 
             $issues[] = array(
                 'id' => $issue->getId(),
+                'itemId' => $issue->getUserSpecificId(),
                 'name' => $issue->getTitle(),
                 'description' => $issue->getDescription(),
                 'isCompleted' => $issue->getIsCompleted(),

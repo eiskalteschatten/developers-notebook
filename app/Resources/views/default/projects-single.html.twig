@@ -74,6 +74,10 @@
         function goToContent(url, id) {
             window.location.href = url + "?selectedItem=" + id;
         }
+        
+        function goToContentItemId(url, id) {
+            window.location.href = url + "?selectedItemId=" + id;
+        }
 
         function goToContentNoId(url) {
             window.location.href = url;
@@ -148,11 +152,11 @@
                                 {% set isCompletedClass = ' is-completed' %}
                             {% endif %}
 
-                            <div class="row{{ isCompletedClass }}" onclick="goToContentNoId('{{ path('singleIssue', {'id': issue.id}) }}')">
+                            <div class="row{{ isCompletedClass }}" onclick="goToContentNoId('{{ path('singleIssue', {'id': issue.itemId}) }}')">
                                 <div class="info">
                                     <div class="left">
                                         <div>
-                                            <span class="item-id to-empty">#{{ issue.id }}</span>
+                                            <span class="item-id to-empty">#{{ issue.itemId }}</span>
                                             <span class="name to-empty">{{ issue.name }}</span>
                                         </div>
                                         <div class="gray-info">
@@ -182,11 +186,11 @@
                                 {% set isCompletedClass = ' is-completed' %}
                             {% endif %}
 
-                            <div class="row{{ isCompletedClass }}" onclick="goToContent('{{ path('todos') }}', '{{ todo.id }}')">
+                            <div class="row{{ isCompletedClass }}" onclick="goToContentItemId('{{ path('todos') }}', '{{ todo.itemId }}')">
                                 <div class="info">
                                     <div class="left">
                                         <div>
-                                            <span class="item-id to-empty">#{{ todo.id }}</span>
+                                            <span class="item-id to-empty">#{{ todo.itemId }}</span>
                                             <span class="name to-empty">{{ todo.name }}</span>
                                         </div>
                                         <div class="gray-info no-margin">

@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Todo;
 use AppBundle\Entity\ConnectorTodosIssues;
-use AppBundle\Services\Helper;
 
 class TodosController extends Controller
 {
@@ -63,7 +62,7 @@ class TodosController extends Controller
 			$issuesResult = $this->getDoctrine()
 				->getRepository('AppBundle:ConnectorTodosIssues')
 				->findBy(
-					array('userId' => $userId, 'todo' => $todo->getId()),
+					array('userId' => $userId, 'todo' => $todo->getUserSpecificId()),
 					array('dateCreated' => 'ASC')
 				);
 
@@ -78,6 +77,7 @@ class TodosController extends Controller
 
 			$todos[] = array(
 				'id' => $todo->getId(),
+				'itemId' => $todo->getUserSpecificId(),
 				'name' => $todo->getTodo(),
 				'notes' => $todo->getNotes(),
 				'isCompleted' => $todo->getIsCompleted(),
@@ -97,6 +97,7 @@ class TodosController extends Controller
 
 		$todos[] = array(
 			'id' => '-1',
+			'itemId' => '',
 			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
 			'notes' => '',
 			'isCompleted' => '',
@@ -142,9 +143,25 @@ class TodosController extends Controller
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
+		
+		$todosResult = $this->getDoctrine()
+        ->getRepository('AppBundle:Todo')
+        ->findBy(
+			array('userId' => $userId),
+			array('userSpecificId' => 'DESC')
+		);
+		
+		if ($todosResult) {
+			$nextSpecificId = $todosResult[0]->getUserSpecificId() + 1;
+		}
+		else {
+			$nextSpecificId = 1;
+		}
+
 
 		$todo = new Todo();
 		$todo->setUserId($userId);
+		$todo->setUserSpecificId($nextSpecificId);
 		$todo->setDateCreated($date);
 		$todo->setDateModified($date);
 		$todo->setTodo("");
@@ -159,7 +176,7 @@ class TodosController extends Controller
 		$em->persist($todo);
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'project' => $todo->getProject(), 'folder' => $todo->getFolder(), 'priority' => $todo->getPriority()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'project' => $todo->getProject(), 'folder' => $todo->getFolder(), 'priority' => $todo->getPriority()));
 
 		return $response;
 	}
@@ -232,7 +249,7 @@ class TodosController extends Controller
 				$connector = new ConnectorTodosIssues();
 				$connector->setUserId($userId);
 				$connector->setIssue($issue);
-				$connector->setTodo($todo->getId());
+				$connector->setTodo($todo->getUserSpecificId());
 				$connector->setDateCreated($date);
 
 				$em->persist($connector);
@@ -262,7 +279,7 @@ class TodosController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'name' => $todo->getTodo(), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}
@@ -388,15 +405,15 @@ class TodosController extends Controller
 		$userId = $user->getId();
 
 		$em = $this->getDoctrine()->getManager();
-		$query = $em->createQuery("SELECT t.todo, t.id FROM AppBundle:Todo t WHERE (t.todo LIKE :searchTerm OR t.id LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+		$query = $em->createQuery("SELECT t.todo, t.id, t.userSpecificId FROM AppBundle:Todo t WHERE (t.todo LIKE :searchTerm OR t.userSpecificId LIKE :searchTerm) AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
 		$todosResult = $query->getResult();
 
 		$todos = array();
 
 		foreach ($todosResult as $todo) {
 			$todos[] = array(
-				'label' => "#" . $todo['id'] . " " . $todo['todo'],
-				'value' => $todo['id']
+				'label' => "#" . $todo['userSpecificId'] . " " . $todo['todo'],
+				'value' => $todo['userSpecificId']
 			);
 		}
 

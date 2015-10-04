@@ -18,6 +18,11 @@ class Issue
      * @var integer
      */
     private $userId;
+    
+    /**
+     * @var integer
+     */
+    private $userSpecificId;
 
     /**
      * @var \DateTime
@@ -105,6 +110,29 @@ class Issue
     public function getUserId()
     {
         return $this->userId;
+    }
+    
+    /**
+     * Set userSpecificId
+     *
+     * @param integer $userSpecificId
+     * @return Issue
+     */
+    public function setUserSpecificId($userSpecificId)
+    {
+        $this->userSpecificId = $userSpecificId;
+
+        return $this;
+    }
+
+    /**
+     * Get userSpecificId
+     *
+     * @return integer 
+     */
+    public function getUserSpecificId()
+    {
+        return $this->userSpecificId;
     }
 
     /**

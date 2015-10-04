@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Pages;
 use AppBundle\Entity\EditorSettings;
-use AppBundle\Services\Helper;
 
 class NotebookController extends Controller
 {

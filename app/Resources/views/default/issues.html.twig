@@ -21,7 +21,8 @@
             div.show();
             div.attr('data-id', data.id);
             div.attr('data-folder', data.folder);
-            div.attr('data-project', data.project)
+            div.attr('data-project', data.project);
+            div.attr('data-item-id', data.itemId);
             div.find('input').val("");
             div.find('textarea').val("");
             div.find('.to-empty').text('');
@@ -65,7 +66,7 @@
 
             $.post(saveItemUrl, toSend, function(data) {
                 var info = selected.find('.info');
-                info.find('.item-id').text("#" + data.id);
+                info.find('.item-id').text("#" + data.itemId);
                 info.find('.name').text(data.name);
                 info.find('.labels').html("<b>Labels:</b> " + data.labels);
                 info.find('.todos').html("<b>To dos:</b> " + data.todosHtml);
@@ -167,13 +168,13 @@
                         {% set toBeCloned = ' to-be-cloned' %}
                     {% endif %}
 
-                    <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ issue.id }}" data-folder="{{ issue.folder }}" data-project="{{ issue.project }}" onclick="selectItem(this)">
+                    <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ issue.id }}" data-folder="{{ issue.folder }}" data-project="{{ issue.project }}" data-item-id="{{ issue.itemId }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a><br><a href="{{ path('singleIssue', {'id': issue.id}) }}" class="view-url">View</a></span>
                             <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ issue.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
                             <div class="left">
                                 <div>
-                                    <span class="item-id to-empty">#{{ issue.id }}</span>
+                                    <span class="item-id to-empty">#{{ issue.itemId }}</span>
                                     <span class="name to-empty">{{ issue.name }}</span>
                                 </div>
                                 <div class="gray-info">

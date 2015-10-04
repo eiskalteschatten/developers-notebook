@@ -22,7 +22,7 @@ class Helper
         $html = "";
 
         foreach($todos as $todo) {
-            $html .= '<a href="' . $todosUrl . '?selectedItem=' . $todo . '">';
+            $html .= '<a href="' . $todosUrl . '?selectedItemId=' . $todo . '">';
             $html .= '#' . $todo;
             $html .= '</a>';
 

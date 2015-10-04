@@ -23,9 +23,14 @@ $(document).ready(function() {
     $('.all-projects-folders').trigger('click');
 
     var selectedItem = getUrlParameter("selectedItem");
+    var selectedItemId = getUrlParameter("selectedItemId");
 
     if (selectedItem !== undefined) {
         $('.row[data-id="'+selectedItem+'"]').trigger('click');
+    }
+    
+    if (selectedItemId !== undefined) {
+        $('.row[data-item-id="'+selectedItemId+'"]').trigger('click');
     }
 
     setDraggableAndDroppable();

@@ -11,6 +11,9 @@ AppBundle\Entity\Issue:
         userId:
             type: integer
             column: user_id
+        userSpecificId:
+            type: integer
+            column: user_specific_id
         dateCreated:
             type: datetime
             column: date_created
