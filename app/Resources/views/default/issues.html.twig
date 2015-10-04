@@ -170,7 +170,7 @@
 
                     <div class="row{{ toBeCloned }}{{ isCompletedClass }}" data-id="{{ issue.id }}" data-folder="{{ issue.folder }}" data-project="{{ issue.project }}" data-item-id="{{ issue.itemId }}" onclick="selectItem(this)">
                         <div class="info">
-                            <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a><br><a href="{{ path('singleIssue', {'id': issue.id}) }}" class="view-url">View</a></span>
+                            <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a><br><a href="{{ path('issues') }}{{ issue.itemId }}/" class="view-url">View</a></span>
                             <div class="left is-completed-box"><input type="checkbox" onclick="toggleIsComplete('{{ issue.id }}', this)" class="is-completed-check"{{ isCompletedCheck }}></div>
                             <div class="left">
                                 <div>
