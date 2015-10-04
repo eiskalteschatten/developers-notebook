@@ -73,7 +73,73 @@
 		}
 		
 		function searchSecondRow() {
+			todosSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('todosSpinner'));
+			issuesSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('issuesSpinner'));
+			bookmarksSpinner = new Spinner(ajaxLoaderLargeOpts).spin(document.getElementById('bookmarksSpinner'));
 			
+			var toSend = {
+                q: "{{ query }}"
+            }
+
+            $.post("{{ path('searchTodosIssuesBookmarks') }}", toSend, function(data) {
+                todosSpinner.stop();
+                issuesSpinner.stop();
+                bookmarksSpinner.stop();
+	            
+                $.each(data, function(key, value) {
+	                if (value.area == "todo") {
+    	                var div = $('#todoClone').clone();
+			            div.removeClass('to-be-cloned');
+			            div.attr('id', '');
+			            div.find('.item-id').text("#" + value.itemId);
+			            div.find('.name').text(value.name);
+    		            div.find('.priority-content').text(value.priority);
+    		            div.find('.date-planned-content').text(value.datePlanned);    		            
+    		            div.find('.date-due-content').text(value.dateDue);    		            
+		                
+			            div.click(function() {
+			                window.location.href = "{{ path('todos') }}?selectedItemId=" + value.itemId;
+			            });
+			            
+			            $('#todosResults').append(div);
+		            }
+		            else if (value.area == "issues") {
+    	                var div = $('#issuesClone').clone();
+			            div.removeClass('to-be-cloned');
+			            div.attr('id', '');
+			            div.find('.item-id').text("#" + value.itemId);
+			            div.find('.name').text(value.name);
+    		            div.find('.date-planned-content').text(value.datePlanned);    		            
+    		            div.find('.date-due-content').text(value.dateDue);    		            
+		                
+			            div.click(function() {
+			                window.location.href = "{{ path('issues') }}?selectedItemId=" + value.itemId;
+			            });
+			            
+			            $('#issuesResults').append(div);
+		            }
+					else if (value.area == "bookmarks") {
+			            var div = $('#bookmarksClone').clone();
+			            div.removeClass('to-be-cloned');
+			            div.attr('id', '');
+			            div.find('.name').text(value.name);
+    		            div.find('.url').find('a').text(value.croppedUrl);
+    		            div.find('.url').find('a').attr('href', data.url);
+		                
+			            div.click(function() {
+			                window.location.href = "{{ path('bookmarks') }}?selectedItem=" + value.id;
+			            });
+			            
+			            $('#bookmarksResults').append(div);
+		            }
+				});
+                
+                searchThirdRow();
+            });
+
+            function searchThirdRow() {
+	            
+            }
 		}
     </script>
 {% endblock %}
@@ -162,13 +228,34 @@
     </div>
 
 	<div class="row to-be-cloned" id="todoClone">
-	    <div class="name"></div>
+		<div>
+			<span class="item-id"></span>
+			<span class="name"></span>
+		</div>
 	    <div class="gray-info">
 	        <span class="priority single-row"><b>Priority:</b> <span class="priority-content"></span></span>
 	        <span class="date-planned single-row"><b>Date Planned:</b> <span class="date-planned-content"></span></span>
 	        <span class="date-due single-row"><b>Due:</b> <span class="date-due-content"></span></span>
 	    </div>
 	</div>
+	
+    <div class="row to-be-cloned" id="issuesClone">
+		<div>
+			<span class="item-id"></span>
+			<span class="name"></span>
+		</div>
+        <div class="gray-info">
+	        <span class="date-planned single-row"><b>Date Planned:</b> <span class="date-planned-content"></span></span>
+	        <span class="date-due single-row"><b>Due:</b> <span class="date-due-content"></span></span>
+        </div>
+    </div>
+    
+    <div class="row to-be-cloned" id="bookmarksClone">
+        <div class="name"></div>
+        <div class="gray-info">
+            <span class="url"><a href="" target="_blank"></a></span>
+        </div>
+    </div>
 
 
 {% endblock %}
@@ -183,45 +270,3 @@
     	}
     </style>
 {% endblock %}
-
-{% macro bookmarks(id, name, url, croppedUrl, showType) %}
-    <div class="row" onclick="goToItem('{{ path('bookmarks') }}?selectedItem={{ id }}')">
-        <div class="name">{{ name }}</div>
-        <div class="gray-info">
-            {% if showType == "true" %}
-                <span class="type single-row bold italic">Bookmark</span>
-            {% endif %}
-            <span class="url gray-info to-empty"><a href="{{ url }}" target="_blank">{{ croppedUrl }}</a></span>
-        </div>
-    </div>
-{% endmacro %}
-
-
-{% macro issues(id, name, datePlanned, dateDue, showType) %}
-    <div class="row" onclick="goToItem('{{ path('singleIssue', {"id": id}) }}')">
-        <div class="name">{{ name }}</div>
-        <div class="gray-info">
-            {% if showType == "true" %}
-                <span class="type single-row bold italic">Issue</span>
-            {% endif %}
-            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
-            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
-        </div>
-    </div>
-{% endmacro %}
-
-
-{% macro pages(id, name, area, dateModified, showType) %}
-    {% if area == "code" %}
-        {% set rowType = "Code Cache" %}
-        {% set url = path('codeCache') %}
-    {% elseif area == "journal" %}
-        {% set rowType = "Journal" %}
-        {% set url = path('journal') %}
-    {% else %}
-        {% set rowType = "Notes" %}
-        {% set url = path('notes') %}
-    {% endif %}
-
-    
-{% endmacro %}

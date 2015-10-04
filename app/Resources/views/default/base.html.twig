@@ -42,7 +42,7 @@
                     </div>
                 </div>
 				<div class="command-search right" data-search-url="{{ path('searchUrl') }}">
-                    <input type="text" class="command-search-field" onclick="expandSearch(this)" onkeyup="submitSearch(event)" placeholder="Type a search query">
+                    <input type="text" class="command-search-field" onclick="expandSearch(this)" onkeyup="submitSearch(event)" placeholder="Type a search query"{% if query is defined %}value="{{ query }}"{% endif %}>
                 </div>
             </div>
         {% endblock %}
