@@ -44,10 +44,13 @@
 }
 
 .content-two-thirds-columns {
+	display: flex;
+
 	.narrow-column {
 		float: left;
 		width: 300px;
 		overflow: auto;
+		flex-direction: column;
 
 		&.gray {
 			border-right: 1px solid $bordercolor;

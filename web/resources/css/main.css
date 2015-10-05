@@ -323,21 +323,24 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   float: left;
   width: 50%; }
 
-.content-two-thirds-columns .narrow-column {
-  float: left;
-  width: 300px;
-  overflow: auto; }
-  .content-two-thirds-columns .narrow-column.gray {
-    border-right: 1px solid #e6e6e6;
-    background: #f6f6f6; }
-  .content-two-thirds-columns .narrow-column.border-top {
-    padding-top: 0 !important; }
-.content-two-thirds-columns .large-column {
-  float: left;
-  width: calc(100% - 302px);
-  overflow: auto; }
-.content-two-thirds-columns .tab-section {
-  display: none; }
+.content-two-thirds-columns {
+  display: flex; }
+  .content-two-thirds-columns .narrow-column {
+    float: left;
+    width: 300px;
+    overflow: auto;
+    flex-direction: column; }
+    .content-two-thirds-columns .narrow-column.gray {
+      border-right: 1px solid #e6e6e6;
+      background: #f6f6f6; }
+    .content-two-thirds-columns .narrow-column.border-top {
+      padding-top: 0 !important; }
+  .content-two-thirds-columns .large-column {
+    float: left;
+    width: calc(100% - 302px);
+    overflow: auto; }
+  .content-two-thirds-columns .tab-section {
+    display: none; }
 
 .content-three-columns {
   width: 100%;
