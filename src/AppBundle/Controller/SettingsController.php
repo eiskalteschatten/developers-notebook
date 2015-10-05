@@ -13,7 +13,7 @@ use AppBundle\Entity\EditorSettings;
 class SettingsController extends Controller
 {
     /**
-     * @Route("/settings/", name="settingsPage")
+     * @Route("/notebook/settings/", name="settingsPage")
      */
     public function settingsAction(Request $request)
     {
