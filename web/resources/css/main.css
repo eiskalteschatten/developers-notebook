@@ -864,8 +864,13 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
     clear: both;
     padding: 5px;
     background: #efefef; }
-  .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
-    min-width: 25px; }
+  .ui-datepicker .ui-datepicker-calendar {
+    text-align: center; }
+    .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
+      min-width: 25px; }
+  .ui-datepicker .ui-datepicker-today, .ui-datepicker .ui-state-highlight {
+    font-weight: bold;
+    background: #f0f0f0; }
 
 /* Autocomplete */
 .ui-autocomplete {

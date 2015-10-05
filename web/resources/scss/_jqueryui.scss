@@ -50,9 +50,16 @@
     }
 
     .ui-datepicker-calendar {
+        text-align: center;
+
         th, td {
             min-width: 25px;
         }
+    }
+
+    .ui-datepicker-today, .ui-state-highlight {
+        font-weight: bold;
+        background: #f0f0f0;
     }
 }
 
