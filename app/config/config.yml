@@ -40,6 +40,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         app_version: 0.2
+        general_error_message: "Something went wrong. Please reload the page and try again."
 
 # Assetic Configuration
 assetic:

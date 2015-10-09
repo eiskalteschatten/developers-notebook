@@ -58,6 +58,9 @@ function createItem() {
     $.post(createItemUrl, toSend, function(data) {
         createCallback(data);
         closeGeneralAjaxLoader();
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -85,6 +88,9 @@ function removeItemConfirmed() {
         var previewSibling = selected.prev();
         selected.remove();
         previewSibling.trigger('click');
+        closeGeneralAjaxLoader();
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
         closeGeneralAjaxLoader();
     });
 }
@@ -187,6 +193,9 @@ function setDraggableAndDroppable() {
                 $('.editor-folder.selected').trigger('click');
                 
                 closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
+                closeGeneralAjaxLoader();
             });
         }
     });
@@ -209,6 +218,9 @@ function setDraggableAndDroppable() {
                 $('.editor-folder.selected').trigger('click');
                 
                 closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
+                closeGeneralAjaxLoader();
             });
         }
     });
@@ -230,6 +242,9 @@ function setDraggableAndDroppable() {
                 page.attr('data-project', data.project);
                 $('.editor-folder.selected').trigger('click');
                 
+                closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
                 closeGeneralAjaxLoader();
             });
         }

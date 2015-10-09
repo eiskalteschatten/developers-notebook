@@ -17,6 +17,9 @@
             $.post("{{ path('accountSaveInfo') }}", toSend, function(data) {
                 showMessage(data.msgType, data.message);
                 closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
+                closeGeneralAjaxLoader();
             });
         }
 
@@ -30,6 +33,9 @@
 
             $.post("{{ path('accountSavePassword') }}", toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
                 closeGeneralAjaxLoader();
             });
         }

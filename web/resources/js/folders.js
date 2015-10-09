@@ -45,6 +45,9 @@ function sendCreateFolder(obj) {
 
             setDraggableAndDroppable();
             closeGeneralAjaxLoader();
+        }).fail(function() {
+            showMessage('error', generalErrorMessage);
+            closeGeneralAjaxLoader();
         });
     }
     else {
@@ -77,6 +80,9 @@ function removeFolderConfirmed(url) {
         selected.remove();
         previewSibling.trigger('click');
         
+        closeGeneralAjaxLoader();
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
         closeGeneralAjaxLoader();
     });
 }

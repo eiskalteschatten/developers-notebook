@@ -55,6 +55,9 @@
 
                     closeFullEdit();
                     closeGeneralAjaxLoader();
+                }).fail(function() {
+                    showMessage('error', generalErrorMessage);
+                    closeGeneralAjaxLoader();
                 });
             }
 
@@ -72,6 +75,9 @@
                 $.post(removeItemUrl, toSend, function(data) {
 	                closeGeneralAjaxLoader();
                     window.location.href = "{{ path('issues') }}";
+                }).fail(function() {
+                    showMessage('error', generalErrorMessage);
+                    closeGeneralAjaxLoader();
                 });
             }
         </script>

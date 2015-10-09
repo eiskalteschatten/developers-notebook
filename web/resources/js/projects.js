@@ -36,6 +36,9 @@ function addNewProject(event, obj) {
                 $(obj).val('');
                 
                 closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
+                closeGeneralAjaxLoader();
             });
         }
     }
@@ -93,6 +96,9 @@ function toggleIsComplete(id, obj) {
         }
         
         closeGeneralAjaxLoader();
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
+        closeGeneralAjaxLoader();
     });
 }
 
@@ -110,5 +116,8 @@ function removeConfirmed(id) {
     $.post(postUrlDelete, toSend, function (data) {
         closeGeneralAjaxLoader();
         window.location.href = projectsUrl;
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
+        closeGeneralAjaxLoader();
     });
 }

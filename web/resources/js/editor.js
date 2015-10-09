@@ -43,7 +43,10 @@ function createPage() {
     	
     	setDraggableAndDroppable();
         closeGeneralAjaxLoader();
-    });
+    }).fail(function() {
+		showMessage('error', generalErrorMessage);
+		closeGeneralAjaxLoader();
+	});
 }
 
 function savePage() {
@@ -63,7 +66,10 @@ function savePage() {
 		$('.editor-page.selected').find('.content').text(content);
 
         closeGeneralAjaxLoader();
-    });
+    }).fail(function() {
+		showMessage('error', generalErrorMessage);
+		closeGeneralAjaxLoader();
+	});
 }
 
 function removePage() {
@@ -92,6 +98,9 @@ function removePageConfirmed() {
 		previewSibling.trigger('click');
 		
         closeGeneralAjaxLoader();
+	}).fail(function() {
+		showMessage('error', generalErrorMessage);
+		closeGeneralAjaxLoader();
 	});
 }
 
@@ -190,6 +199,9 @@ function setDraggableAndDroppable() {
 				$('.editor-folder.selected').trigger('click');
 				
 		        closeGeneralAjaxLoader();
+			}).fail(function() {
+				showMessage('error', generalErrorMessage);
+				closeGeneralAjaxLoader();
 			});
 		}
 	});
@@ -212,6 +224,9 @@ function setDraggableAndDroppable() {
 				$('.editor-folder.selected').trigger('click');
 				
 		        closeGeneralAjaxLoader();
+			}).fail(function() {
+				showMessage('error', generalErrorMessage);
+				closeGeneralAjaxLoader();
 			});
 		}
 	});
@@ -234,6 +249,9 @@ function setDraggableAndDroppable() {
 				$('.editor-folder.selected').trigger('click');
 				
 		        closeGeneralAjaxLoader();
+			}).fail(function() {
+				showMessage('error', generalErrorMessage);
+				closeGeneralAjaxLoader();
 			});
 		}
 	});
@@ -257,6 +275,9 @@ function saveAllSettings() {
 	$.post(saveSettingsUrl, toSend, function(data) {
 		closePopup();
         closeGeneralAjaxLoader();
+	}).fail(function() {
+		showMessage('error', generalErrorMessage);
+		closeGeneralAjaxLoader();
 	});
 }
 

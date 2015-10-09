@@ -43,6 +43,9 @@ function toggleIsComplete(id, obj) {
         }
         
         closeGeneralAjaxLoader();
+    }).fail(function() {
+        showMessage('error', generalErrorMessage);
+        closeGeneralAjaxLoader();
     });
 }
 

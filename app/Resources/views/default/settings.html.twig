@@ -62,6 +62,9 @@
             $.post(saveGeneralSettingsUrl, toSend, function(data) {
                 showMessage(data.msgType, data.message);
                 closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
+                closeGeneralAjaxLoader();
             });
         }
 
@@ -83,6 +86,9 @@
 
             $.post(saveEditorSettingsUrl, toSend, function(data) {
                 showMessage(data.msgType, data.message);
+                closeGeneralAjaxLoader();
+            }).fail(function() {
+                showMessage('error', generalErrorMessage);
                 closeGeneralAjaxLoader();
             });
         }

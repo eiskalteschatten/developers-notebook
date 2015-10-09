@@ -58,6 +58,9 @@
                         closeEditName();
                         
                         closeGeneralAjaxLoader();
+                    }).fail(function() {
+                        showMessage('error', generalErrorMessage);
+                        closeGeneralAjaxLoader();
                     });
                 }
             }
