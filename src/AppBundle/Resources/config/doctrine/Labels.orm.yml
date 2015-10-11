@@ -1,0 +1,23 @@
+AppBundle\Entity\Labels:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        userId:
+            type: integer
+            column: user_id
+        name:
+            type: string
+            length: 255
+        color:
+            type: string
+            length: 255
+        isCompleted:
+            type: boolean
+            column: is_completed
+    lifecycleCallbacks: {  }
