@@ -21,6 +21,7 @@ class LabelsService
     }
 
     public function createLabel($name, $userId) {
+        $name = ltrim($name);
         $this->setName($name);
 
         $label = $this->em->getRepository('AppBundle\Entity\Labels')->findOneBy(array('name' => $name, 'userId' => $userId));
