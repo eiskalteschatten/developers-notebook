@@ -16,7 +16,6 @@ class FoldersProjects
 	    $this->em = $entityManager;
 	}
 	
-	
 	public function init($repository, $folderProjectId, $itemId) {
 		$this->setRepository($repository);
 		$this->setFolderProjectId($folderProjectId);

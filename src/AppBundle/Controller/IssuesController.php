@@ -185,6 +185,7 @@ class IssuesController extends Controller
 	public function saveIssueAction(Request $request)
 	{
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
@@ -228,6 +229,16 @@ class IssuesController extends Controller
 
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
+
+		// CREATE LABELS
+
+		$labelsExploded = explode(",", $labels);
+
+		foreach ($labelsExploded as $label) {
+			$labelsService->createLabel($label, $userId);
+		}
+
+		// CONNECT TODOS AND ISSUES
 
 		$removeConnectors = $em->getRepository('AppBundle:ConnectorTodosIssues')->findBy(
 			array('issue' => $issue->getId())

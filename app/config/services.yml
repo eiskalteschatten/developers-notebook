@@ -18,6 +18,7 @@ services:
         class: AppBundle\Services\LabelsService
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
+            defaultLabelColor: %AppBundle.defaultLabelColor%
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName

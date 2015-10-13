@@ -17,3 +17,5 @@ parameters:
     AppBundle.defaultShowWeather: 'true'
     AppBundle.defaultWeatherLocation: 'Munich, Germany'
     AppBundle.defaultWeatherUnit: 'c'
+
+    AppBundle.defaultLabelColor: '#3aba34'
