@@ -12,6 +12,7 @@ Requirements
 ------------
 
 - PHP 5.3.9 or higher
+- The Symfony2 Framework - https://symfony.com/
 
 For more specific requirements, see http://symfony.com/doc/current/reference/requirements.html
 
@@ -44,7 +45,18 @@ For more information about Symfony2/Doctrine and databases, see Symfony2's docum
 
 http://symfony.com/doc/current/book/doctrine.html
 
-Now you have setup the database and can proceed with the environment-specific steps.
+Now you have setup the database and can install the Symfony2 dependencies.
+
+
+### Install Dependencies
+
+The application cannot run without the standard Symfony2 dependencies. To install these, browse to the application's root directory and run:
+
+```bash
+composer install
+```
+
+Now you can proceed with the environment-specific steps.
 
 
 ### Development Environment
