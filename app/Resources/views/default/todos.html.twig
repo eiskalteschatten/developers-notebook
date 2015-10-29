@@ -90,7 +90,7 @@
             var priority = row.find('.priority').text().replace(/\D/g,'');
 
             if (priority == "") {
-                priority = "1";
+                priority = "2";
             }
 
             row.find('.select-item-priority').val(priority);
@@ -270,7 +270,7 @@
                                 Priority:<br>
                                 <select class="select-item-priority">
                                     <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option value="2" selected>2</option>
                                     <option value="3">3</option>
                                 </select>
                             </div>
