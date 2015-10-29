@@ -23,6 +23,7 @@ class IssuesController extends Controller
     public function indexAction(Request $request)
     {
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
@@ -72,6 +73,15 @@ class IssuesController extends Controller
 				$todos[] = $todo->getTodo();
 			}
 
+			// GET LABELS AND CREATE LINKS
+
+			$labelUrls = array();
+			$labels = explode(",", $issue->getLabels());
+
+			foreach ($labels as $label) {
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+			}
+
 			$issues[] = array(
 				'id' => $issue->getId(),
 				'itemId' => $issue->getUserSpecificId(),
@@ -82,6 +92,7 @@ class IssuesController extends Controller
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
 				'labels' => $issue->getLabels(),
+				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
 				'todos' => $todosResult,
 				'todosHtml' => $helper->createTodosHtmlLinks($todos, $this->generateUrl('todos')),
 				'folder' => $issue->getFolder(),
@@ -102,6 +113,7 @@ class IssuesController extends Controller
 			'datePlanned' => '',
 			'dateDue' => '',
 			'labels' => '',
+			'labelHtml' => '',
 			'todos' => '',
 			'todosHtml' => '',
 			'folder' => '',
@@ -230,12 +242,14 @@ class IssuesController extends Controller
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
 
-		// CREATE LABELS
+		// CREATE LABELS AND GENERATE LINKS
 
+		$labelUrls = array();
 		$labelsExploded = explode(",", $labels);
 
 		foreach ($labelsExploded as $label) {
 			$labelsService->createLabel($label, $userId);
+			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
 		}
 
 		// CONNECT TODOS AND ISSUES
@@ -281,7 +295,7 @@ class IssuesController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
 		return $response;
 	}
@@ -430,6 +444,7 @@ class IssuesController extends Controller
 	public function singleIssueAction(Request $request, $id)
 	{
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
@@ -482,6 +497,15 @@ class IssuesController extends Controller
 			$todos[] = $todo->getTodo();
 		}
 
+		// GET LABELS AND CREATE LINKS
+
+		$labelUrls = array();
+		$labels = explode(",", $issuesResult->getLabels());
+
+		foreach ($labels as $label) {
+			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+		}
+
 		$issue = array(
 			'id' => $issuesResult->getId(),
 			'itemId' => $issuesResult->getUserSpecificId(),
@@ -493,6 +517,7 @@ class IssuesController extends Controller
 			'datePlanned' => $datePlanned,
 			'dateDue' => $dateDue,
 			'labels' => $issuesResult->getLabels(),
+			'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
 			'todos' => $todos,
 			'todosHtml' => $helper->createTodosHtmlLinks($todos, $this->generateUrl('todos')),
 			'folder' => $issuesResult->getFolder(),

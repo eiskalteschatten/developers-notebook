@@ -45,6 +45,27 @@ class LabelsService
         return $response;
     }
 
+    public static function createHtmlLinks($labels, $labelsUrl) {
+        $i = 0;
+        $length = count($labels);
+
+        $html = "";
+
+        foreach($labels as $label) {
+            $html .= '<a href="' . $labelsUrl[$i] . '">';
+            $html .= trim($label);
+            $html .= '</a>';
+
+            if ($i != $length - 1) {
+                $html .= ",&nbsp;";
+            }
+
+            $i++;
+        }
+
+        return $html;
+    }
+
     public function setName($name) {
         $this->name = $name;
     }
