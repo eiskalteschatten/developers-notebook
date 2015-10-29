@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Entity\Project;
 
 class LabelController extends Controller
 {
@@ -75,140 +74,134 @@ class LabelController extends Controller
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
         $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
+        $numberOfItems = $this->container->getParameter('AppBundle.notebookHomeNumberOfItems');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
 
-        $projectsResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Project')
+        $decodedName = urldecode($name);
+
+        $labelsResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Labels')
             ->findOneBy(
-                array('id' => $id, 'userId' => $userId)
+                array('name' => $decodedName, 'userId' => $userId)
             );
 
-        if (!$projectsResult) {
-            return $this->render('default/projects-single.html.twig', array(
+        if (!$labelsResult) {
+            return $this->render('default/labels-single.html.twig', array(
                 'fail' => true,
                 'currentPage' => $this->currentPage
             ));
         }
 
-        // GET PAGES FROM JOURNAL, CODE CACHE, AND NOTES
+        $em = $this->getDoctrine()->getManager();
 
-        $pagesResults = $this->getDoctrine()
-            ->getRepository('AppBundle:Pages')
-            ->findBy(
-                array('userId' => $userId, 'project' => $id),
-                array('dateModified' => 'ASC')
-            );
-
-        $pages = array();
-
-        foreach ($pagesResults as $page) {
-            $pages[] = array(
-                'id' => $page->getId(),
-                'content' => $helper->createPagePreview($page->getContent()),
-                'area' => $page->getArea(),
-                'dateModified' => $page->getDateModified()->format($dateTimeFormat)
-            );
-        }
 
         // GET BOOKMARKS
-
-        $bookmarksResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Bookmark')
-            ->findBy(
-                array('userId' => $userId, 'project' => $id),
-                array('dateModified' => 'DESC')
-            );
-
-        $bookmarks = array();
-
-        foreach ($bookmarksResult as $bookmark) {
-            $bookmarks[] = array(
-                'id' => $bookmark->getId(),
-                'name' => $bookmark->getName(),
-                'url' => $bookmark->getUrl(),
-                'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
-                'notes' => $bookmark->getNotes(),
-                'folder' => $bookmark->getFolder(),
-                'project' => $bookmark->getProject(),
-                'date' => $bookmark->getDateModified()->format($dateTimeFormat)
-            );
-        }
+//
+//        $bookmarksResult = $this->getDoctrine()
+//            ->getRepository('AppBundle:Bookmark')
+//            ->findBy(
+//                array('userId' => $userId, 'project' => $id),
+//                array('dateModified' => 'DESC')
+//            );
+//
+//        $bookmarks = array();
+//
+//        foreach ($bookmarksResult as $bookmark) {
+//            $bookmarks[] = array(
+//                'id' => $bookmark->getId(),
+//                'name' => $bookmark->getName(),
+//                'url' => $bookmark->getUrl(),
+//                'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
+//                'notes' => $bookmark->getNotes(),
+//                'folder' => $bookmark->getFolder(),
+//                'project' => $bookmark->getProject(),
+//                'date' => $bookmark->getDateModified()->format($dateTimeFormat)
+//            );
+//        }
 
 
         // GET TO DOS
 
-        $todosResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Todo')
-            ->findBy(
-                array('userId' => $userId, 'project' => $id),
-                array('dateModified' => 'DESC')
-            );
-
-        $todos = array();
-
-        foreach ($todosResult as $todo) {
-            $dateCompleted = $todo->getDateCompleted();
-            if ($dateCompleted) {
-                $dateCompleted = $dateCompleted->format($dateTimeFormat);
-            }
-
-            $datePlanned = $todo->getDatePlanned();
-            if ($datePlanned) {
-                $datePlanned = $datePlanned->format($dateFormat);
-            }
-
-            $dateDue = $todo->getDateDue();
-            if ($dateDue) {
-                $dateDue = $dateDue->format($dateFormat);
-            }
-
-            $issuesTodosResult = $this->getDoctrine()
-                ->getRepository('AppBundle:ConnectorTodosIssues')
-                ->findBy(
-                    array('userId' => $userId, 'todo' => $todo->getId()),
-                    array('dateCreated' => 'ASC')
-                );
-
-            $issuesTodos = array();
-            $issuesTodosHtml = array();
-
-            foreach ($issuesTodosResult as $issue) {
-                $issuesTodos[] = $issue->getIssue();
-
-                $issuesTodosHtml[] = array(
-                    'id' => $issue->getIssue(),
-                    'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
-                );
-            }
-
-            $todos[] = array(
-                'id' => $todo->getId(),
-				'itemId' => $todo->getUserSpecificId(),
-                'name' => $todo->getTodo(),
-                'notes' => $todo->getNotes(),
-                'isCompleted' => $todo->getIsCompleted(),
-                'dateCompleted' => $dateCompleted,
-                'datePlanned' => $datePlanned,
-                'dateDue' => $dateDue,
-                'priority' => $todo->getPriority(),
-                'folder' => $todo->getFolder(),
-                'project' => $todo->getProject(),
-                'date' => $todo->getDateModified()->format($dateTimeFormat),
-                'issues' => $issuesTodos,
-                'issuesHtml' => $helper->createIssuesHtmlLinks($issuesTodosHtml)
-            );
-        }
+//        $todosResult = $this->getDoctrine()
+//            ->getRepository('AppBundle:Todo')
+//            ->findBy(
+//                array('userId' => $userId, 'project' => $id),
+//                array('dateModified' => 'DESC')
+//            );
+//
+//        $todos = array();
+//
+//        foreach ($todosResult as $todo) {
+//            $dateCompleted = $todo->getDateCompleted();
+//            if ($dateCompleted) {
+//                $dateCompleted = $dateCompleted->format($dateTimeFormat);
+//            }
+//
+//            $datePlanned = $todo->getDatePlanned();
+//            if ($datePlanned) {
+//                $datePlanned = $datePlanned->format($dateFormat);
+//            }
+//
+//            $dateDue = $todo->getDateDue();
+//            if ($dateDue) {
+//                $dateDue = $dateDue->format($dateFormat);
+//            }
+//
+//            $issuesTodosResult = $this->getDoctrine()
+//                ->getRepository('AppBundle:ConnectorTodosIssues')
+//                ->findBy(
+//                    array('userId' => $userId, 'todo' => $todo->getId()),
+//                    array('dateCreated' => 'ASC')
+//                );
+//
+//            $issuesTodos = array();
+//            $issuesTodosHtml = array();
+//
+//            foreach ($issuesTodosResult as $issue) {
+//                $issuesTodos[] = $issue->getIssue();
+//
+//                $issuesTodosHtml[] = array(
+//                    'id' => $issue->getIssue(),
+//                    'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
+//                );
+//            }
+//
+//            $todos[] = array(
+//                'id' => $todo->getId(),
+//				'itemId' => $todo->getUserSpecificId(),
+//                'name' => $todo->getTodo(),
+//                'notes' => $todo->getNotes(),
+//                'isCompleted' => $todo->getIsCompleted(),
+//                'dateCompleted' => $dateCompleted,
+//                'datePlanned' => $datePlanned,
+//                'dateDue' => $dateDue,
+//                'priority' => $todo->getPriority(),
+//                'folder' => $todo->getFolder(),
+//                'project' => $todo->getProject(),
+//                'date' => $todo->getDateModified()->format($dateTimeFormat),
+//                'issues' => $issuesTodos,
+//                'issuesHtml' => $helper->createIssuesHtmlLinks($issuesTodosHtml)
+//            );
+//        }
 
         // GET ISSUES
 
-        $issuesResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Issue')
-            ->findBy(
-                array('userId' => $userId, 'project' => $id),
-                array('dateModified' => 'DESC')
-            );
+//        $issuesResult = $this->getDoctrine()
+//            ->getRepository('AppBundle:Issue')
+//            ->findBy(
+//                array('userId' => $userId, 'labels' => $decodedName),
+//                array('dateModified' => 'DESC')
+//            );
+
+        //SELECT * FROM issue t WHERE FIND_IN_SET ("new label here", t.labels) AND t.user_id = "1" AND t.is_completed = false ORDER BY t.date_modified
+
+        $query = $em->createQuery("SELECT t FROM AppBundle:Issue t WHERE find_in_set(:label, t.labels) = 1 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+            ->setParameter('label', $decodedName)
+            ->setParameter('userId', $userId)
+            ->setMaxResults($numberOfItems);
+        $issuesResult = $query->getResult();
 
         $issues = array();
 
@@ -260,11 +253,10 @@ class LabelController extends Controller
             );
         }
 
-        return $this->render('default/projects-single.html.twig', array(
-            'project' => $projectsResult,
-            'pages' => $pages,
-            'bookmarks' => $bookmarks,
-            'todos' => $todos,
+        return $this->render('default/labels-single.html.twig', array(
+            'label' => $labelsResult,
+            //'bookmarks' => $bookmarks,
+            //'todos' => $todos,
             'issues' => $issues,
             'currentPage' => $this->currentPage
         ));

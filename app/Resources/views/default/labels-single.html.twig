@@ -1,0 +1,116 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}
+    {% if fail is defined and fail is not empty %}
+        Labels - Developer's Notebook
+    {% else %}
+        {{ label.name }} - Labels - Developer's Notebook
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="application/javascript">
+        function goToItem(url) {
+            window.location.href = url;
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% if fail is defined and fail is not empty %}
+        <div class="content">
+            No such label exists!
+        </div>
+    {% else %}
+        <div class="content">
+            <div class="page-title">{{ label.name }}</div>
+        </div>
+        <div class="section">
+            <div class="content-even-three-columns">
+                <div class="column">
+                    <div class="column-title">To Dos</div>
+                    <div class="wrapper">
+                        <div class="full-size-table small-rows">
+                            {#{% for todo in todos %}#}
+                                {#{{ _self.todos(todo.id, todo.itemId, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}#}
+                            {#{% endfor %}#}
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="column-title">Issues</div>
+                    <div class="wrapper">
+                        <div class="full-size-table small-rows">
+                            {% for issue in issues %}
+                                {{ _self.issues(issue.id, issue.itemId, issue.name, issue.datePlanned, issue.dateDue) }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="column-title">Bookmarks</div>
+                    <div class="wrapper">
+                        <div class="full-size-table small-rows">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="clear-both"></div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+{% endblock %}
+
+
+{% macro todos(id, itemId, name, priority, datePlanned, dateDue, showType) %}
+    <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ id }}')">
+		<div>
+			<span class="item-id">#{{ itemId }}</span>
+			<span class="name">{{ name }}</span>
+		</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">To do</span>
+            {% endif %}
+            <span class="priority single-row"><b>Priority:</b> {{ priority }}</span>
+            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
+            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro bookmarks(id, name, url, croppedUrl, showType) %}
+    <div class="row" onclick="goToItem('{{ path('bookmarks') }}?selectedItem={{ id }}')">
+        <div class="name">{{ name }}</div>
+        <div class="gray-info">
+            {% if showType == "true" %}
+                <span class="type single-row bold italic">Bookmark</span>
+            {% endif %}
+            <span class="url to-empty"><a href="{{ url }}" target="_blank">{{ croppedUrl }}</a></span>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro issues(id, itemId, name, datePlanned, dateDue) %}
+    <div class="row" onclick="goToItem('{{ path('singleIssue', {"id": id}) }}')">
+		<div>
+			<span class="item-id">#{{ itemId }}</span>
+			<span class="name">{{ name }}</span>
+		</div>
+        <div class="gray-info">
+            <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
+            <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
+        </div>
+    </div>
+{% endmacro %}
