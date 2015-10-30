@@ -219,3 +219,30 @@ function autocompleteSplit(val) {
 function autocompleteExtractLast(term) {
 	return autocompleteSplit(term).pop();
 }
+
+function setAutocomplete(obj, url) {
+	$(obj).autocomplete({
+		source: function (request, response) {
+			$.getJSON(url, {
+				term: autocompleteExtractLast(request.term)
+			}, response);
+		},
+		search: function () {
+			var term = autocompleteExtractLast(this.value);
+			if (term.length < 1) {
+				return false;
+			}
+		},
+		focus: function () {
+			return false;
+		},
+		select: function (event, ui) {
+			var terms = autocompleteSplit(this.value);
+			terms.pop();
+			terms.push(ui.item.value);
+			terms.push("");
+			this.value = terms.join(", ");
+			return false;
+		}
+	});
+}

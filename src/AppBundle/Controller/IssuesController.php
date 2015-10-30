@@ -79,7 +79,9 @@ class IssuesController extends Controller
 			$labels = explode(",", $issue->getLabels());
 
 			foreach ($labels as $label) {
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+				if (!empty($label)) {
+					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+				}
 			}
 
 			$issues[] = array(
@@ -203,7 +205,7 @@ class IssuesController extends Controller
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
-		$labels = $request->request->get('labels');
+		$labels = rtrim($request->request->get('labels'), ', ');
 		$todos = rtrim($request->request->get('todos'), ', ');
 		$datePlanned = $request->request->get('datePlanned');
 		$dateDue = $request->request->get('dateDue');
@@ -248,8 +250,10 @@ class IssuesController extends Controller
 		$labelsExploded = explode(",", $labels);
 
 		foreach ($labelsExploded as $label) {
-			$labelsService->createLabel($label, $userId);
-			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+			if(!empty($label)) {
+				$labelsService->createLabel($label, $userId);
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+			}
 		}
 
 		// CONNECT TODOS AND ISSUES

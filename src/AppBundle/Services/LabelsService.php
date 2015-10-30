@@ -48,19 +48,20 @@ class LabelsService
     public static function createHtmlLinks($labels, $labelsUrl) {
         $i = 0;
         $length = count($labels);
-
         $html = "";
 
-        foreach($labels as $label) {
-            $html .= '<a href="' . $labelsUrl[$i] . '">';
-            $html .= trim($label);
-            $html .= '</a>';
+        if ($length > 0 && !empty($labels[0])) {
+            foreach ($labels as $label) {
+                $html .= '<a href="' . $labelsUrl[$i] . '">';
+                $html .= trim($label);
+                $html .= '</a>';
 
-            if ($i != $length - 1) {
-                $html .= ",&nbsp;";
+                if ($i != $length - 1) {
+                    $html .= ",&nbsp;";
+                }
+
+                $i++;
             }
-
-            $i++;
         }
 
         return $html;

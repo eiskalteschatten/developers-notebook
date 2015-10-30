@@ -22,6 +22,8 @@ AppBundle\Entity\Bookmark:
             type: text
         notes:
             type: text
+        labels:
+            type: text
         dateCreated:
             type: datetime
             column: date_created

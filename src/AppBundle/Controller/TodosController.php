@@ -23,6 +23,7 @@ class TodosController extends Controller
     public function indexAction(Request $request)
     {
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
@@ -75,6 +76,17 @@ class TodosController extends Controller
 				);
 			}
 
+			// GET LABELS AND CREATE LINKS
+
+			$labelUrls = array();
+			$labels = explode(",", $todo->getLabels());
+
+			foreach ($labels as $label) {
+				if (!empty($label)) {
+					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+				}
+			}
+
 			$todos[] = array(
 				'id' => $todo->getId(),
 				'itemId' => $todo->getUserSpecificId(),
@@ -84,6 +96,8 @@ class TodosController extends Controller
 				'dateCompleted' => $dateCompleted,
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
+				'labels' => $todo->getLabels(),
+				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),
@@ -104,6 +118,8 @@ class TodosController extends Controller
 			'dateCompleted' => '',
 			'datePlanned' => '',
 			'dateDue' => '',
+			'labels' => '',
+			'labelHtml' => '',
 			'priority' => '',
 			'folder' => '',
 			'project' => '',
@@ -166,6 +182,7 @@ class TodosController extends Controller
 		$todo->setDateModified($date);
 		$todo->setTodo("");
 		$todo->setNotes("");
+		$todo->setLabels("");
 		$todo->setIsCompleted(false);
 		$todo->setPriority(1);
 		$todo->setProject($project);
@@ -188,12 +205,14 @@ class TodosController extends Controller
 	public function saveTodoAction(Request $request)
 	{
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$dateFormat = $this->container->getParameter('AppBundle.dateFormat');
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$priority = $request->request->get('priority');
+		$labels = rtrim($request->request->get('labels'), ', ');
 		$issuesGet = rtrim($request->request->get('issues'), ', ');
 		$datePlanned = $request->request->get('datePlanned');
 		$dateDue = $request->request->get('dateDue');
@@ -224,6 +243,7 @@ class TodosController extends Controller
 
 		$todo->setDateModified($date);
 		$todo->setTodo($name);
+		$todo->setLabels($labels);
 		$todo->setPriority($priority);
 		$todo->setDatePlanned($datePlanned);
 		$todo->setDateDue($dateDue);
@@ -232,6 +252,18 @@ class TodosController extends Controller
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 		$userId = $user->getId();
 
+		// CREATE LABELS AND GENERATE LINKS
+
+		$labelUrls = array();
+		$labelsExploded = explode(",", $labels);
+
+		foreach ($labelsExploded as $label) {
+			if(!empty($label)) {
+				$labelsService->createLabel($label, $userId);
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+			}
+		}
+
 		$removeConnectors = $em->getRepository('AppBundle:ConnectorTodosIssues')->findBy(
 			array('todo' => $todo->getId())
 		);
@@ -239,6 +271,8 @@ class TodosController extends Controller
 		foreach ($removeConnectors as $removeConnector) {
 			$em->remove($removeConnector);
 		}
+
+		// CONNECT TODOS AND ISSUES
 
 		$issues = str_replace(' ', '', $issuesGet);
 		$issuesArray = explode(",", $issues);
@@ -279,7 +313,7 @@ class TodosController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'labels' => $todo->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}

@@ -45,6 +45,11 @@ class Bookmark
     private $notes;
 
     /**
+     * @var string
+     */
+    private $labels;
+
+    /**
      * @var \DateTime
      */
     private $dateModified;
@@ -201,6 +206,29 @@ class Bookmark
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Set labels
+     *
+     * @param string $labels
+     * @return Bookmark
+     */
+    public function setLabels($labels)
+    {
+        $this->labels = $labels;
+
+        return $this;
+    }
+
+    /**
+     * Get labels
+     *
+     * @return string
+     */
+    public function getLabels()
+    {
+        return $this->labels;
     }
 
     /**

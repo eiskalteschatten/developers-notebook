@@ -12,6 +12,8 @@
         var removeItemUrl = "{{ path('todosRemove') }}";
         var movePageToFolderUrl = "{{ path('todosMovePageToFolder') }}";
         var removePageFromFoldersUrl = "{{ path('todosRemovePageFromFolders') }}";
+        var issuesGetListOfIssuesUrl = "{{ path('issuesGetListOfIssues') }}";
+        var labelsGetListOfLabelsUrl = "{{ path('labelsGetListOfLabels') }}";
         var movePageToProjectUrl = "{{ path('todosMovePageToProject') }}";
 
         $(document).ready(function() {
@@ -60,6 +62,7 @@
             var toSend = {
                 id: selected.attr('data-id'),
                 name: selected.find('.text-item-name').val(),
+                labels: selected.find('.text-item-labels').val(),
                 priority: selected.find('.select-item-priority').val(),
                 issues: selected.find('.text-item-issues').val(),
                 datePlanned: selected.find('.text-item-dateplanned').val(),
@@ -71,6 +74,7 @@
                 var info = selected.find('.info');
                 info.find('.item-id').text("#" + data.itemId);
                 info.find('.name').text(data.name);
+                info.find('.labels').html("<b>Labels:</b> " + data.labelHtml);
                 info.find('.issues').html("<b>Issues:</b> " + data.issuesHtml);
                 info.find('.priority').html("<b>Priority:</b> " + data.priority);
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
@@ -101,7 +105,8 @@
 
             selectItem(row);
 
-            setAutocomplete(row.find('.text-item-issues'));
+            setAutocomplete(row.find('.text-item-issues'), issuesGetListOfIssuesUrl);
+            setAutocomplete(row.find('.text-item-labels'), labelsGetListOfLabelsUrl);
         }
 
         function toggleCompletedTodos(button) {
@@ -123,53 +128,26 @@
                 isComplete: isComplete
             }
 
-            $.post("{{ path('todosIsComplete') }}", toSend, function(data) {
+            $.post("{{ path('todosIsComplete') }}", toSend, function (data) {
                 var row = $(obj).parents('.row');
 
                 if (data.isCompleted) {
                     row.addClass('is-completed');
                     row.removeClass('selected');
                     row.find('.date-completed').text("Completed: " + data.date);
-					
-					if (!$('#toggleIsCompleted').hasClass('selected')) {
-		                row.hide();	                
-	                }
+
+                    if (!$('#toggleIsCompleted').hasClass('selected')) {
+                        row.hide();
+                    }
                 }
                 else {
                     row.removeClass('is-completed');
                     row.find('.date-completed').remove();
-	                row.show();
+                    row.show();
                 }
-            }).fail(function() {
+            }).fail(function () {
                 showMessage('error', generalErrorMessage);
                 closeGeneralAjaxLoader();
-            });
-        }
-
-        function setAutocomplete(obj) {
-            $(obj).autocomplete({
-                source: function (request, response) {
-                    $.getJSON('{{ path('issuesGetListOfIssues') }}', {
-                        term: autocompleteExtractLast(request.term)
-                    }, response);
-                },
-                search: function () {
-                    var term = autocompleteExtractLast(this.value);
-                    if (term.length < 1) {
-                        return false;
-                    }
-                },
-                focus: function () {
-                    return false;
-                },
-                select: function (event, ui) {
-                    var terms = autocompleteSplit(this.value);
-                    terms.pop();
-                    terms.push(ui.item.value);
-                    terms.push("");
-                    this.value = terms.join(", ");
-                    return false;
-                }
             });
         }
     </script>
@@ -247,15 +225,17 @@
                                     <span class="item-id to-empty">#{{ todo.itemId }}</span>
                                     <span class="name to-empty">{{ todo.name }}</span>
                                 </div>
-                                <div class="gray-info no-margin">
+                                <div class="gray-info">
                                     {% if todo.isCompleted is not empty %}
                                         <span class="date-completed to-empty single-row"><b>Completed:</b> {{ todo.dateCompleted }}</span>
                                     {% endif %}
-
-                                    <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
                                     <span class="priority to-empty single-row"><b>Priority:</b> {{ todo.priority }}</span>
                                     <span class="date-planned to-empty single-row"><b>Date Planned:</b> {{ todo.datePlanned }}</span>
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ todo.dateDue }}</span>
+                                </div>
+                                <div class="gray-info">
+                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ todo.labelHtml | raw }}</span>
+                                    <span class="issues to-empty single-row"><b>Issues:</b> {{ todo.issuesHtml | raw }}</span>
                                 </div>
                             </div>
                             <div class="clear-both"></div>
@@ -276,6 +256,11 @@
                             </div>
 
                             <div class="clear-both"></div>
+
+                            <div class="left item-labels" style="margin-top: 20px;">
+                                Labels:<br>
+                                <input type="text" class="text-item-labels" value="{{ todo.labels }}" placeholder="Labels, comma seperated">
+                            </div>
 
                             <div class="left item-issues" style="margin-top: 20px;">
                                 Connected issues:<br>
@@ -331,17 +316,13 @@
             margin-left: 10px;
         }
 
-        .text-item-issues  {
-            width: calc(100% - 10px) !important;
-        }
-
-        .item-dateplanned, .item-datedue {
+        .item-dateplanned, .item-datedue, .item-labels, .item-issues {
             width: calc(50% - 30px) !important;
             float: left;
             margin-left: 10px;
         }
 
-        .text-item-dateplanned, .text-item-datedue  {
+        .text-item-dateplanned, .text-item-datedue, .text-item-labels, .text-item-issues {
             width: calc(100% - 10px) !important;
         }
 

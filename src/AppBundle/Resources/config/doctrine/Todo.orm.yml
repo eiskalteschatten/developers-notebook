@@ -46,4 +46,6 @@ AppBundle\Entity\Todo:
             type: integer
         project:
             type: integer
+        labels:
+            type: text
     lifecycleCallbacks: {  }

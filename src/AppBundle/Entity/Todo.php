@@ -79,6 +79,11 @@ class Todo
      */
     private $project;
 
+    /**
+     * @var string
+     */
+    private $labels;
+
 
     /**
      * Get id
@@ -387,5 +392,28 @@ class Todo
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * Set labels
+     *
+     * @param string $labels
+     * @return Todo
+     */
+    public function setLabels($labels)
+    {
+        $this->labels = $labels;
+
+        return $this;
+    }
+
+    /**
+     * Get labels
+     *
+     * @return string
+     */
+    public function getLabels()
+    {
+        return $this->labels;
     }
 }

@@ -155,76 +155,68 @@ class LabelController extends Controller
 
         // GET TO DOS
 
-//        $todosResult = $this->getDoctrine()
-//            ->getRepository('AppBundle:Todo')
-//            ->findBy(
-//                array('userId' => $userId, 'project' => $id),
-//                array('dateModified' => 'DESC')
-//            );
-//
-//        $todos = array();
-//
-//        foreach ($todosResult as $todo) {
-//            $dateCompleted = $todo->getDateCompleted();
-//            if ($dateCompleted) {
-//                $dateCompleted = $dateCompleted->format($dateTimeFormat);
-//            }
-//
-//            $datePlanned = $todo->getDatePlanned();
-//            if ($datePlanned) {
-//                $datePlanned = $datePlanned->format($dateFormat);
-//            }
-//
-//            $dateDue = $todo->getDateDue();
-//            if ($dateDue) {
-//                $dateDue = $dateDue->format($dateFormat);
-//            }
-//
-//            $issuesTodosResult = $this->getDoctrine()
-//                ->getRepository('AppBundle:ConnectorTodosIssues')
-//                ->findBy(
-//                    array('userId' => $userId, 'todo' => $todo->getId()),
-//                    array('dateCreated' => 'ASC')
-//                );
-//
-//            $issuesTodos = array();
-//            $issuesTodosHtml = array();
-//
-//            foreach ($issuesTodosResult as $issue) {
-//                $issuesTodos[] = $issue->getIssue();
-//
-//                $issuesTodosHtml[] = array(
-//                    'id' => $issue->getIssue(),
-//                    'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
-//                );
-//            }
-//
-//            $todos[] = array(
-//                'id' => $todo->getId(),
-//				'itemId' => $todo->getUserSpecificId(),
-//                'name' => $todo->getTodo(),
-//                'notes' => $todo->getNotes(),
-//                'isCompleted' => $todo->getIsCompleted(),
-//                'dateCompleted' => $dateCompleted,
-//                'datePlanned' => $datePlanned,
-//                'dateDue' => $dateDue,
-//                'priority' => $todo->getPriority(),
-//                'folder' => $todo->getFolder(),
-//                'project' => $todo->getProject(),
-//                'date' => $todo->getDateModified()->format($dateTimeFormat),
-//                'issues' => $issuesTodos,
-//                'issuesHtml' => $helper->createIssuesHtmlLinks($issuesTodosHtml)
-//            );
-//        }
+        $query = $em->createQuery("SELECT t FROM AppBundle:Todo t WHERE find_in_set(:label, replace(t.labels, ', ', ',')) != 0 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+            ->setParameter('label', $decodedName)
+            ->setParameter('userId', $userId)
+            ->setMaxResults($numberOfItems);
+        $todosResult = $query->getResult();
+
+        $todos = array();
+
+        foreach ($todosResult as $todo) {
+            $dateCompleted = $todo->getDateCompleted();
+            if ($dateCompleted) {
+                $dateCompleted = $dateCompleted->format($dateTimeFormat);
+            }
+
+            $datePlanned = $todo->getDatePlanned();
+            if ($datePlanned) {
+                $datePlanned = $datePlanned->format($dateFormat);
+            }
+
+            $dateDue = $todo->getDateDue();
+            if ($dateDue) {
+                $dateDue = $dateDue->format($dateFormat);
+            }
+
+            $issuesTodosResult = $this->getDoctrine()
+                ->getRepository('AppBundle:ConnectorTodosIssues')
+                ->findBy(
+                    array('userId' => $userId, 'todo' => $todo->getId()),
+                    array('dateCreated' => 'ASC')
+                );
+
+            $issuesTodos = array();
+            $issuesTodosHtml = array();
+
+            foreach ($issuesTodosResult as $issue) {
+                $issuesTodos[] = $issue->getIssue();
+
+                $issuesTodosHtml[] = array(
+                    'id' => $issue->getIssue(),
+                    'url' => $this->generateUrl("singleIssue", array('id' => $issue->getIssue()))
+                );
+            }
+
+            $todos[] = array(
+                'id' => $todo->getId(),
+				'itemId' => $todo->getUserSpecificId(),
+                'name' => $todo->getTodo(),
+                'notes' => $todo->getNotes(),
+                'isCompleted' => $todo->getIsCompleted(),
+                'dateCompleted' => $dateCompleted,
+                'datePlanned' => $datePlanned,
+                'dateDue' => $dateDue,
+                'priority' => $todo->getPriority(),
+                'folder' => $todo->getFolder(),
+                'project' => $todo->getProject(),
+                'date' => $todo->getDateModified()->format($dateTimeFormat),
+                'issues' => $issuesTodos,
+                'issuesHtml' => $helper->createIssuesHtmlLinks($issuesTodosHtml)
+            );
+        }
 
         // GET ISSUES
-
-//        $issuesResult = $this->getDoctrine()
-//            ->getRepository('AppBundle:Issue')
-//            ->findBy(
-//                array('userId' => $userId, 'labels' => $decodedName),
-//                array('dateModified' => 'DESC')
-//            );
 
         //SELECT * FROM issue t WHERE FIND_IN_SET("another label test", replace(t.labels, ', ', ',')) AND t.user_id = "1" AND t.is_completed = false ORDER BY t.date_modified
 
@@ -287,7 +279,7 @@ class LabelController extends Controller
         return $this->render('default/labels-single.html.twig', array(
             'label' => $labelsResult,
             //'bookmarks' => $bookmarks,
-            //'todos' => $todos,
+            'todos' => $todos,
             'issues' => $issues,
             'currentPage' => $this->currentPage
         ));

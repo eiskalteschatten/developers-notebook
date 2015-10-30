@@ -34,9 +34,9 @@
                     <div class="column-title">To Dos</div>
                     <div class="wrapper">
                         <div class="full-size-table small-rows">
-                            {#{% for todo in todos %}#}
-                                {#{{ _self.todos(todo.id, todo.itemId, todo.name, todo.priority, todo.datePlanned, todo.dateDue, "false") }}#}
-                            {#{% endfor %}#}
+                            {% for todo in todos %}
+                                {{ _self.todos(todo.id, todo.itemId, todo.name, todo.priority, todo.datePlanned, todo.dateDue) }}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -71,16 +71,13 @@
 {% endblock %}
 
 
-{% macro todos(id, itemId, name, priority, datePlanned, dateDue, showType) %}
+{% macro todos(id, itemId, name, priority, datePlanned, dateDue) %}
     <div class="row" onclick="goToItem('{{ path('todos') }}?selectedItem={{ id }}')">
 		<div>
 			<span class="item-id">#{{ itemId }}</span>
 			<span class="name">{{ name }}</span>
 		</div>
         <div class="gray-info">
-            {% if showType == "true" %}
-                <span class="type single-row bold italic">To do</span>
-            {% endif %}
             <span class="priority single-row"><b>Priority:</b> {{ priority }}</span>
             <span class="date-planned single-row"><b>Date Planned:</b> {{ datePlanned }}</span>
             <span class="date-due single-row"><b>Due:</b> {{ dateDue }}</span>
@@ -89,13 +86,10 @@
 {% endmacro %}
 
 
-{% macro bookmarks(id, name, url, croppedUrl, showType) %}
+{% macro bookmarks(id, name, url, croppedUrl) %}
     <div class="row" onclick="goToItem('{{ path('bookmarks') }}?selectedItem={{ id }}')">
         <div class="name">{{ name }}</div>
         <div class="gray-info">
-            {% if showType == "true" %}
-                <span class="type single-row bold italic">Bookmark</span>
-            {% endif %}
             <span class="url to-empty"><a href="{{ url }}" target="_blank">{{ croppedUrl }}</a></span>
         </div>
     </div>
