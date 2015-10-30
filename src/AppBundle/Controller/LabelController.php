@@ -195,9 +195,9 @@ class LabelController extends Controller
 //                array('dateModified' => 'DESC')
 //            );
 
-        //SELECT * FROM issue t WHERE FIND_IN_SET ("new label here", t.labels) AND t.user_id = "1" AND t.is_completed = false ORDER BY t.date_modified
+        //SELECT * FROM issue t WHERE FIND_IN_SET("another label test", replace(t.labels, ', ', ',')) AND t.user_id = "1" AND t.is_completed = false ORDER BY t.date_modified
 
-        $query = $em->createQuery("SELECT t FROM AppBundle:Issue t WHERE find_in_set(:label, t.labels) = 1 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
+        $query = $em->createQuery("SELECT t FROM AppBundle:Issue t WHERE find_in_set(:label, replace(t.labels, ', ', ',')) != 0 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
             ->setParameter('label', $decodedName)
             ->setParameter('userId', $userId)
             ->setMaxResults($numberOfItems);
