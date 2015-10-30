@@ -79,13 +79,19 @@ class TodosController extends Controller
 			// GET LABELS AND CREATE LINKS
 
 			$labelUrls = array();
-			$labels = explode(",", $todo->getLabels());
+			$labels = explode(", ", $todo->getLabels());
 
 			foreach ($labels as $label) {
 				if (!empty($label)) {
 					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
 				}
 			}
+
+			$labelsResult = $this->getDoctrine()
+				->getRepository('AppBundle:Labels')
+				->findBy(
+					array('userId' => $userId, 'name' => $labels)
+				);
 
 			$todos[] = array(
 				'id' => $todo->getId(),
@@ -98,6 +104,7 @@ class TodosController extends Controller
 				'dateDue' => $dateDue,
 				'labels' => $todo->getLabels(),
 				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
+				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),
@@ -120,6 +127,7 @@ class TodosController extends Controller
 			'dateDue' => '',
 			'labels' => '',
 			'labelHtml' => '',
+			'labelColorHtml' => '',
 			'priority' => '',
 			'folder' => '',
 			'project' => '',
@@ -255,7 +263,7 @@ class TodosController extends Controller
 		// CREATE LABELS AND GENERATE LINKS
 
 		$labelUrls = array();
-		$labelsExploded = explode(",", $labels);
+		$labelsExploded = explode(", ", $labels);
 
 		foreach ($labelsExploded as $label) {
 			if(!empty($label)) {
@@ -264,6 +272,14 @@ class TodosController extends Controller
 			}
 		}
 
+		$labelsResult = $this->getDoctrine()
+			->getRepository('AppBundle:Labels')
+			->findBy(
+				array('userId' => $userId, 'name' => $labelsExploded)
+			);
+
+		// CONNECT TODOS AND ISSUES
+
 		$removeConnectors = $em->getRepository('AppBundle:ConnectorTodosIssues')->findBy(
 			array('todo' => $todo->getId())
 		);
@@ -271,8 +287,6 @@ class TodosController extends Controller
 		foreach ($removeConnectors as $removeConnector) {
 			$em->remove($removeConnector);
 		}
-
-		// CONNECT TODOS AND ISSUES
 
 		$issues = str_replace(' ', '', $issuesGet);
 		$issuesArray = explode(",", $issues);
@@ -313,7 +327,7 @@ class TodosController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'labels' => $todo->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'labels' => $todo->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}

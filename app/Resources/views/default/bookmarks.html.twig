@@ -58,7 +58,7 @@
                 info.find('.name').text(data.name);
                 info.find('.url').find('a').attr('href', data.url);
                 info.find('.url').find('a').text(data.croppedUrl);
-                info.find('.labels').html("<b>Labels:</b> " + data.labelHtml);
+                info.find('.labels').html("<b>Labels:</b> " + data.labelColorHtml);
                 
  		        spinner.stop();
 
@@ -140,7 +140,7 @@
                                 <span class="url gray-info to-empty"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
                             </div>
                             <div class="gray-info">
-                                <span class="labels to-empty single-row"><b>Labels:</b> {{ bookmark.labelHtml | raw }}</span>
+                                <span class="labels to-empty single-row"><b>Labels:</b> {{ bookmark.labelColorHtml | raw }}</span>
                             </div>
                             <div class="clear-both"></div>
                         </div>

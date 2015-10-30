@@ -44,13 +44,19 @@ class BookmarkController extends Controller
 			// GET LABELS AND CREATE LINKS
 
 			$labelUrls = array();
-			$labels = explode(",", $bookmark->getLabels());
+			$labels = explode(", ", $bookmark->getLabels());
 
 			foreach ($labels as $label) {
 				if (!empty($label)) {
 					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
 				}
 			}
+
+			$labelsResult = $this->getDoctrine()
+				->getRepository('AppBundle:Labels')
+				->findBy(
+					array('userId' => $userId, 'name' => $labels)
+				);
 
 			$bookmarks[] = array(
 				'id' => $bookmark->getId(),
@@ -60,6 +66,7 @@ class BookmarkController extends Controller
 				'notes' => $bookmark->getNotes(),
 				'labels' => $bookmark->getLabels(),
 				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
+				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
 				'folder' => $bookmark->getFolder(),
 				'project' => $bookmark->getProject(),
 				'date' => $bookmark->getDateModified()->format($dateTimeFormat)
@@ -76,6 +83,7 @@ class BookmarkController extends Controller
 			'notes' => '',
 			'labels' => '',
 			'labelHtml' => '',
+			'labelColorHtml' => '',
 			'folder' => '',
 			'project' => '',
 			'date' => ''
@@ -172,7 +180,7 @@ class BookmarkController extends Controller
 		// CREATE LABELS AND GENERATE LINKS
 
 		$labelUrls = array();
-		$labelsExploded = explode(",", $labels);
+		$labelsExploded = explode(", ", $labels);
 
 		foreach ($labelsExploded as $label) {
 			if(!empty($label)) {
@@ -181,7 +189,13 @@ class BookmarkController extends Controller
 			}
 		}
 
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls)));
+		$labelsResult = $this->getDoctrine()
+			->getRepository('AppBundle:Labels')
+			->findBy(
+				array('userId' => $userId, 'name' => $labelsExploded)
+			);
+
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls)));
 
 		return $response;
 	}
