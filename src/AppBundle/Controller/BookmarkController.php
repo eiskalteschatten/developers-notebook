@@ -22,6 +22,7 @@ class BookmarkController extends Controller
     public function indexAction(Request $request)
     {
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
 
@@ -40,12 +41,25 @@ class BookmarkController extends Controller
 		$bookmarks = array();
 		
 		foreach ($bookmarksResult as $bookmark) {
+			// GET LABELS AND CREATE LINKS
+
+			$labelUrls = array();
+			$labels = explode(",", $bookmark->getLabels());
+
+			foreach ($labels as $label) {
+				if (!empty($label)) {
+					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+				}
+			}
+
 			$bookmarks[] = array(
 				'id' => $bookmark->getId(),
 				'name' => $bookmark->getName(),
 				'url' => $bookmark->getUrl(),
 				'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
 				'notes' => $bookmark->getNotes(),
+				'labels' => $bookmark->getLabels(),
+				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
 				'folder' => $bookmark->getFolder(),
 				'project' => $bookmark->getProject(),
 				'date' => $bookmark->getDateModified()->format($dateTimeFormat)
@@ -60,6 +74,8 @@ class BookmarkController extends Controller
 			'url' => '',
 			'croppedUrl' => '',
 			'notes' => '',
+			'labels' => '',
+			'labelHtml' => '',
 			'folder' => '',
 			'project' => '',
 			'date' => ''
@@ -104,6 +120,7 @@ class BookmarkController extends Controller
 		$bookmark->setName("");
 		$bookmark->setUrl("");
 		$bookmark->setNotes("");
+		$bookmark->setLabels("");
 		$bookmark->setProject($project);
 		$bookmark->setFolder($folder);
 
@@ -124,11 +141,13 @@ class BookmarkController extends Controller
 	public function saveBookmarkAction(Request $request)
 	{
 		$helper = $this->get('app.services.helper');
+		$labelsService = $this->get('app.services.labels');
 
 		$id = $request->request->get('id');
 		$name = $request->request->get('name');
 		$url = $request->request->get('url');
 		$notes = $request->request->get('notes');
+		$labels = rtrim($request->request->get('labels'), ', ');
 
 		$date = new \DateTime("now");
 
@@ -143,10 +162,26 @@ class BookmarkController extends Controller
 		$bookmark->setName($name);
 		$bookmark->setUrl($url);
 		$bookmark->setNotes($notes);
+		$bookmark->setLabels($labels);
 
 		$em->flush();
 
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes()));
+		$user = $this->get('security.token_storage')->getToken()->getUser();
+		$userId = $user->getId();
+
+		// CREATE LABELS AND GENERATE LINKS
+
+		$labelUrls = array();
+		$labelsExploded = explode(",", $labels);
+
+		foreach ($labelsExploded as $label) {
+			if(!empty($label)) {
+				$labelsService->createLabel($label, $userId);
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
+			}
+		}
+
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls)));
 
 		return $response;
 	}

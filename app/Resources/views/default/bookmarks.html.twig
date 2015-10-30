@@ -13,6 +13,7 @@
         var movePageToFolderUrl = "{{ path('bookmarksMovePageToFolder') }}";
         var removePageFromFoldersUrl = "{{ path('bookmarksRemovePageFromFolders') }}";
         var movePageToProjectUrl = "{{ path('bookmarksMovePageToProject') }}";
+        var labelsGetListOfLabelsUrl = "{{ path('labelsGetListOfLabels') }}";
 
         function createCallback(data) {
             var div = $('.row:first').clone();
@@ -47,7 +48,8 @@
                 id: selected.attr('data-id'),
                 name: selected.find('.text-item-name').val(),
                 url: selected.find('.text-item-url').val(),
-                notes: selected.find('.text-item-note').val()
+                labels: selected.find('.text-item-labels').val(),
+                notes: selected.find('.text-item-note').val(),
             }
 
             $.post(saveItemUrl, toSend, function(data) {
@@ -56,6 +58,7 @@
                 info.find('.name').text(data.name);
                 info.find('.url').find('a').attr('href', data.url);
                 info.find('.url').find('a').text(data.croppedUrl);
+                info.find('.labels').html("<b>Labels:</b> " + data.labelHtml);
                 
  		        spinner.stop();
 
@@ -73,6 +76,8 @@
             row.addClass('edit-mode');
 
             selectItem(row);
+
+            setAutocomplete(row.find('.text-item-labels'), labelsGetListOfLabelsUrl);
         }
     </script>
     <script type="text/javascript" src="{{ asset('resources/js/folders.js') }}"></script>
@@ -130,8 +135,13 @@
                     <div class="row{{ toBeCloned }}" data-id="{{ bookmark.id }}" data-folder="{{ bookmark.folder }}" data-project="{{ bookmark.project }}" onclick="selectItem(this)">
                         <div class="info">
                             <span class="edit-button"><a href="#!" onclick="openEdit(this)">Edit</a></span>
-                            <span class="name to-empty">{{ bookmark.name }}</span>
-                            <span class="url gray-info to-empty"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
+                            <div>
+                                <span class="name to-empty">{{ bookmark.name }}</span>
+                                <span class="url gray-info to-empty"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.croppedUrl }}</a></span>
+                            </div>
+                            <div class="gray-info">
+                                <span class="labels to-empty single-row"><b>Labels:</b> {{ bookmark.labelHtml | raw }}</span>
+                            </div>
                         </div>
                         <div class="edit">
                             <div class="left item-name">
@@ -142,6 +152,13 @@
                             <div class="left item-url">
                                 URL:<br>
                                 <input type="text" class="text-item-url" value="{{ bookmark.url }}" placeholder="Bookmark URL">
+                            </div>
+
+                            <div class="clear-both"></div>
+
+                            <div class="left item-labels" style="margin-top: 20px;">
+                                Labels:<br>
+                                <input type="text" class="text-item-labels" value="{{ bookmark.labels }}" placeholder="Labels, comma seperated">
                             </div>
 
                             <div class="clear-both"></div>
@@ -168,7 +185,12 @@
             margin-left: 10px;
         }
 
-        .text-item-name, .text-item-url  {
+        .item-labels {
+            width: calc(100% - 50px);
+            margin-left: 10px;
+        }
+
+        .text-item-name, .text-item-url, .text-item-labels {
             width: calc(100% - 10px) !important;
         }
 

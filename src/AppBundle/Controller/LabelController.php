@@ -105,7 +105,6 @@ class LabelController extends Controller
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
         $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
-        $numberOfItems = $this->container->getParameter('AppBundle.notebookHomeNumberOfItems');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
@@ -129,36 +128,33 @@ class LabelController extends Controller
 
 
         // GET BOOKMARKS
-//
-//        $bookmarksResult = $this->getDoctrine()
-//            ->getRepository('AppBundle:Bookmark')
-//            ->findBy(
-//                array('userId' => $userId, 'project' => $id),
-//                array('dateModified' => 'DESC')
-//            );
-//
-//        $bookmarks = array();
-//
-//        foreach ($bookmarksResult as $bookmark) {
-//            $bookmarks[] = array(
-//                'id' => $bookmark->getId(),
-//                'name' => $bookmark->getName(),
-//                'url' => $bookmark->getUrl(),
-//                'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
-//                'notes' => $bookmark->getNotes(),
-//                'folder' => $bookmark->getFolder(),
-//                'project' => $bookmark->getProject(),
-//                'date' => $bookmark->getDateModified()->format($dateTimeFormat)
-//            );
-//        }
+
+        $query = $em->createQuery("SELECT t FROM AppBundle:Bookmark t WHERE find_in_set(:label, replace(t.labels, ', ', ',')) != 0 AND t.userId = :userId ORDER BY t.dateModified")
+            ->setParameter('label', $decodedName)
+            ->setParameter('userId', $userId);
+        $bookmarksResult = $query->getResult();
+
+        $bookmarks = array();
+
+        foreach ($bookmarksResult as $bookmark) {
+            $bookmarks[] = array(
+                'id' => $bookmark->getId(),
+                'name' => $bookmark->getName(),
+                'url' => $bookmark->getUrl(),
+                'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
+                'notes' => $bookmark->getNotes(),
+                'folder' => $bookmark->getFolder(),
+                'project' => $bookmark->getProject(),
+                'date' => $bookmark->getDateModified()->format($dateTimeFormat)
+            );
+        }
 
 
         // GET TO DOS
 
         $query = $em->createQuery("SELECT t FROM AppBundle:Todo t WHERE find_in_set(:label, replace(t.labels, ', ', ',')) != 0 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
             ->setParameter('label', $decodedName)
-            ->setParameter('userId', $userId)
-            ->setMaxResults($numberOfItems);
+            ->setParameter('userId', $userId);
         $todosResult = $query->getResult();
 
         $todos = array();
@@ -222,8 +218,7 @@ class LabelController extends Controller
 
         $query = $em->createQuery("SELECT t FROM AppBundle:Issue t WHERE find_in_set(:label, replace(t.labels, ', ', ',')) != 0 AND t.userId = :userId AND t.isCompleted = false ORDER BY t.dateModified")
             ->setParameter('label', $decodedName)
-            ->setParameter('userId', $userId)
-            ->setMaxResults($numberOfItems);
+            ->setParameter('userId', $userId);
         $issuesResult = $query->getResult();
 
         $issues = array();
@@ -278,7 +273,7 @@ class LabelController extends Controller
 
         return $this->render('default/labels-single.html.twig', array(
             'label' => $labelsResult,
-            //'bookmarks' => $bookmarks,
+            'bookmarks' => $bookmarks,
             'todos' => $todos,
             'issues' => $issues,
             'currentPage' => $this->currentPage

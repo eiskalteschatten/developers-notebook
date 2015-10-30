@@ -54,7 +54,9 @@
                     <div class="column-title">Bookmarks</div>
                     <div class="wrapper">
                         <div class="full-size-table small-rows">
-
+                            {% for bookmark in bookmarks %}
+                                {{ _self.bookmarks(bookmark.id, bookmark.name, bookmark.url, bookmark.croppedUrl) }}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
