@@ -72,6 +72,7 @@ class ProjectController extends Controller
     public function singleProjectAction(Request $request, $id)
     {
         $helper = $this->get('app.services.helper');
+        $labelsService = $this->get('app.services.labels');
 
         $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
         $dateFormat = $this->container->getParameter('AppBundle.dateFormat');
@@ -124,12 +125,30 @@ class ProjectController extends Controller
         $bookmarks = array();
 
         foreach ($bookmarksResult as $bookmark) {
+            // GET LABELS AND CREATE LINKS
+
+            $labelUrls = array();
+            $labels = explode(", ", $bookmark->getLabels());
+
+            $labelsResult = $this->getDoctrine()
+                ->getRepository('AppBundle:Labels')
+                ->findBy(
+                    array('userId' => $userId, 'name' => $labels)
+                );
+
+            foreach ($labelsResult as $label) {
+                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+            }
+
             $bookmarks[] = array(
                 'id' => $bookmark->getId(),
                 'name' => $bookmark->getName(),
                 'url' => $bookmark->getUrl(),
                 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
                 'notes' => $bookmark->getNotes(),
+                'labels' => $bookmark->getLabels(),
+                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
                 'folder' => $bookmark->getFolder(),
                 'project' => $bookmark->getProject(),
                 'date' => $bookmark->getDateModified()->format($dateTimeFormat)
@@ -183,6 +202,21 @@ class ProjectController extends Controller
                 );
             }
 
+            // GET LABELS AND CREATE LINKS
+
+            $labelUrls = array();
+            $labels = explode(", ", $todo->getLabels());
+
+            $labelsResult = $this->getDoctrine()
+                ->getRepository('AppBundle:Labels')
+                ->findBy(
+                    array('userId' => $userId, 'name' => $labels)
+                );
+
+            foreach ($labelsResult as $label) {
+                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+            }
+
             $todos[] = array(
                 'id' => $todo->getId(),
 				'itemId' => $todo->getUserSpecificId(),
@@ -192,6 +226,9 @@ class ProjectController extends Controller
                 'dateCompleted' => $dateCompleted,
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
+                'labels' => $todo->getLabels(),
+                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
                 'priority' => $todo->getPriority(),
                 'folder' => $todo->getFolder(),
                 'project' => $todo->getProject(),
@@ -243,6 +280,21 @@ class ProjectController extends Controller
                 $issuesTodos[] = $todo->getTodo();
             }
 
+            // GET LABELS AND CREATE LINKS
+
+            $labelUrls = array();
+            $labels = explode(", ", $issue->getLabels());
+
+            $labelsResult = $this->getDoctrine()
+                ->getRepository('AppBundle:Labels')
+                ->findBy(
+                    array('userId' => $userId, 'name' => $labels)
+                );
+
+            foreach ($labelsResult as $label) {
+                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+            }
+
             $issues[] = array(
                 'id' => $issue->getId(),
                 'itemId' => $issue->getUserSpecificId(),
@@ -253,6 +305,8 @@ class ProjectController extends Controller
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
                 'labels' => $issue->getLabels(),
+                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
                 'todos' => $helper->createTodosHtmlLinks($issuesTodos, $this->generateUrl('todos')),
                 'folder' => $issue->getFolder(),
                 'project' => $issue->getProject(),
