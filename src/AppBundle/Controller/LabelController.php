@@ -65,6 +65,37 @@ class LabelController extends Controller
         ));
     }
 
+
+    /**
+     * @Route("/notebook/labels/getListOfLabels/", name="labelsGetListOfLabels")
+     * @Method("GET")
+     */
+    public function getListOfLabelsAction(Request $request)
+    {
+        $term = $request->query->get('term');
+        $searchTerm = "%" . $term . "%";
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = $user->getId();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery("SELECT t.name FROM AppBundle:Labels t WHERE t.name LIKE :searchTerm AND t.userId = :userId AND t.isCompleted = false")->setParameter('searchTerm', $searchTerm)->setParameter('userId', $userId);
+        $labelsResult = $query->getResult();
+
+        $labels = array();
+
+        foreach ($labelsResult as $label) {
+            $labels[] = array(
+                'label' => $label['name'],
+                'value' => $label['name']
+            );
+        }
+
+        $response = new JsonResponse($labels);
+
+        return $response;
+    }
+
     /**
      * @Route("/notebook/labels/{name}/", name="singleLabel")
      */

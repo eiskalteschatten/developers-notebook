@@ -49,10 +49,10 @@ function toggleIsComplete(id, obj) {
     });
 }
 
-function setAutocomplete(obj) {
+function setAutocomplete(obj, url) {
    $(obj).autocomplete({
         source: function (request, response) {
-            $.getJSON(todosGetListOfTodosUrl, {
+            $.getJSON(url, {
                 term: autocompleteExtractLast(request.term)
             }, response);
         },

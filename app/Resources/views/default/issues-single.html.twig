@@ -17,13 +17,15 @@
             var saveItemUrl = "{{ path('issuesSaveIssue') }}";
             var removeItemUrl = "{{ path('issuesRemove') }}";
             var todosGetListOfTodosUrl = "{{ path('todosGetListOfTodos') }}";
+            var labelsGetListOfLabelsUrl = "{{ path('labelsGetListOfLabels') }}";
             var issuesIsCompleteUrl = "{{ path('issuesIsComplete') }}";
 
             function openFullEdit() {
                 $('.info').hide();
                 $('.edit').show();
 
-                setAutocomplete($('.text-item-todos'));
+                setAutocomplete($('.text-item-todos'), todosGetListOfTodosUrl);
+                setAutocomplete($('.text-item-labels'), labelsGetListOfLabelsUrl);
             }
 
             function closeFullEdit() {
