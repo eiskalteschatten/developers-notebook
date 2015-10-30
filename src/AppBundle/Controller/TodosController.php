@@ -81,17 +81,15 @@ class TodosController extends Controller
 			$labelUrls = array();
 			$labels = explode(", ", $todo->getLabels());
 
-			foreach ($labels as $label) {
-				if (!empty($label)) {
-					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
-				}
-			}
-
 			$labelsResult = $this->getDoctrine()
 				->getRepository('AppBundle:Labels')
 				->findBy(
 					array('userId' => $userId, 'name' => $labels)
 				);
+
+			foreach ($labelsResult as $label) {
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+			}
 
 			$todos[] = array(
 				'id' => $todo->getId(),
@@ -265,18 +263,15 @@ class TodosController extends Controller
 		$labelUrls = array();
 		$labelsExploded = explode(", ", $labels);
 
-		foreach ($labelsExploded as $label) {
-			if(!empty($label)) {
-				$labelsService->createLabel($label, $userId);
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
-			}
-		}
-
 		$labelsResult = $this->getDoctrine()
 			->getRepository('AppBundle:Labels')
 			->findBy(
 				array('userId' => $userId, 'name' => $labelsExploded)
 			);
+
+		foreach ($labelsResult as $label) {
+			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+		}
 
 		// CONNECT TODOS AND ISSUES
 

@@ -46,17 +46,15 @@ class BookmarkController extends Controller
 			$labelUrls = array();
 			$labels = explode(", ", $bookmark->getLabels());
 
-			foreach ($labels as $label) {
-				if (!empty($label)) {
-					$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
-				}
-			}
-
 			$labelsResult = $this->getDoctrine()
 				->getRepository('AppBundle:Labels')
 				->findBy(
 					array('userId' => $userId, 'name' => $labels)
 				);
+
+			foreach ($labelsResult as $label) {
+				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+			}
 
 			$bookmarks[] = array(
 				'id' => $bookmark->getId(),
@@ -182,18 +180,15 @@ class BookmarkController extends Controller
 		$labelUrls = array();
 		$labelsExploded = explode(", ", $labels);
 
-		foreach ($labelsExploded as $label) {
-			if(!empty($label)) {
-				$labelsService->createLabel($label, $userId);
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label))));
-			}
-		}
-
 		$labelsResult = $this->getDoctrine()
 			->getRepository('AppBundle:Labels')
 			->findBy(
 				array('userId' => $userId, 'name' => $labelsExploded)
 			);
+
+		foreach ($labelsResult as $label) {
+			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
+		}
 
 		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls)));
 

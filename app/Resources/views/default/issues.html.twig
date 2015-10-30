@@ -76,6 +76,8 @@
 
  		        spinner.stop();
 
+                checkLabelsDarkLight();
+
                 closeEdit(selected.find('.edit'));
             }).fail(function() {
                 showMessage('error', generalErrorMessage);

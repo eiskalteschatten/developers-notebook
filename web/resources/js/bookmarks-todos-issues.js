@@ -34,6 +34,7 @@ $(document).ready(function() {
     }
 
     setDraggableAndDroppable();
+    checkLabelsDarkLight();
 });
 
 function createItem() {
