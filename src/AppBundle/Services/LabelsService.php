@@ -53,12 +53,30 @@ class LabelsService
         if ($length > 0 && !empty($labels[0])) {
             foreach ($labels as $label) {
                 $html .= '<a href="' . $labelsUrl[$i] . '">';
-                $html .= trim($label);
+                $html .= $label;
                 $html .= '</a>';
 
                 if ($i != $length - 1) {
                     $html .= ",&nbsp;";
                 }
+
+                $i++;
+            }
+        }
+
+        return $html;
+    }
+
+    public static function createLabelHtml($labels, $labelsUrl) {
+        $i = 0;
+        $length = count($labels);
+        $html = "";
+
+        if ($length > 0 && !empty($labels[0])) {
+            foreach ($labels as $label) {
+                $html .= '<a href="' . $labelsUrl[$i] . '" class="label-color right" style="background-color: ' . $label->getColor() . '">';
+                $html .= $label->getName();
+                $html .= '</a>';
 
                 $i++;
             }

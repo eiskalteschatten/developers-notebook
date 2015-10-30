@@ -337,6 +337,7 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 		.gray-info .single-row {
 			display: inline-block;
 			margin-right: 25px;
+			float: left;
 		}
 
 		&.selected {

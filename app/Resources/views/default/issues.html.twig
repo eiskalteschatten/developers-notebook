@@ -69,7 +69,7 @@
                 var info = selected.find('.info');
                 info.find('.item-id').text("#" + data.itemId);
                 info.find('.name').text(data.name);
-                info.find('.labels').html("<b>Labels:</b> " + data.labelHtml);
+                info.find('.labels').html("<b>Labels:</b> " + data.labelColorHtml);
                 info.find('.todos').html("<b>To dos:</b> " + data.todosHtml);
                 info.find('.date-planned').html("<b>Date Planned:</b> " + data.datePlanned);
                 info.find('.date-due').html("<b>Due:</b> " + data.dateDue);
@@ -190,7 +190,7 @@
                                     <span class="date-due to-empty single-row"><b>Due:</b> {{ issue.dateDue }}</span>
                                 </div>
                                 <div class="gray-info">
-                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labelHtml | raw }}</span>
+                                    <span class="labels to-empty single-row"><b>Labels:</b> {{ issue.labelColorHtml | raw }}</span>
                                     <span class="todos to-empty single-row"><b>To dos:</b> {{ issue.todosHtml | raw }}</span>
                                 </div>
                             </div>

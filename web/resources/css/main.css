@@ -250,7 +250,8 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
       margin-top: 5px; }
     .full-size-table .row .gray-info .single-row {
       display: inline-block;
-      margin-right: 25px; }
+      margin-right: 25px;
+      float: left; }
     .full-size-table .row.selected {
       background: #3b80dc;
       color: #ffffff; }
@@ -835,14 +836,17 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 
 .label-color {
   display: inline-block;
-  font-size: 12px;
-  padding: 3px 6px;
+  font-size: 10px !important;
+  padding: 1px 4px;
   border-radius: 3px;
   font-weight: normal;
   line-height: 1.5em;
-  margin-right: 10px; }
+  margin-left: 5px;
+  color: #000000 !important;
+  text-decoration: none;
+  border: 1px solid #f2f2f2; }
   .label-color.dark-bg {
-    color: #ffffff; }
+    color: #ffffff !important; }
 
 /* General */
 .ui-widget-content {
