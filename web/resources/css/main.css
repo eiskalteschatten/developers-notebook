@@ -833,6 +833,17 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   .login-box input {
     width: 300px; }
 
+.label-color {
+  display: inline-block;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-weight: normal;
+  line-height: 1.5em;
+  margin-right: 10px; }
+  .label-color.dark-bg {
+    color: #ffffff; }
+
 /* General */
 .ui-widget-content {
   background: #ffffff;

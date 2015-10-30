@@ -12,6 +12,10 @@
     {{ parent() }}
 
     <script type="application/javascript">
+        $(document).ready(function() {
+            checkLabelsDarkLight();
+        });
+
         function goToItem(url) {
             window.location.href = url;
         }
@@ -26,7 +30,10 @@
         </div>
     {% else %}
         <div class="content">
-            <div class="page-title">{{ label.name }}</div>
+            <div class="page-title">
+                <span class="label-color right" style="background-color: {{ label.color | raw }}">{{ label.color }}</span>
+                {{ label.name }}
+            </div>
         </div>
         <div class="section">
             <div class="content-even-three-columns">

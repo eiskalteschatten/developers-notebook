@@ -1,0 +1,13 @@
+.label-color {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-weight: normal;
+    line-height: 1.5em;
+    margin-right: 10px;
+
+    &.dark-bg {
+        color: #ffffff;
+    }
+}

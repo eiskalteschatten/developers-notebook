@@ -246,3 +246,18 @@ function setAutocomplete(obj, url) {
 		}
 	});
 }
+
+// Functions for labels
+
+function checkLabelsDarkLight() {
+	$('.label-color').each(function() {
+		var color = $(this).css('background-color');
+		color = color.substring(4, color.length - 1);
+		var rgb = color.split(',');
+		var luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+
+		if (luma < 40) {
+			$(this).addClass('dark-bg');
+		}
+	});
+}
