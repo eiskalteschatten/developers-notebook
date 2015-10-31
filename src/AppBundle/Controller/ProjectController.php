@@ -125,20 +125,9 @@ class ProjectController extends Controller
         $bookmarks = array();
 
         foreach ($bookmarksResult as $bookmark) {
-            // GET LABELS AND CREATE LINKS
+            // GET LABELS
 
-            $labelUrls = array();
-            $labels = explode(", ", $bookmark->getLabels());
-
-            $labelsResult = $this->getDoctrine()
-                ->getRepository('AppBundle:Labels')
-                ->findBy(
-                    array('userId' => $userId, 'name' => $labels)
-                );
-
-            foreach ($labelsResult as $label) {
-                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-            }
+            $labelsResult = $labelsService->fetchLabels($bookmark->getLabels(), $userId);
 
             $bookmarks[] = array(
                 'id' => $bookmark->getId(),
@@ -147,8 +136,7 @@ class ProjectController extends Controller
                 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
                 'notes' => $bookmark->getNotes(),
                 'labels' => $bookmark->getLabels(),
-                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
                 'folder' => $bookmark->getFolder(),
                 'project' => $bookmark->getProject(),
                 'date' => $bookmark->getDateModified()->format($dateTimeFormat)
@@ -202,20 +190,9 @@ class ProjectController extends Controller
                 );
             }
 
-            // GET LABELS AND CREATE LINKS
+            // GET LABELS
 
-            $labelUrls = array();
-            $labels = explode(", ", $todo->getLabels());
-
-            $labelsResult = $this->getDoctrine()
-                ->getRepository('AppBundle:Labels')
-                ->findBy(
-                    array('userId' => $userId, 'name' => $labels)
-                );
-
-            foreach ($labelsResult as $label) {
-                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-            }
+            $labelsResult = $labelsService->fetchLabels($todo->getLabels(), $userId);
 
             $todos[] = array(
                 'id' => $todo->getId(),
@@ -227,8 +204,7 @@ class ProjectController extends Controller
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
                 'labels' => $todo->getLabels(),
-                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
                 'priority' => $todo->getPriority(),
                 'folder' => $todo->getFolder(),
                 'project' => $todo->getProject(),
@@ -280,20 +256,9 @@ class ProjectController extends Controller
                 $issuesTodos[] = $todo->getTodo();
             }
 
-            // GET LABELS AND CREATE LINKS
+            // GET LABELS
 
-            $labelUrls = array();
-            $labels = explode(", ", $issue->getLabels());
-
-            $labelsResult = $this->getDoctrine()
-                ->getRepository('AppBundle:Labels')
-                ->findBy(
-                    array('userId' => $userId, 'name' => $labels)
-                );
-
-            foreach ($labelsResult as $label) {
-                $labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-            }
+            $labelsResult = $labelsService->fetchLabels($issue->getLabels(), $userId);
 
             $issues[] = array(
                 'id' => $issue->getId(),
@@ -305,8 +270,7 @@ class ProjectController extends Controller
                 'datePlanned' => $datePlanned,
                 'dateDue' => $dateDue,
                 'labels' => $issue->getLabels(),
-                'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+                'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
                 'todos' => $helper->createTodosHtmlLinks($issuesTodos, $this->generateUrl('todos')),
                 'folder' => $issue->getFolder(),
                 'project' => $issue->getProject(),
