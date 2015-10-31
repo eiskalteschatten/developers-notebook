@@ -19,6 +19,7 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             defaultLabelColor: %AppBundle.defaultLabelColor%
+            router: "@router"
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName

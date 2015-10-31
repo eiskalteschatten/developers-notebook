@@ -41,20 +41,9 @@ class BookmarkController extends Controller
 		$bookmarks = array();
 		
 		foreach ($bookmarksResult as $bookmark) {
-			// GET LABELS AND CREATE LINKS
+			// GET LABELS
 
-			$labelUrls = array();
-			$labels = explode(", ", $bookmark->getLabels());
-
-			$labelsResult = $this->getDoctrine()
-				->getRepository('AppBundle:Labels')
-				->findBy(
-					array('userId' => $userId, 'name' => $labels)
-				);
-
-			foreach ($labelsResult as $label) {
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-			}
+			$labelsResult = $labelsService->fetchLabels($bookmark->getLabels(), $userId);
 
 			$bookmarks[] = array(
 				'id' => $bookmark->getId(),
@@ -63,8 +52,7 @@ class BookmarkController extends Controller
 				'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()),
 				'notes' => $bookmark->getNotes(),
 				'labels' => $bookmark->getLabels(),
-				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
 				'folder' => $bookmark->getFolder(),
 				'project' => $bookmark->getProject(),
 				'date' => $bookmark->getDateModified()->format($dateTimeFormat)
@@ -80,7 +68,6 @@ class BookmarkController extends Controller
 			'croppedUrl' => '',
 			'notes' => '',
 			'labels' => '',
-			'labelHtml' => '',
 			'labelColorHtml' => '',
 			'folder' => '',
 			'project' => '',
@@ -177,20 +164,11 @@ class BookmarkController extends Controller
 
 		// CREATE LABELS AND GENERATE LINKS
 
-		$labelUrls = array();
-		$labelsExploded = explode(", ", $labels);
+		$labelsService->createLabel($labels, $userId);
+		$labelsResult = $labelsService->fetchLabels($bookmark->getLabels(), $userId);
 
-		$labelsResult = $this->getDoctrine()
-			->getRepository('AppBundle:Labels')
-			->findBy(
-				array('userId' => $userId, 'name' => $labelsExploded)
-			);
 
-		foreach ($labelsResult as $label) {
-			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-		}
-
-		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls)));
+		$response = new JsonResponse(array('id' => $bookmark->getId(), 'name' => $bookmark->getName(), 'url' => $bookmark->getUrl(), 'croppedUrl' => $helper->cropBookmarkUrl($bookmark->getUrl()), 'notes' => $bookmark->getNotes(), 'labels' => $bookmark->getLabels(), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult)));
 
 		return $response;
 	}

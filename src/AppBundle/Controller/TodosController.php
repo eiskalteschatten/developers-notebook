@@ -76,20 +76,9 @@ class TodosController extends Controller
 				);
 			}
 
-			// GET LABELS AND CREATE LINKS
+			// GET LABELS
 
-			$labelUrls = array();
-			$labels = explode(", ", $todo->getLabels());
-
-			$labelsResult = $this->getDoctrine()
-				->getRepository('AppBundle:Labels')
-				->findBy(
-					array('userId' => $userId, 'name' => $labels)
-				);
-
-			foreach ($labelsResult as $label) {
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-			}
+			$labelsResult = $labelsService->fetchLabels($todo->getLabels(), $userId);
 
 			$todos[] = array(
 				'id' => $todo->getId(),
@@ -101,8 +90,7 @@ class TodosController extends Controller
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
 				'labels' => $todo->getLabels(),
-				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
 				'priority' => $todo->getPriority(),
 				'folder' => $todo->getFolder(),
 				'project' => $todo->getProject(),
@@ -124,7 +112,6 @@ class TodosController extends Controller
 			'datePlanned' => '',
 			'dateDue' => '',
 			'labels' => '',
-			'labelHtml' => '',
 			'labelColorHtml' => '',
 			'priority' => '',
 			'folder' => '',
@@ -260,18 +247,8 @@ class TodosController extends Controller
 
 		// CREATE LABELS AND GENERATE LINKS
 
-		$labelUrls = array();
-		$labelsExploded = explode(", ", $labels);
-
-		$labelsResult = $this->getDoctrine()
-			->getRepository('AppBundle:Labels')
-			->findBy(
-				array('userId' => $userId, 'name' => $labelsExploded)
-			);
-
-		foreach ($labelsResult as $label) {
-			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-		}
+		$labelsService->createLabel($labels, $userId);
+		$labelsResult = $labelsService->fetchLabels($todo->getLabels(), $userId);
 
 		// CONNECT TODOS AND ISSUES
 
@@ -322,7 +299,7 @@ class TodosController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'labels' => $todo->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
+		$response = new JsonResponse(array('id' => $todo->getId(), 'itemId' => $todo->getUserSpecificId(), 'name' => $todo->getTodo(), 'labels' => $todo->getLabels(), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult), 'issues' => $issuesArray, 'issuesHtml' => $helper->createIssuesHtmlLinks($issuesHtmlArray), 'priority' => $todo->getPriority(), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'notes' => $todo->getNotes()));
 
 		return $response;
 	}

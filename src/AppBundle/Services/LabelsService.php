@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use \Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Labels;
 
@@ -11,70 +12,76 @@ class LabelsService
 {
     protected $em;
     protected $defaultLabelColor;
+    protected $router;
     protected $name;
     protected $color;
     protected $isComplete;
 
-    public function __construct(EntityManager $entityManager, $defaultLabelColor) {
+    public function __construct(EntityManager $entityManager, $defaultLabelColor, $router) {
         $this->em = $entityManager;
         $this->defaultLabelColor = $defaultLabelColor;
+        $this->router = $router;
     }
 
-    public function createLabel($name, $userId) {
-        $name = ltrim($name);
-        $this->setName($name);
+    public function createLabel($labels, $userId) {
+        $labelsExploded = explode(", ", $labels);
 
-        $label = $this->em->getRepository('AppBundle\Entity\Labels')->findOneBy(array('name' => $name, 'userId' => $userId));
+        foreach ($labelsExploded as $label) {
+            $name = ltrim($label);
+            $this->setName($label);
 
-        if (!$label) {
-            $label = new Labels();
-            $label->setUserId($userId);
-            $label->setName($name);
-            $label->setColor($this->defaultLabelColor);
-            $label->setIsCompleted(false);
+            $labelResult = $this->em->getRepository('AppBundle\Entity\Labels')->findOneBy(array('name' => $name, 'userId' => $userId));
 
-            $this->em->persist($label);
-        }
-        else {
-            $label->setIsCompleted(false);
+            if (!$labelResult) {
+                $labelResult = new Labels();
+                $labelResult->setUserId($userId);
+                $labelResult->setName($name);
+                $labelResult->setColor($this->defaultLabelColor);
+                $labelResult->setIsCompleted(false);
+
+                $this->em->persist($labelResult);
+            } else {
+                $labelResult->setIsCompleted(false);
+            }
         }
 
         $this->em->flush();
 
-        $response = new JsonResponse(array("id" => $label->getId(), "color" => $label->getColor()));
+        $response = new JsonResponse(array("id" => $labelResult->getId(), "color" => $labelResult->getColor()));
         return $response;
     }
 
-    public static function createHtmlLinks($labels, $labelsUrl) {
-        $i = 0;
-        $length = count($labels);
-        $html = "";
+    public function fetchLabels($labels, $userId) {
+        $labelsExploded = explode(", ", $labels);
 
-        if ($length > 0 && !empty($labels[0])) {
-            foreach ($labels as $label) {
-                $html .= '<a href="' . $labelsUrl[$i] . '">';
-                $html .= $label;
-                $html .= '</a>';
+        $labelsResult = $this->em
+            ->getRepository('AppBundle:Labels')
+            ->findBy(
+                array('userId' => $userId, 'name' => $labelsExploded)
+            );
 
-                if ($i != $length - 1) {
-                    $html .= ",&nbsp;";
-                }
-
-                $i++;
-            }
-        }
-
-        return $html;
+        return $labelsResult;
     }
 
-    public static function createLabelHtml($labels, $labelsUrl) {
+    public function getLabelUrls($labels) {
+        $labelUrls = array();
+
+        foreach ($labels as $label) {
+            $labelUrls[] = $this->router->generate("singleLabel", array('name' => urlencode(trim($label->getName()))), "NETWORK_PATH");
+        }
+
+        return $labelUrls;
+    }
+
+    public function createLabelHtml($labels) {
         $i = 0;
         $length = count($labels);
         $html = "";
 
         if ($length > 0 && !empty($labels[0])) {
             foreach ($labels as $label) {
-                $html .= '<a href="' . $labelsUrl[$i] . '" class="label-color right" style="background-color: ' . $label->getColor() . '">';
+                $url = $this->router->generate("singleLabel", array('name' => urlencode(trim($label->getName()))), "NETWORK_PATH");
+                $html .= '<a href="' . $url . '" class="label-color right" style="background-color: ' . $label->getColor() . '">';
                 $html .= $label->getName();
                 $html .= '</a>';
 

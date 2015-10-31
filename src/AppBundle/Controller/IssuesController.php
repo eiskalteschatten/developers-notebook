@@ -73,20 +73,9 @@ class IssuesController extends Controller
 				$todos[] = $todo->getTodo();
 			}
 
-			// GET LABELS AND CREATE LINKS
+			// GET LABELS
 
-			$labelUrls = array();
-			$labels = explode(", ", $issue->getLabels());
-
-			$labelsResult = $this->getDoctrine()
-				->getRepository('AppBundle:Labels')
-				->findBy(
-					array('userId' => $userId, 'name' => $labels)
-				);
-
-			foreach ($labelsResult as $label) {
-				$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-			}
+			$labelsResult = $labelsService->fetchLabels($issue->getLabels(), $userId);
 
 			$issues[] = array(
 				'id' => $issue->getId(),
@@ -98,8 +87,7 @@ class IssuesController extends Controller
 				'datePlanned' => $datePlanned,
 				'dateDue' => $dateDue,
 				'labels' => $issue->getLabels(),
-				'labelHtml' => $labelsService->createHtmlLinks($labels, $labelUrls),
-				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls),
+				'labelColorHtml' => $labelsService->createLabelHtml($labelsResult),
 				'todos' => $todosResult,
 				'todosHtml' => $helper->createTodosHtmlLinks($todos, $this->generateUrl('todos')),
 				'folder' => $issue->getFolder(),
@@ -120,7 +108,6 @@ class IssuesController extends Controller
 			'datePlanned' => '',
 			'dateDue' => '',
 			'labels' => '',
-			'labelHtml' => '',
 			'labelColorHtml' => '',
 			'todos' => '',
 			'todosHtml' => '',
@@ -252,18 +239,8 @@ class IssuesController extends Controller
 
 		// CREATE LABELS AND GENERATE LINKS
 
-		$labelUrls = array();
-		$labelsExploded = explode(", ", $labels);
-
-		$labelsResult = $this->getDoctrine()
-			->getRepository('AppBundle:Labels')
-			->findBy(
-				array('userId' => $userId, 'name' => $labelsExploded)
-			);
-
-		foreach ($labelsResult as $label) {
-			$labelUrls[] = $this->generateUrl("singleLabel", array('name' => urlencode(trim($label->getName()))));
-		}
+		$labelsService->createLabel($labels, $userId);
+		$labelsResult = $labelsService->fetchLabels($issue->getLabels(), $userId);
 
 		// CONNECT TODOS AND ISSUES
 
@@ -308,7 +285,7 @@ class IssuesController extends Controller
 			$dateDueResponse = "";
 		}
 
-		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'labelHtml' => $labelsService->createHtmlLinks($labelsExploded, $labelUrls), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult, $labelUrls), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
+		$response = new JsonResponse(array('id' => $issue->getId(), 'itemId' => $issue->getUserSpecificId(), 'name' => $issue->getTitle(), 'labels' => $issue->getLabels(), 'labelColorHtml' => $labelsService->createLabelHtml($labelsResult), 'todos' => $todosArray, 'todosHtml' => $helper->createTodosHtmlLinks($todosArray, $this->generateUrl('todos')), 'datePlanned' => $datePlannedResponse, 'dateDue' => $dateDueResponse, 'description' => $issue->getDescription()));
 
 		return $response;
 	}
