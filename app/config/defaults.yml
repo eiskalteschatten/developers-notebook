@@ -18,4 +18,4 @@ parameters:
     AppBundle.defaultWeatherLocation: 'Munich, Germany'
     AppBundle.defaultWeatherUnit: 'c'
 
-    AppBundle.defaultLabelColor: '#3aba34'
+    AppBundle.defaultLabelColor: '#3ABA34'

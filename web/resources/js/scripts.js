@@ -256,8 +256,76 @@ function checkLabelsDarkLight() {
 		var rgb = color.split(',');
 		var luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
 
-		if (luma < 40) {
+		if (luma < 128) {
 			$(this).addClass('dark-bg');
 		}
+	});
+}
+
+function loadLabelColorPicker() {
+	$('.label-color').colorPicker({
+		GPU: true,
+		renderCallback: function ($elm, toggled) {
+			var colorHex = '#' + this.color.colors.HEX;
+
+			$($elm).text(colorHex);
+
+			var colors = this.color.colors.RND,
+				modes = {
+					r: colors.rgb.r, g: colors.rgb.g, b: colors.rgb.b,
+					h: colors.hsv.h, s: colors.hsv.s, v: colors.hsv.v,
+					HEX: this.color.colors.HEX
+				};
+
+			$('input', '.cp-panel').each(function() {
+				this.value = modes[this.className.substr(3)];
+			});
+
+			if (toggled === false) {
+				var id = $($elm).attr('data-id');
+				saveLabelColor(id, colorHex);
+			}
+		},
+		buildCallback: function($elm) {
+			var colorInstance = this.color,
+				colorPicker = this;
+
+			$elm.prepend('<div class="cp-panel">' +
+				'R <input type="text" class="cp-r" /><br>' +
+				'G <input type="text" class="cp-g" /><br>' +
+				'B <input type="text" class="cp-b" /><hr>' +
+				'H <input type="text" class="cp-h" /><br>' +
+				'S <input type="text" class="cp-s" /><br>' +
+				'B <input type="text" class="cp-v" /><hr>' +
+				'<input type="text" class="cp-HEX" />' +
+				'</div>').on('change', 'input', function(e) {
+				var value = this.value,
+					className = this.className,
+					type = className.split('-')[1],
+					color = {};
+
+				color[type] = value;
+				colorInstance.setColor(type === 'HEX' ? value : color,
+					type === 'HEX' ? 'HEX' : /(?:r|g|b)/.test(type) ? 'rgb' : 'hsv');
+				colorPicker.render();
+				this.blur();
+			});
+		}
+	});
+}
+
+function saveLabelColor(id, color) {
+	openGeneralAjaxLoaderWithTimer();
+
+	var toSend = {
+		id: id,
+		color: color
+	}
+
+	$.post(labelsSaveUrl, toSend, function(data) {
+		closeGeneralAjaxLoader();
+	}).fail(function() {
+		showMessage('error', generalErrorMessage);
+		closeGeneralAjaxLoader();
 	});
 }

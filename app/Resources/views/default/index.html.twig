@@ -3,7 +3,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="application/javascript">
+    <script type="text/javascript">
         $(document).ready(function() {
             {% if attribute(generalSettings, 'showWeather') is not empty %}
 	            {% set weatherLocation = attribute(generalSettings, 'weatherLocation') %}

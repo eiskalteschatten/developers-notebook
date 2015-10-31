@@ -334,6 +334,14 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
 			margin-top: 5px;
 		}
 
+		.gray-info a.label-color {
+			color: #000000;
+
+			&.dark-bg {
+				color: #ffffff;
+			}
+		}
+
 		.gray-info .single-row {
 			display: inline-block;
 			margin-right: 25px;

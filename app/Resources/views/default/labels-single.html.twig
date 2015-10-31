@@ -11,15 +11,19 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="application/javascript">
+    <script type="text/javascript">
+        var labelsSaveUrl = "{{ path('labelsSave') }}";
+
         $(document).ready(function() {
             checkLabelsDarkLight();
+            loadLabelColorPicker();
         });
 
         function goToItem(url) {
             window.location.href = url;
         }
     </script>
+    <script type="text/javascript" src="{{ asset('resources/js/jqColorPicker.min.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -31,7 +35,7 @@
     {% else %}
         <div class="content">
             <div class="page-title">
-                <span class="label-color right" style="background-color: {{ label.color | raw }}">{{ label.color }}</span>
+                <span class="label-color right" style="background-color: {{ label.color | raw }}" data-id="{{ label.id }}">{{ label.color }}</span>
                 {{ label.name }}
             </div>
         </div>

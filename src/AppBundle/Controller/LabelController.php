@@ -97,6 +97,28 @@ class LabelController extends Controller
     }
 
     /**
+     * @Route("/notebook/labels/save/", name="labelsSave")
+     * @Method("POST")
+     */
+    public function saveAction(Request $request)
+    {
+        $id = $request->request->get('id');
+        $color = $request->request->get('color');
+
+        $em = $this->getDoctrine()->getManager();
+        $label = $em->getRepository('AppBundle:Labels')->find($id);
+
+        if (!$label) {
+            throw $this->createNotFoundException('No label found for id '.$id);
+        }
+
+        $label->setColor($color);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
      * @Route("/notebook/labels/{name}/", name="singleLabel")
      */
     public function singleLabelAction(Request $request, $name)
