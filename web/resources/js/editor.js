@@ -265,6 +265,7 @@ function saveAllSettings() {
 		defaultSyntax: $('#defaultMode').val(),
 		highlightActiveLine: $('#highlightActiveLine').prop('checked'),
 		wrapSearch: $('#wrapSearch').prop('checked'),
+		wordWrap: $('#wordWrap').prop('checked'),
 		caseSensitive: $('#caseSensitive').prop('checked'),
 		wholeWord: $('#wholeWord').prop('checked'),
 		regExp: $('#regExp').prop('checked'),

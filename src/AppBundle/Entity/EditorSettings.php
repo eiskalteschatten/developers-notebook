@@ -37,6 +37,11 @@ class EditorSettings
     /**
      * @var boolean
      */
+    private $wordWrap;
+
+    /**
+     * @var boolean
+     */
     private $caseSensitiveSearch;
 
     /**
@@ -163,9 +168,32 @@ class EditorSettings
     }
 
     /**
+     * Get wordWrap
+     *
+     * @return boolean
+     */
+    public function getWordWrap()
+    {
+        return $this->wordWrap;
+    }
+
+    /**
+     * Set wordWrap
+     *
+     * @param boolean $wordWrap
+     * @return EditorSettings
+     */
+    public function setWordWrap($wordWrap)
+    {
+        $this->wordWrap = $wordWrap;
+
+        return $this;
+    }
+
+    /**
      * Get wrapSearch
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWrapSearch()
     {

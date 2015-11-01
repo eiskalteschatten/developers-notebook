@@ -36,6 +36,9 @@
             {% if attribute(editorSettings, 'wrapSearch') is not empty %}
                 $('#wrapSearch').prop('checked', true);
             {% endif %}
+            {% if attribute(editorSettings, 'wordWrap') is not empty %}
+                $('#wordWrap').prop('checked', true);
+            {% endif %}
             {% if attribute(editorSettings, 'caseSensitiveSearch') is not empty %}
                 $('#caseSensitive').prop('checked', true);
             {% endif %}
@@ -46,7 +49,7 @@
                 $('#regExp').prop('checked', true);
             {% endif %}
             {% if attribute(editorSettings, 'skipCurrentLineSearch') is not empty %}
-            $('#skipCurrent').prop('checked', true);
+                $('#skipCurrent').prop('checked', true);
             {% endif %}
         });
 
@@ -78,6 +81,7 @@
                 defaultSyntaxNotebook: $('#defaultModeNotebook').val(),
                 highlightActiveLine: $('#highlightActiveLine').prop('checked'),
                 wrapSearch: $('#wrapSearch').prop('checked'),
+                wordWrap: $('#wordWrap').prop('checked'),
                 caseSensitive: $('#caseSensitive').prop('checked'),
                 wholeWord: $('#wholeWord').prop('checked'),
                 regExp: $('#regExp').prop('checked'),
@@ -157,6 +161,9 @@
                     </div>
                     <div class="option">
                         <input type="checkbox" id="highlightActiveLine"><label for="highlightActiveLine">Highlight active line</label><br>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="wordWrap"><label for="wordWrap">Word wrap</label><br>
                     </div>
                 </div>
                 <div class="column">

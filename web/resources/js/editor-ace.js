@@ -122,6 +122,15 @@ function toggleHighlightActiveLine() {
     }
 }
 
+function toggleWordWrap() {
+    if (editor.getSession().getUseWrapMode()) {
+        editor.getSession().setUseWrapMode(false);
+    }
+    else {
+        editor.getSession().setUseWrapMode(true);
+    }
+}
+
 var findOptions = {};
 
 function setFindOptions(needle) {

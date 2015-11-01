@@ -290,7 +290,8 @@ class AccountController extends Controller
             $es->setUserId($userId);
 	        $es->setDefaultTheme($defaultTheme);
 	        $es->setHighlightActiveLine(0);
-	        $es->setWrapSearch(0);
+            $es->setWrapSearch(0);
+            $es->setWordWrap(0);
 	        $es->setCaseSensitiveSearch(0);
 	        $es->setMatchWholeWordsSearch(0);
 	        $es->setIsRegexSearch(0);

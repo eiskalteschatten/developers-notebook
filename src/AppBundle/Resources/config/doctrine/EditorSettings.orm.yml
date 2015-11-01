@@ -21,6 +21,9 @@ AppBundle\Entity\EditorSettings:
         wrapSearch:
             type: boolean
             column: wrap_search
+        wordWrap:
+            type: boolean
+            column: word_wrap
         caseSensitiveSearch:
             type: boolean
             column: case_sensitive_search

@@ -85,6 +85,7 @@ class SettingsController extends Controller
         $defaultSyntax = $request->request->get('defaultSyntax');
         $highlightActiveLine= ($request->request->get('highlightActiveLine') === 'true');
         $wrapSearch = ($request->request->get('wrapSearch') === 'true');
+        $wordWrap = ($request->request->get('wordWrap') === 'true');
         $caseSensitive = ($request->request->get('caseSensitive') === 'true');
         $wholeWord = ($request->request->get('wholeWord') === 'true');
         $regExp = ($request->request->get('regExp') === 'true');
@@ -103,6 +104,7 @@ class SettingsController extends Controller
         $es->setDefaultTheme($defaultTheme);
         $es->setHighlightActiveLine($highlightActiveLine);
         $es->setWrapSearch($wrapSearch);
+        $es->setWordWrap($wordWrap);
         $es->setCaseSensitiveSearch($caseSensitive);
         $es->setMatchWholeWordsSearch($wholeWord);
         $es->setIsRegexSearch($regExp);
@@ -144,6 +146,7 @@ class SettingsController extends Controller
         $defaultSyntaxNotebook = $request->request->get('defaultSyntaxNotebook');
         $highlightActiveLine= ($request->request->get('highlightActiveLine') === 'true');
         $wrapSearch = ($request->request->get('wrapSearch') === 'true');
+        $wordWrap = ($request->request->get('wordWrap') === 'true');
         $caseSensitive = ($request->request->get('caseSensitive') === 'true');
         $wholeWord = ($request->request->get('wholeWord') === 'true');
         $regExp = ($request->request->get('regExp') === 'true');
@@ -161,6 +164,7 @@ class SettingsController extends Controller
         $es->setDefaultTheme($defaultTheme);
         $es->setHighlightActiveLine($highlightActiveLine);
         $es->setWrapSearch($wrapSearch);
+        $es->setWordWrap($wordWrap);
         $es->setCaseSensitiveSearch($caseSensitive);
         $es->setMatchWholeWordsSearch($wholeWord);
         $es->setIsRegexSearch($regExp);

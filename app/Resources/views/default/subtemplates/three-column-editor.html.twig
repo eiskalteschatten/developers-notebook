@@ -120,6 +120,7 @@
                 {{ syntaxOptions|raw }}
             </select><br><br>
             <input type="checkbox" id="highlightActiveLine" onclick="toggleHighlightActiveLine()"><label for="highlightActiveLine">Highlight active line</label><br>
+            <input type="checkbox" id="wordWrap" onclick="toggleWordWrap()"><label for="wordWrap">Word wrap</label><br>
             <div class="buttons">
                 <button onclick="saveAllSettings()" class="blue-button has-neighbor-button">Save Changes</button><button onclick="closePopup()" class="white-button">Close</button>
             </div>
@@ -206,9 +207,12 @@
 			{% if attribute(editorSettings, 'highlightActiveLine') is not empty %}
 				$('#highlightActiveLine').prop('checked', true);
 			{% endif %}
-			{% if attribute(editorSettings, 'wrapSearch') is not empty %}
-				$('#wrapSearch').prop('checked', true);
-			{% endif %}
+            {% if attribute(editorSettings, 'wrapSearch') is not empty %}
+            $('#wrapSearch').prop('checked', true);
+            {% endif %}
+            {% if attribute(editorSettings, 'wordWrap') is not empty %}
+            $('#wordWrap').prop('checked', true);
+            {% endif %}
 			{% if attribute(editorSettings, 'caseSensitiveSearch') is not empty %}
 				$('#caseSensitive').prop('checked', true);
 			{% endif %}
@@ -232,6 +236,7 @@
             $('#mode').val(standardSyntax);
 
             editor.setHighlightActiveLine((($('#highlightActiveLine:checked').length > 0) ? true:false));
+            editor.getSession().setUseWrapMode((($('#wordWrap:checked').length > 0) ? true:false));
         }
     </script>
 {% endblock %}
