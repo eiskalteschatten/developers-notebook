@@ -14,53 +14,36 @@ class LabelController extends Controller
     private $currentPage = "label";
 
     /**
-     * @Route("/notebook/labels/", name="labels")
+     * @Route("/notebook/labels/", name="labelsPage")
      */
     public function indexAction(Request $request)
     {
-        $dateTimeFormat = $this->container->getParameter('AppBundle.dateTimeFormat');
+        $labelsService = $this->get('app.services.labels');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
 
-        $projectsResult = $this->getDoctrine()
-            ->getRepository('AppBundle:Project')
+        $labelsResult = $this->getDoctrine()
+            ->getRepository('AppBundle:Labels')
             ->findBy(
                 array('userId' => $userId),
                 array('name' => 'ASC')
             );
 
-        $projects = array();
+        $labels = array();
 
-        foreach ($projectsResult as $project) {
-            if ($project->getDateCompleted()) {
-                $dateCompleted = $project->getDateCompleted()->format($dateTimeFormat);
-            }
-            else {
-                $dateCompleted = "";
-            }
-
-            $projects[] = array(
-                'id' => $project->getId(),
-                'name' => $project->getName(),
-                'dateModified' => $project->getDateModified()->format($dateTimeFormat),
-                'isCompleted' => $project->getIsCompleted(),
-                'dateCompleted' => $dateCompleted
+        foreach ($labelsResult as $label) {
+            $labels[] = array(
+                'id' => $label->getId(),
+                'name' => $label->getName(),
+                'color' => $label->getColor(),
+                'labelColorHtml' => $labelsService->createLabelHtml(array($label)),
+                'isCompleted' => $label->getIsCompleted()
             );
         }
-        
-		// ADD A BLANK HIDDEN ROW FOR CLONING WHEN CREATING A NEW PROJECT
 
-		$projects[] = array(
-            'id' => '-1',
-			'name' => 'dGhpcyByb3cgc2hvdWxkIGJlIGNsb25lZA==',  // BASE64 ENCODED "this row should be cloned"
-            'dateModified' => '',
-            'isCompleted' => '',
-            'dateCompleted' => ''
-		);
-
-        return $this->render('default/projects.html.twig', array(
-            'projects' => $projects,
+        return $this->render('default/labels.html.twig', array(
+            'labels' => $labels,
             'currentPage' => $this->currentPage
         ));
     }
@@ -97,10 +80,10 @@ class LabelController extends Controller
     }
 
     /**
-     * @Route("/notebook/labels/save/", name="labelsSave")
+     * @Route("/notebook/labels/changeColor/", name="labelsChangeColor")
      * @Method("POST")
      */
-    public function saveAction(Request $request)
+    public function changeColorAction(Request $request)
     {
         $id = $request->request->get('id');
         $color = $request->request->get('color');

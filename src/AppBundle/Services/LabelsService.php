@@ -81,7 +81,7 @@ class LabelsService
         if ($length > 0 && !empty($labels[0])) {
             foreach ($labels as $label) {
                 $url = $this->router->generate("singleLabel", array('name' => urlencode(trim($label->getName()))), "NETWORK_PATH");
-                $html .= '<a href="' . $url . '" class="label-color right" style="background-color: ' . $label->getColor() . '">';
+                $html .= '<a href="' . $url . '" class="label-color" style="background-color: ' . $label->getColor() . '">';
                 $html .= $label->getName();
                 $html .= '</a>';
 

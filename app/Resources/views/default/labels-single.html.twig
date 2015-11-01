@@ -12,11 +12,11 @@
     {{ parent() }}
 
     <script type="text/javascript">
-        var labelsSaveUrl = "{{ path('labelsSave') }}";
+        var labelsSaveUrl = "{{ path('labelsChangeColor') }}";
 
         $(document).ready(function() {
             checkLabelsDarkLight();
-            loadLabelColorPicker();
+            loadLabelColorPicker($('.label-color'), true);
         });
 
         function goToItem(url) {

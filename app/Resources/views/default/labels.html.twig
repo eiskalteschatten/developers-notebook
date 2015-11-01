@@ -1,0 +1,46 @@
+{% extends 'default/base.html.twig' %}
+
+{% block title %}
+    Labels - Developer's Notebook
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var labelsSaveUrl = "{{ path('labelsChangeColor') }}";
+
+        $(document).ready(function() {
+            checkLabelsDarkLight();
+        });
+
+        function changeColor(obj) {
+            loadLabelColorPicker($(obj), false);
+        }
+    </script>
+    <script type="text/javascript" src="{{ asset('resources/js/jqColorPicker.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="content">
+        <div class="page-title">Labels</div>
+
+        <div class="full-size-table" id="itemTable">
+            {% for label in labels %}
+                <div class="row big-label" data-id="{{ label.id }}">
+                    <div class="info">
+                        <span class="edit-button"><button onclick="changeColor(this)">Change Color</button></span>
+                        {{ label.labelColorHtml | raw }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+{% endblock %}

@@ -262,8 +262,8 @@ function checkLabelsDarkLight() {
 	});
 }
 
-function loadLabelColorPicker() {
-	$('.label-color').colorPicker({
+function loadLabelColorPicker(obj, saveOnClose) {
+	obj.colorPicker({
 		GPU: true,
 		renderCallback: function ($elm, toggled) {
 			var colorHex = '#' + this.color.colors.HEX;
@@ -281,14 +281,14 @@ function loadLabelColorPicker() {
 				this.value = modes[this.className.substr(3)];
 			});
 
-			if (toggled === false) {
+			if (toggled === false && saveOnClose === true) {
 				var id = $($elm).attr('data-id');
 				saveLabelColor(id, colorHex);
 			}
 		},
 		buildCallback: function($elm) {
-			var colorInstance = this.color,
-				colorPicker = this;
+			var colorInstance = this.color;
+			var colorPicker = this;
 
 			$elm.prepend('<div class="cp-panel">' +
 				'R <input type="text" class="cp-r" /><br>' +
@@ -299,14 +299,13 @@ function loadLabelColorPicker() {
 				'B <input type="text" class="cp-v" /><hr>' +
 				'<input type="text" class="cp-HEX" />' +
 				'</div>').on('change', 'input', function(e) {
-				var value = this.value,
-					className = this.className,
-					type = className.split('-')[1],
-					color = {};
+				var value = this.value;
+				var className = this.className;
+				var type = className.split('-')[1];
+				var color = {};
 
 				color[type] = value;
-				colorInstance.setColor(type === 'HEX' ? value : color,
-					type === 'HEX' ? 'HEX' : /(?:r|g|b)/.test(type) ? 'rgb' : 'hsv');
+				colorInstance.setColor(type === 'HEX' ? value : color, type === 'HEX' ? 'HEX' : /(?:r|g|b)/.test(type) ? 'rgb' : 'hsv');
 				colorPicker.render();
 				this.blur();
 			});
